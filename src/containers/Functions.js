@@ -10,13 +10,22 @@ const FUNCTIONS = [
   'equals', 'id', 'length', 'map', 'not', 'or',
   'reduce', 'split', 'succ'
 ];
+const VALUES = ['True', 'False', '[ ]', '0'];
 
 const FunctionPalette = ({onFunctionClick}) => {
-  let fns = [];
+  let fns     = [],
+      values  = [];
   FUNCTIONS.forEach(fn => {
     fns.push(<button className="function" key={fn}
       onClick={() => onFunctionClick(fn)}>
         {fn}
+      </button>);
+  });
+  VALUES.forEach(value => {
+    values.push(
+      <button className="value" key={value}
+              onClick={() => onFunctionClick(value)}>
+        {value}
       </button>);
   });
   return (
@@ -28,10 +37,7 @@ const FunctionPalette = ({onFunctionClick}) => {
       </div>
       <div className="values">
         <h3>Values</h3>
-        <button className="value">True</button>
-        <button className="value">False</button>
-        <button className="value">[ ]</button>
-        <button className="value">0</button>
+        {values}
       </div>
     </div>
   );
