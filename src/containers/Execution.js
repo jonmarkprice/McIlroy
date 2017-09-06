@@ -43,6 +43,41 @@ const parse = (list) => list.reduce((agg, token, index, array) => {
   return agg;
 }, {stack: [], steps: []});
 
+function display(obj) {
+  if (Array.isArray(obj)) {
+    console.log("I'm an array")
+
+    // If list is empty
+    if (obj.length === 0) {
+      return '[ ]';
+    }
+    // For singleton lists
+    else if (obj.length === 1) {
+      return `[${display(obj[0])}]`
+    }
+    // For lists of length two or greater
+    else {
+      const lastIndex = obj.length - 1;
+      return obj.reduce((agg, elem, index) => {
+        if (agg === '') {
+          // For first item
+          return '[' + display(elem);
+        }
+        else if (index === lastIndex) {
+          // For last item
+          return agg + ', ' + display(elem) + ']';
+        }
+        else {
+          return agg + ', ' + display(elem);
+        }
+      }, '');
+    }
+  }
+  else {
+    return obj.toString();
+  }
+}
+
 
 class ExecutionRows extends React.Component {
 
@@ -65,7 +100,7 @@ class ExecutionRows extends React.Component {
       const offset = step.left.length;
 
       // Wrap tokens
-      const newToken = <Token text={step.value.toString()}
+      const newToken = <Token text={display(step.value)}
                               classList={['em']} key='new' />;
       const consTokens = step.left.map((text, index) => (
         <Token text={text} classList={['skip']} key={index} />
