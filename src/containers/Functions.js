@@ -1,33 +1,39 @@
 import React from 'react';
+import library from '../lib/library';
+import literals from '../lib/literals';
 import { connect } from  'react-redux';
 import { pushFunction } from '../actions';
 
 // Possibly (later) divide into categories, such as
 // math, lists, etc. or into built-in and derived
-const FUNCTIONS = [
+/*const FUNCTIONS = [
   ':', '+', '-', '*', '/', '^', '%', 'apply',
   'and', 'capitalize', 'concat', 'cond', 'cons',
   'equals', 'id', 'length', 'map', 'not', 'or',
   'reduce', 'split', 'succ'
 ];
 const VALUES = ['True', 'False', '[ ]', '0'];
+*/
 
 const FunctionPalette = ({onFunctionClick}) => {
-  let fns     = [],
+  const appOp = <button className="function" key=":"
+                        onClick={() => onFunctionClick(':')}>:</button>
+  let fns     = [appOp],
       values  = [];
-  FUNCTIONS.forEach(fn => {
-    fns.push(<button className="function" key={fn}
-      onClick={() => onFunctionClick(fn)}>
+  for (let fn of library.keys()) {
+    fns.push(
+      <button className="function" key={fn}
+              onClick={() => onFunctionClick(fn)}>
         {fn}
       </button>);
-  });
-  VALUES.forEach(value => {
+  }
+  for (let value of literals.keys()) {
     values.push(
       <button className="value" key={value}
               onClick={() => onFunctionClick(value)}>
         {value}
       </button>);
-  });
+  }
   return (
     <div id="functions" className="box">
       <h2>Palette</h2>

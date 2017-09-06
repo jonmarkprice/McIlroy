@@ -1,9 +1,10 @@
 // Presentational components
 
 import React from 'react';
-import ProgramRow from './ProgramRow';
+// import ProgramRow from './ProgramRow';
 import ProgramCanvas from '../containers/ProgramCanvas';
 import Functions from '../containers/Functions';
+import Execution from '../containers/Execution';
 // import PropTypes from 'prop-types'; // TODO need?
 
 const Input = () => (
@@ -16,13 +17,6 @@ const Input = () => (
 const Info = () => (
   <div id="information" className="box">
     <h2>Info</h2>
-  </div>
-);
-
-const Execution = () => (
-  <div id="execution" className="box">
-    <h2>Execution</h2>
-    <ProgramRow program={[]} />
   </div>
 );
 
