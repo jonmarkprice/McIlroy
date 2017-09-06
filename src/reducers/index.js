@@ -21,6 +21,10 @@ function app(state = initialState, action) {
       return Object.assign({}, state, {
         program: state.program.concat(action.name)
       });
+    case 'CLEAR_CANVAS':
+      return Object.assign({}, state, {
+        program: []
+      })
     default: return state
   }
 }
