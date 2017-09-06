@@ -1,10 +1,9 @@
 import React from 'react';
-//import ProgramRow from '../components/ProgramRow';
-import Token from '../components/Token';
 import { connect } from  'react-redux';
-// import { clearCanvas } from '../actions';
+import Token from '../components/Token';
 import library from '../lib/library';
 import literals from '../lib/literals';
+import display from '../lib/display';
 
 const mapStateToProps = state => ({
   program: state.program
@@ -42,42 +41,6 @@ const parse = (list) => list.reduce((agg, token, index, array) => {
   }
   return agg;
 }, {stack: [], steps: []});
-
-function display(obj) {
-  if (Array.isArray(obj)) {
-    console.log("I'm an array")
-
-    // If list is empty
-    if (obj.length === 0) {
-      return '[ ]';
-    }
-    // For singleton lists
-    else if (obj.length === 1) {
-      return `[${display(obj[0])}]`
-    }
-    // For lists of length two or greater
-    else {
-      const lastIndex = obj.length - 1;
-      return obj.reduce((agg, elem, index) => {
-        if (agg === '') {
-          // For first item
-          return '[' + display(elem);
-        }
-        else if (index === lastIndex) {
-          // For last item
-          return agg + ', ' + display(elem) + ']';
-        }
-        else {
-          return agg + ', ' + display(elem);
-        }
-      }, '');
-    }
-  }
-  else {
-    return obj.toString();
-  }
-}
-
 
 class ExecutionRows extends React.Component {
 
