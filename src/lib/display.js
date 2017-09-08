@@ -1,7 +1,5 @@
 const display = (obj) => {
   if (Array.isArray(obj)) {
-    console.log("I'm an array")
-
     // If list is empty
     if (obj.length === 0) {
       return '[ ]';

@@ -1,7 +1,5 @@
 // Presentational components
-
 import React from 'react';
-// import ProgramRow from './ProgramRow';
 import ProgramCanvas from '../containers/ProgramCanvas';
 import Functions from '../containers/Functions';
 import Execution from '../containers/Execution';
