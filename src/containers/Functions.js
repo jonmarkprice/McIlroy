@@ -4,17 +4,6 @@ import literals from '../lib/literals';
 import { connect } from  'react-redux';
 import { pushFunction } from '../actions';
 
-// Possibly (later) divide into categories, such as
-// math, lists, etc. or into built-in and derived
-/*const FUNCTIONS = [
-  ':', '+', '-', '*', '/', '^', '%', 'apply',
-  'and', 'capitalize', 'concat', 'cond', 'cons',
-  'equals', 'id', 'length', 'map', 'not', 'or',
-  'reduce', 'split', 'succ'
-];
-const VALUES = ['True', 'False', '[ ]', '0'];
-*/
-
 const FunctionPalette = ({onFunctionClick}) => {
   const appOp = <button className="function" key=":"
                         onClick={() => onFunctionClick(':')}>:</button>

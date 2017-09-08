@@ -55,9 +55,9 @@ class ExecutionRows extends React.Component {
     rows.push(<div className="row" key="init">
         {this.props.program.map((text, index) => <Token text={text} key={index} />)}
     </div>);
-    const result = parse(this.props.program);
+    const result = parse(this.props.program); // TODO move props
 
-    // Display
+    // Wrap tokens
     result.steps.forEach((step, stepIndex) => {
       console.log(step);
       const offset = step.left.length;
@@ -66,7 +66,7 @@ class ExecutionRows extends React.Component {
       const newToken = <Token text={display(step.value)}
                               classList={['em']} key='new' />;
       const consTokens = step.left.map((text, index) => (
-        <Token text={text} classList={['skip']} key={index} />
+        <Token text={display(text)} classList={['skip']} key={index} />
       ));
 
       const remTokens = step.right.map((text, index) => (

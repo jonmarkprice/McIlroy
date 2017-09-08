@@ -1,5 +1,17 @@
 import display from './display';
 
+// Possibly (later) divide into categories, such as
+// math, lists, etc. or into built-in and derived
+// TODO make sure I have each of theses
+/*const FUNCTIONS = [
+  ':', '+', '-', '*', '/', '^', '%', 'apply',
+  'and', 'capitalize', 'concat', 'cond', 'cons',
+  'equals', 'id', 'length', 'map', 'not', 'or',
+  'reduce', 'split', 'succ'
+];
+const VALUES = ['True', 'False', '[ ]', '0'];
+*/
+
 const library = new Map([
   ['cons', {
     name: 'cons',
