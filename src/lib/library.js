@@ -1,4 +1,5 @@
 import display from './display';
+import { equal } from './helpers';
 
 // Possibly (later) divide into categories, such as
 // math, lists, etc. or into built-in and derived
@@ -21,7 +22,7 @@ const library = new Map([
     // [].concat(1) and [].concat([1]) both return [1]
     // this is not the behavior I want
     fn: (list, elem) => Array.isArray(elem) ?
-        list.concat([elem]) : list.concat(elem)
+      list.concat([elem]) : list.concat(elem)
   }],
   ['replicate', {
     name: 'replicate',
@@ -175,12 +176,20 @@ const library = new Map([
     name: 'length',
     arity: 1,
     fn: list => list.length
+  }],
+  ['succ', {
+    name: 'succ', // alternate names: incr(ement)
+    arity: 1,
+    fn: num => Number(num) + 1
+  }],
+  ['=', {
+    name: '=', // alternate names: eq(ual)
+    arity: 2,
+    fn: (x, y) => equal(x, y)
   }]
   /* TODO
    * cond (if ... else ...)
-   * equal(s)
    * filter
-   * succ
    */
 ]);
 
