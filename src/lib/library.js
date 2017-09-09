@@ -187,16 +187,18 @@ const library = new Map([
     arity: 2,
     fn: (x, y) => equal(x, y)
   }],
-  ['cond', {
-    name: 'cond', // cond(ition)
-    arity: 3,
-    fn: (cond, aff, neg) => cond ? aff : neg
-  }],
   ['filter', {
     name: 'filter',
     arity: 2,
     fn: (list, cond) => list.filter(x => cond.fn.call(null, x))
   }]
 ]);
+
+/* TODO
+['cond', {
+  name: 'cond', // cond(ition)
+  arity: 3,
+  fn: (cond, aff, neg) => cond ? aff : neg
+}], */
 
 export default library;

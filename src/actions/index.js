@@ -5,3 +5,6 @@ export const pushFunction = (name) =>
 
 export const clearCanvas = () =>
   ({type: 'CLEAR_CANVAS'});
+
+export const pushInput = (name) =>
+  ({type: 'PUSH_INPUT', name});

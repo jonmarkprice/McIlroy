@@ -3,14 +3,8 @@ import React from 'react';
 import ProgramCanvas from '../containers/ProgramCanvas';
 import Functions from '../containers/Functions';
 import Execution from '../containers/Execution';
+import Input from '../containers/Input';
 // import PropTypes from 'prop-types'; // TODO need?
-
-const Input = () => (
-  <div id="data" className="box">
-    <h2>Input</h2>
-    <div className="input-item">"Hello"</div>
-  </div>
-)
 
 const Info = () => (
   <div id="information" className="box">

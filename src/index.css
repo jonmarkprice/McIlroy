@@ -27,7 +27,7 @@ p { margin-top: 0.3em; margin-bottom: 0.3em; }
 h2 { font-size: 18; }
 h3 { font-size: 14; }
 
-.box {
+.box, .input-item {
   border: 1px solid darkgrey;
   background-color: lightgrey;
   /*overflow: hidden;*/
@@ -60,6 +60,10 @@ h3 { font-size: 14; }
 }
 .em, #highlighted {
   background-color: lightsalmon;
+}
+
+#no-input {
+  color: grey;
 }
 
 #data {

@@ -5,7 +5,7 @@
 // function PopFunction()
 
 const initialState = {
-  input: ['hello'],
+  input: ['[No Input]'],
   program: []
 }
 /*
@@ -21,10 +21,14 @@ function app(state = initialState, action) {
       return Object.assign({}, state, {
         program: state.program.concat(action.name)
       });
+    case 'PUSH_INPUT':
+      return Object.assign({}, state, {
+        input: state.input.concat(action.name)
+      });
     case 'CLEAR_CANVAS':
       return Object.assign({}, state, {
         program: []
-      })
+      });
     default: return state
   }
 }

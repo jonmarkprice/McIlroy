@@ -5,7 +5,7 @@ import { createStore } from 'redux';
 import './index.css'
 import app from './reducers';
 import Interpretter from './components/components';
-// import { pushFunction } from './actions';
+import { pushInput } from './actions';
 
 let store = createStore(app);
 
@@ -16,18 +16,12 @@ render(
   document.getElementById('root')
 );
 
-// console.log(store.getState());
-
 let unsubscribe = store.subscribe(() =>
   console.log(store.getState())
 );
 
-/* Turn off for now
 // dispatch some actions
-store.dispatch(pushFunction('1'));
-store.dispatch(pushFunction('2'));
-store.dispatch(pushFunction('+'));
-store.dispatch(pushFunction(':'));
-*/
+store.dispatch(pushInput('"Hello"'));
+store.dispatch(pushInput('1'));
 
 unsubscribe();
