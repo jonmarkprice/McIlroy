@@ -5,8 +5,9 @@
 // function PopFunction()
 
 const initialState = {
-  input: ['[No Input]'],
-  program: []
+  input     : ['[No Input]'],
+  selected  : 0,
+  program   : []
 }
 /*
 export const pushFunction = (state, action.name) =>
@@ -29,6 +30,10 @@ function app(state = initialState, action) {
       return Object.assign({}, state, {
         program: []
       });
+    case 'SELECT_INPUT':
+      return Object.assign({}, state, {
+        selected: action.index
+      })
     default: return state
   }
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import library from '../lib/library';
 import literals from '../lib/literals';
-import { connect } from  'react-redux';
+import { connect } from 'react-redux';
 import { pushFunction } from '../actions';
 
 const FunctionPalette = ({onFunctionClick}) => {

@@ -1,11 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { selectInput } from '../actions';
 
 class InputList extends React.Component {
   render() {
     let items = [];
     this.props.input.forEach((text, index) => {
-      items.push(<div className="input-item" key={index}>{text}</div>);
+      const select = (index === this.props.selected) ? ' em' : '';
+      items.push(<div className={"input-item"+select} key={text}>{text}</div>);
     });
     return (
       <div id="data" className="box">
@@ -17,11 +19,18 @@ class InputList extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  input: state.input
+  input: state.input,
+  selected: state.selected
 })
 
-// TODO need to mapStateToProps, mapDispatchToProps
+const mapDispatchToProps = dispatch => {
+  return {
+    onInputSelect: text => {
+      dispatch(selectInput(text))
+    }
+  };
+};
 
-const Input = connect(mapStateToProps, undefined)(InputList);
+const Input = connect(mapStateToProps, mapDispatchToProps)(InputList);
 
 export default Input;

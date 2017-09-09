@@ -8,3 +8,6 @@ export const clearCanvas = () =>
 
 export const pushInput = (name) =>
   ({type: 'PUSH_INPUT', name});
+
+export const selectInput = (index) =>
+  ({type: 'SELECT_INPUT', index})
