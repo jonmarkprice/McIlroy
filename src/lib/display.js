@@ -1,8 +1,5 @@
 const display = (obj) => {
-  if (obj === ':') {
-    return ':';
-  }
-  else if (Array.isArray(obj)) {
+  if (Array.isArray(obj)) {
     // If list is empty
     if (obj.length === 0) {
       return '[ ]';
@@ -34,9 +31,9 @@ const display = (obj) => {
       const data = obj.wraps.data ? obj.wraps.data + ' ' : '';
       return `(${data}${obj.wraps.name} ${obj.name})`;
     }
-  }
-  else if (typeof obj === 'string' && obj.length === 1) {
-    return "'" + obj + "'";
+    else {
+      return obj.name;
+    }
   }
   else {
     return obj.toString();
