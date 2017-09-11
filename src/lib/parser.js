@@ -3,7 +3,13 @@ import library from './library';
 const parseToken = (token) => {
   // TODO : check for character
   // Process arrays
-  if (Array.isArray(token)) {
+  if (token === ':') {
+    return ':';
+  }
+  else if (library.has(token)) {
+    return library.get(token);
+  }
+  else if (Array.isArray(token)) {
     return token.map(parseToken);
   }
   else if (typeof token === 'boolean') {
@@ -13,8 +19,10 @@ const parseToken = (token) => {
   else if (typeof token === 'number') {
     return Number(token);
   }
-  else if (library.has(token)) {
-    return library.get(token);
+  // Check for character (maybe later strings)
+  else if (typeof token === 'string' && token.length === 1) {
+    console.log(`Found string ${token}`)
+    return "'" + token + "'";
   }
   else {
     throw Error('Not parsable');

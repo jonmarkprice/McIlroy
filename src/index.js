@@ -33,5 +33,9 @@ store.dispatch(pushInput({
   label : '[true, false]',
   data  : [true, false]
 }));
+store.dispatch(pushInput({
+  label : '"hello"',
+  data  : ['h', 'e', 'l', 'l', 'o']
+}));
 
 unsubscribe();
