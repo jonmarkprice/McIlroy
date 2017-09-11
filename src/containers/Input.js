@@ -5,9 +5,13 @@ import { selectInput } from '../actions';
 class InputList extends React.Component {
   render() {
     let items = [];
-    this.props.input.forEach((text, index) => {
+    this.props.input.forEach((item, index) => {
       const select = (index === this.props.selected) ? ' em' : '';
-      items.push(<div className={"input-item"+select} key={text}>{text}</div>);
+      items.push(
+        <div className={"input-item" + select} key={index}
+             onClick={() => this.props.onInputSelect(index)}>
+          {item.label}
+        </div>);
     });
     return (
       <div id="data" className="box">

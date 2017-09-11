@@ -5,20 +5,27 @@ import display from '../lib/display';
 import parse from '../lib/parser';
 
 const mapStateToProps = state => ({
-  program: state.program
+  program: state.program,
+  inputData: state.input[state.selected].data
 });
 
 class ExecutionRows extends React.Component {
   render() {
-    let rows = [];
+    // The program applied to the data
+    // NOTE: We use null for no input, so do not include.
+    const input = this.props.inputData;
+    const applied = (input !== null)
+                  ? [input].concat(this.props.program)
+                  : this.props.program;
 
     // Populate rows
-    const rowData = this.props.program.map((text, index) =>
-      <Token text={text} key={index} />);
+    const rowData = applied.map((text, index) =>
+      <Token text={display(text)} key={index} />);
+    let rows = [];
     rows.push(<div className="row" key="init">{rowData}</div>);
-    const result = parse(this.props.program);
 
     // Populate steps
+    const result = parse(applied);
     result.steps.forEach((step, stepIndex) => {
       // Wrap tokens
       const offset = step.left.length;

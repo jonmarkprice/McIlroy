@@ -1,18 +1,27 @@
-import literals from './literals';
 import library from './library';
 
 const parseToken = (token) => {
-  if (literals.has(token)) {
-    // Interpret each token as well
-    return literals.get(token);
+  // TODO : check for character
+  // Process arrays
+  if (Array.isArray(token)) {
+    return token.map(parseToken);
+  }
+  else if (typeof token === 'boolean') {
+    return Boolean(token)
+  }
+  // Check for number
+  else if (typeof token === 'number') {
+    return Number(token);
   }
   else if (library.has(token)) {
     return library.get(token);
   }
+  else {
+    throw Error('Not parsable');
+  }
 }
 
 const parse = (list) => list.reduce((agg, token, index, array) => {
-  // agg is {stack: (unconsumed tokens)], [print list])
   if (token === ':') {
     const func = agg.stack.pop();
     const args = agg.stack.slice(-func.arity);
@@ -30,6 +39,8 @@ const parse = (list) => list.reduce((agg, token, index, array) => {
   }
   else {
     agg.stack.push(parseToken(token));
+    console.log('pushing to stack: ')
+    console.log(token)
   }
   return agg;
 }, {stack: [], steps: []});

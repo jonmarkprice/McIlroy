@@ -5,16 +5,10 @@
 // function PopFunction()
 
 const initialState = {
-  input     : ['[No Input]'],
+  input     : [{label: '[No Input]', data: null}],
   selected  : 0,
   program   : []
 }
-/*
-export const pushFunction = (state, action.name) =>
-  Object.assign({}, state, {
-    program: state.program.concat(action.name)
-  });
-*/
 
 function app(state = initialState, action) {
   switch (action.type) {
@@ -24,7 +18,7 @@ function app(state = initialState, action) {
       });
     case 'PUSH_INPUT':
       return Object.assign({}, state, {
-        input: state.input.concat(action.name)
+        input: state.input.concat(action.input)
       });
     case 'CLEAR_CANVAS':
       return Object.assign({}, state, {

@@ -1,4 +1,3 @@
-import display from './display';
 import { equal } from './helpers';
 
 // Possibly (later) divide into categories, such as
@@ -51,7 +50,7 @@ const library = new Map([
       name: 'partial',
       arity: 1,
       fn: (y) => f.fn(x, y),
-      wraps: {name: f.name, data: display(x)}
+      wraps: {name: f.name, data: x}
     })
   }],
   ['flip', {

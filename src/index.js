@@ -21,7 +21,17 @@ let unsubscribe = store.subscribe(() =>
 );
 
 // dispatch some actions
-store.dispatch(pushInput('"Hello"'));
-store.dispatch(pushInput('1'));
+store.dispatch(pushInput({
+  label : '1',
+  data  : 1
+}));
+store.dispatch(pushInput({
+  label : '[1, 2, 3]',
+  data  : [1, 2, 3]
+}));
+store.dispatch(pushInput({
+  label : '[true, false]',
+  data  : [true, false]
+}));
 
 unsubscribe();
