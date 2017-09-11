@@ -21,7 +21,6 @@ const parseToken = (token) => {
   }
   // Check for character (maybe later strings)
   else if (typeof token === 'string' && token.length === 1) {
-    console.log(`Found string ${token}`)
     return "'" + token + "'";
   }
   else {

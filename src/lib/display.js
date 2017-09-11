@@ -1,5 +1,8 @@
 const display = (obj) => {
-  if (Array.isArray(obj)) {
+  if (obj === ':') {
+    return obj; // Don't quote application operator.
+  }
+  else if (Array.isArray(obj)) {
     // If list is empty
     if (obj.length === 0) {
       return '[ ]';
@@ -34,6 +37,9 @@ const display = (obj) => {
     else {
       return obj.name;
     }
+  }
+  else if (typeof obj === 'string' && obj.length === 1) {
+    return `'${obj}'`; // Quote characters
   }
   else {
     return obj.toString();
