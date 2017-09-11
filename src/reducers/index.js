@@ -1,5 +1,6 @@
 // import { combineReducers } from 'redux' // Not using currently
 // Reducers
+import { append } from 'rambda';
 
 // const boundPushFunction = name => dispatch(pushFunction(name));
 // function PopFunction()
@@ -14,7 +15,7 @@ function app(state = initialState, action) {
   switch (action.type) {
     case 'PUSH_FUNCTION':
       return Object.assign({}, state, {
-        program: state.program.concat(action.name)
+        program: append(action.name, state.program) //state.program.concat(action.name)
       });
     case 'PUSH_INPUT':
       return Object.assign({}, state, {

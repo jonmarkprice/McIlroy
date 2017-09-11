@@ -16,11 +16,11 @@ const FunctionPalette = ({onFunctionClick}) => {
         {fn}
       </button>);
   }
-  for (let value of literals.keys()) {
+  for (let name of literals.keys()) {
     values.push(
-      <button className="value" key={value}
-              onClick={() => onFunctionClick(value)}>
-        {value}
+      <button className="value" key={name}
+              onClick={() => onFunctionClick(literals.get(name))}>
+        {name}
       </button>);
   }
   return (

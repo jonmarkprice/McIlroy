@@ -39,8 +39,6 @@ const parse = (list) => list.reduce((agg, token, index, array) => {
   }
   else {
     agg.stack.push(parseToken(token));
-    console.log('pushing to stack: ')
-    console.log(token)
   }
   return agg;
 }, {stack: [], steps: []});
