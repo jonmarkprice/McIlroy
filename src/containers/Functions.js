@@ -5,16 +5,16 @@ import { connect } from 'react-redux';
 import { pushFunction } from '../actions';
 
 const FunctionPalette = ({onFunctionClick}) => {
-  const appOp = <button className="function" key=":"
-                        onClick={() => onFunctionClick(':')}>:</button>
+  const appOp = <div className="function" key=":"
+                        onClick={() => onFunctionClick(':')}>:</div>
   let fns     = [appOp],
       values  = [];
   for (let fn of library.keys()) {
     fns.push(
-      <button className="function" key={fn}
+      <div className="function" key={fn}
               onClick={() => onFunctionClick(fn)}>
         {fn}
-      </button>);
+      </div>);
   }
   for (let name of literals.keys()) {
     values.push(

@@ -13,14 +13,14 @@ const Info = () => (
 );
 
 const Program = () => (
-  <div id="program" className="box">
+  <div id="program" className="container">
     <ProgramCanvas />
     <Execution />
   </div>
 );
 
 const Palette = () => (
-  <div id="palette" className="box">
+  <div id="palette" className="container">
     <Functions />
     <Info />
   </div>
@@ -28,9 +28,9 @@ const Palette = () => (
 
 const Interpretter = () => (
   <div className="interpretter">
+    <Palette />
     <Input />
     <Program />
-    <Palette />
     { /* // Later: <Aliases> or <Definitions> */ }
   </div>
 );

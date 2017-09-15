@@ -14,9 +14,11 @@ class InputList extends React.Component {
         </div>);
     });
     return (
-      <div id="data" className="box">
-        <h2>Input</h2>
-        {items}
+      <div id="data" className="container">
+        <div className="box">
+          <h2>Input</h2>
+          {items}
+        </div>
       </div>
     );
   }
