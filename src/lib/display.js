@@ -1,11 +1,13 @@
+import library from './library';
+
 const display = (obj) => {
-  if (obj === ':') {
+  if (obj === ':' || library.has(obj)) {
     return obj; // Don't quote application operator.
   }
   else if (Array.isArray(obj)) {
     // If list is empty
     if (obj.length === 0) {
-      return '[ ]';
+      return '[]';
     }
     // For singleton lists
     else if (obj.length === 1) {
