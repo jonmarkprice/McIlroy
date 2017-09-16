@@ -6,26 +6,29 @@ import { pushFunction } from '../actions';
 
 const FunctionPalette = ({onFunctionClick}) => {
   const appOp = <div className="function" key=":"
-                        onClick={() => onFunctionClick(':')}>:</div>
+                        onDoubleClick={() => onFunctionClick(':')}>:</div>
   let fns     = [appOp],
       values  = [];
   for (let fn of library.keys()) {
     fns.push(
       <div className="function" key={fn}
-              onClick={() => onFunctionClick(fn)}>
+           onDoubleClick={() => onFunctionClick(fn)}>
         {fn}
       </div>);
   }
   for (let name of literals.keys()) {
     values.push(
       <button className="value" key={name}
-              onClick={() => onFunctionClick(literals.get(name))}>
+              onDoubleClick={() => onFunctionClick(literals.get(name))}>
         {name}
       </button>);
   }
   return (
     <div id="functions" className="box">
       <h2>Palette</h2>
+      <p className="important-notice">
+        <em>Double click</em> to add to Canvas.
+      </p>
       <div className="functions">
         <h3>Functions</h3>
         {fns}

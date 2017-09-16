@@ -18,6 +18,9 @@ div.interpretter
 
     div.info
 */
+p.important-notice {
+  color: firebrick;
+}
 
 .container {
   margin-left: 1mm;
@@ -83,12 +86,12 @@ body { background-color: #222; }
 .em.input-item {
   background-color: yellow;
 }
-em, .em.item {
+.em, .em.item {
   background-color: lightsalmon;
 }
 .data { background-color: lightgreen; }
 .skip { background-color: #AAA; }
-.input-item, .value, .function, .item 
+.input-item, .value, .function, .item
 { background-color: #DDD; }
 .box { background-color: #EEE; }
 .container { background-color: gainsboro; }
