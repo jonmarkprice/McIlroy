@@ -8,7 +8,8 @@ import { append } from 'rambda';
 const initialState = {
   input     : [{label: '[No Input]', data: null}],
   selected  : 0,
-  program   : []
+  program   : [],
+  displayed : ''
 }
 
 function app(state = initialState, action) {
@@ -32,6 +33,10 @@ function app(state = initialState, action) {
     case 'SELECT_INPUT':
       return Object.assign({}, state, {
         selected: action.index
+      });
+    case 'DISPLAY_FUNCTION':
+      return Object.assign({}, state, {
+        displayed: action.name
       });
     default: return state
   }

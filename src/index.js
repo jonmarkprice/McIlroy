@@ -5,7 +5,7 @@ import { createStore } from 'redux';
 //import './index.css'
 import app from './reducers';
 import Interpretter from './components/components';
-import { pushInput } from './actions';
+import { pushInput, displayFunction } from './actions';
 
 let store = createStore(app);
 
@@ -14,10 +14,6 @@ render(
     <Interpretter />
   </Provider>,
   document.getElementById('root')
-);
-
-let unsubscribe = store.subscribe(() =>
-  console.log(store.getState())
 );
 
 // dispatch some actions
@@ -38,4 +34,4 @@ store.dispatch(pushInput({
   data  : ['h', 'e', 'l', 'l', 'o']
 }));
 
-unsubscribe();
+store.dispatch(displayFunction('Nothing selected.'));

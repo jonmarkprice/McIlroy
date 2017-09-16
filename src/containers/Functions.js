@@ -2,26 +2,28 @@ import React from 'react';
 import library from '../lib/library';
 import literals from '../lib/literals';
 import { connect } from 'react-redux';
-import { pushFunction } from '../actions';
+import { pushFunction, displayFunction } from '../actions';
 
-const FunctionPalette = ({onFunctionClick}) => {
+const FunctionPalette = ({addTokenToCanvas, displayInfo}) => {
   const appOp = <div className="function" key=":"
-                        onDoubleClick={() => onFunctionClick(':')}>:</div>
+                        onDoubleClick={() => addTokenToCanvas(':')}>:</div>
   let fns     = [appOp],
       values  = [];
   for (let fn of library.keys()) {
     fns.push(
       <div className="function" key={fn}
-           onDoubleClick={() => onFunctionClick(fn)}>
+           onDoubleClick={() => addTokenToCanvas(fn)}
+           onClick={() => displayInfo(fn)}>
         {fn}
       </div>);
   }
   for (let name of literals.keys()) {
     values.push(
-      <button className="value" key={name}
-              onDoubleClick={() => onFunctionClick(literals.get(name))}>
+      // XXX warning: Don't make functions withn a loop
+      <div className="value" key={name}
+              onDoubleClick={() => addTokenToCanvas(literals.get(name))}>
         {name}
-      </button>);
+      </div>);
   }
   return (
     <div id="functions" className="box">
@@ -43,8 +45,11 @@ const FunctionPalette = ({onFunctionClick}) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onFunctionClick: text => {
-      dispatch(pushFunction(text));
+    addTokenToCanvas: text => {
+      dispatch(pushFunction(text))
+    },
+    displayInfo: text => {
+      dispatch(displayFunction(text))
     }
   };
 };

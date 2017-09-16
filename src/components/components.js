@@ -4,13 +4,8 @@ import ProgramCanvas from '../containers/ProgramCanvas';
 import Functions from '../containers/Functions';
 import Execution from '../containers/Execution';
 import Input from '../containers/Input';
+import Info from '../containers/Info';
 // import PropTypes from 'prop-types'; // TODO need?
-
-const Info = () => (
-  <div id="information" className="box">
-    <h2>Info</h2>
-  </div>
-);
 
 const Program = () => (
   <div id="program" className="container">

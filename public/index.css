@@ -58,7 +58,10 @@ h1, h2, h3 {
 }
 body { font: 10pt "Century Gothic", Futura, sans-serif; }
 h2 { font-size: 14pt; }
-/* h3 { font-size: 12pt; }*/
+h3 { font-size: 11pt; }
+h3#function-name {
+  font-family: "Courier New", monospace;
+}
 
 /** BORDER **/
 .container, .box, .item, .input-item, .function, .value {
