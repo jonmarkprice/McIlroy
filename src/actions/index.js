@@ -6,6 +6,9 @@ export const pushFunction = (name) =>
 export const clearCanvas = () =>
   ({type: 'CLEAR_CANVAS'});
 
+export const popFromCanvas = () =>
+  ({type: 'BACKSPACE'});
+
 export const pushInput = (input) =>
   ({type: 'PUSH_INPUT', input});
 

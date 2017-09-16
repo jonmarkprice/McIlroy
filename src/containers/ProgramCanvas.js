@@ -1,7 +1,7 @@
 import React from 'react';
 import ProgramRow from '../components/ProgramRow';
 import { connect } from  'react-redux';
-import { clearCanvas } from '../actions';
+import { clearCanvas, popFromCanvas } from '../actions';
 
 const mapStateToProps = state => ({
   program: state.program,
@@ -11,6 +11,9 @@ const mapDispatchToProps = dispatch => {
   return {
     onClear: () => {
       dispatch(clearCanvas());
+    },
+    onBackspace: () => {
+      dispatch(popFromCanvas());
     }
   };
 };
@@ -23,6 +26,9 @@ class ProgramInput extends React.Component {
         <ProgramRow program={this.props.program} />
         <button id="clear-canvas" onClick={this.props.onClear}>
           Clear
+        </button>
+        <button id="backspace" onClick={this.props.onBackspace}>
+          Backspace
         </button>
       </div>
     );

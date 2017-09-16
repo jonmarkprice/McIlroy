@@ -25,10 +25,14 @@ function app(state = initialState, action) {
       return Object.assign({}, state, {
         program: []
       });
+    case 'BACKSPACE':
+      return Object.assign({}, state, {
+        program: state.program.slice(0, -1)
+      });
     case 'SELECT_INPUT':
       return Object.assign({}, state, {
         selected: action.index
-      })
+      });
     default: return state
   }
 }
