@@ -1,4 +1,4 @@
-import { equal } from './helpers';
+import { equals } from 'rambda';
 
 // Possibly (later) divide into categories, such as
 // math, lists, etc. or into built-in and derived
@@ -11,6 +11,8 @@ import { equal } from './helpers';
 ];
 const VALUES = ['True', 'False', '[ ]', '0'];
 */
+// TODO: make each of these return on object containing a function
+// instead of directly executing the function.
 
 const library = new Map([
   ['cons', {
@@ -184,7 +186,7 @@ const library = new Map([
   ['=', {
     name: '=', // alternate names: eq(ual)
     arity: 2,
-    fn: (x, y) => equal(x, y)
+    fn: (x, y) => equals(x, y)
   }],
   ['filter', {
     name: 'filter',

@@ -21,7 +21,7 @@ const parseToken = (token) => {
   }
   // Check for character (maybe later strings)
   else if (typeof token === 'string' && token.length === 1) {
-    return "'" + token + "'";
+    return token;
   }
   else {
     throw Error('Not parsable');
