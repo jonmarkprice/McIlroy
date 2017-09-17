@@ -1,171 +1,151 @@
-import { equals } from 'rambda';
+import * as R from 'rambda';
+import display from './display';
 
-// Possibly (later) divide into categories, such as
-// math, lists, etc. or into built-in and derived
-// TODO make sure I have each of theses
-/*const FUNCTIONS = [
-  ':', '+', '-', '*', '/', '^', '%', 'apply',
-  'and', 'capitalize', 'concat', 'cond', 'cons',
-  'equals', 'id', 'length', 'map', 'not', 'or',
-  'reduce', 'split', 'succ'
-];
-const VALUES = ['True', 'False', '[ ]', '0'];
-*/
-
-// TODO: make each of these return on object containing a function
-// instead of directly executing the function.
-
-// types: list, any, string, char, number, ....
+// types: list, any, string, char, number, integer....
 const library = new Map([
   ['cons', {
-    name: 'cons',
+    display: 'cons',
     arity: 2,
     types: ['list', 'any'],
-    // This implementation appears to be off
-    // `cons([], [1, 2])` = [[1, 2]]
-    // [].concat(1) and [].concat([1]) both return [1]
-    // this is not the behavior I want
-    fn: (list, elem) => Array.isArray(elem) ?
-      list.concat([elem]) : list.concat(elem)
+    fn: (list, elem) => R.append(elem, list)
   }],
   ['replicate', {
-    name: 'replicate',
+    display: 'replicate',
     arity: 2,
     types: ['any', 'integer'],
-    fn: (item, n) => Array(n).fill(item)
+    fn: R.repeat
   }],
   ['sum', {
-    name: 'sum',
+    display: 'sum',
     arity: 1,
     types: ['list'],
-    fn: (list) => list.reduce((a, b) => a + b, 0)
+    fn: R.sum
   }],
   ['map', {
-    name: 'map',
+    display: 'map',
     arity: 2,
     types: ['list', 'function'],
     fn: (list, f) => list.map(f.fn)
   }],
   ['not', {
-    name: 'not',
+    display: 'not',
     arity: 1,
     types: ['boolean'],
-    fn: (x) => !x
+    fn: R.not
   }],
-  ['partial', {
-    name: 'partial',
+  ['curry', {
+    display: 'curry',
     arity: 2,
     types: ['any', 'function'],
     fn: (x, f) => ({
-      name: 'partial',
+      display: `(${display(x)} ${f.display}) curry`,
       arity: 1,
-      fn: (y) => f.fn(x, y),
-      wraps: {name: f.name, data: x}
+      fn: (y) => f.fn.call(null, x, y),
     })
   }],
   ['flip', {
-    name: 'flip',
+    display: 'flip',
     arity: 1,
     types: ['any'],
     fn: f => ({
-      name: 'flip',
+      display: `(${f.display}) flip`,
       arity: 2,
-      fn: (x, y) => f.fn(y, x),
-      wraps: {name: f.name}
+      fn: (x, y) => f.fn.call(null, y, x),
     })
   }],
   ['+', {
-    name: '+',
+    display: '+',
     arity: 2,
     types: ['number', 'number'],
-    fn: (x, y) => x + y
+    fn: R.add
   }],
   ['-', {
-    name: '-',
+    display: '-',
     arity: 2,
     types: ['number', 'number'],
-    fn: (x, y) => x - y
+    fn: R.subtract
   }],
   ['*', {
-    name: '*',
+    display: '*',
     arity: 2,
     types: ['number', 'number'],
-    fn: (x, y) => x * y
+    fn: R.mulitply
   }],
   ['^', {
-    name: '^',
+    display: '^',
     arity: 2,
     types: ['number', 'number'],
     fn: (x, y) => Math.pow(x, y)
   }],
   ['/', {
-    name: '/',
+    display: '/',
     arity: 2,
     types: ['number', 'number'],
-    fn: (x, y) => x / y
+    fn: R.divide
   }],
   ['%', {
-    name: '%',
+    display: '%',
     arity: 2,
     types: ['number', 'number'],
-    fn: (x, y) => x % y
+    fn: R.modulo
   }],
   ['and', {
-    name: 'and',
+    display: 'and',
     arity: 2,
     types: ['boolean', 'boolean'],
-    fn: (x, y) => x && y
+    fn: (x,y) => x && y //R.and
   }],
   ['or', {
-    name: 'or',
+    display: 'or',
     arity: 2,
     types: ['boolean', 'boolean'],
-    fn: (x, y) => x || y
+    fn: (x,y) => x || y //R.or
   }],
   ['concat', {
-    name: 'concat',
+    display: 'concat',
     arity: 2,
     types: ['list', 'any'],
     /* may have to be careful with this for strings.. */
-    fn: (x, y) => x.concat(y)
+    fn: R.concat
   }],
   ['reduce', {
-    name: 'reduce',
+    display: 'reduce',
     arity: 3,
     types: ['list', 'function', 'any'],
     fn: (list, f, base) => list.reduce(f.fn, base)
   }],
   ['zip', {
-    name: 'zip',
+    display: 'zip',
     arity: 2,
     types: ['list', 'list'],
     fn: (a, b) => {
       const len = Math.min(a.length, b.length);
       let result = [];
       for (let i = 0; i < len; i += 1) {
-          result.push([a[i], b[i]]);
+        result.push([a[i], b[i]]);
       }
       return result;
     }
+    //R.zip // failing a test...
   }],
   ['id', {
-    name: 'id',
+    display: 'id',
     arity: 1,
     types: ['any'],
-    fn: x => x,
+    fn: R.identity
   }],
   // apply the same data to a list of functions.
   // or name: all / toEach / eachOf / applyAll / interpret / function map
   // Should be able implement with flip, map and apply, or almost trivially:
   // N replicate : [f1, f2, ... fN] zip : apply map :
   ['into', { // or copyTo, tee, ...
-    name: 'into',
+    display: 'into',
     arity: 2,
     types: ['any', 'list'],
     fn: (data, fns) => fns.map(f => f.fn(data))
   }],
   ['apply', {
-    name: 'apply',
+    display: 'apply',
     arity: 2,
     types: ['list', 'function'],
     fn: (args, f) => f.fn.apply(null, args)
@@ -173,62 +153,74 @@ const library = new Map([
   // renamed apply to eval() since that is what it does.
   // it takes a data structure and evaluates it as a function call
   ['eval', {
-    name: 'eval',
+    display: 'eval',
     arity: 1,
     types: ['list'],
-    fn: list => list[list.length - 1].fn.apply(null, list.slice(0, -1))
+    fn: list => R.last(list).fn.apply(null, list.slice(0, -1))
   }],
   /* This can be implemented with:
     "..." 2 replicate : [head, tail] zip : apply map :
     Or
   */
   ['split', {
-    name: 'split',
+    display: 'split',
     arity: 1,
     types: ['list'],
     fn: list => [list[0], list.slice(1)]
   }],
   ['uppercase', {
-    name: 'uppercase',
+    display: 'uppercase',
     arity: 1,
     types: ['char'],
     fn: char => char.toUpperCase()
   }],
   ['lowercase', {
-    name: 'lowercase',
+    display: 'lowercase',
     arity: 1,
     types: ['char'],
     fn: char => char.toLowerCase()
   }],
   ['length', {
-    name: 'length',
+    display: 'length',
     arity: 1,
     types: ['list'],
-    fn: list => list.length
+    fn: R.length
   }],
   ['succ', {
-    name: 'succ', // alternate names: incr(ement)
+    display: 'succ', // alternate names: inc(r)(ement)
     arity: 1,
     types: ['integer'],
-    fn: num => Number(num) + 1
+    fn: R.inc
   }],
   ['=', {
-    name: '=', // alternate names: eq(ual)
+    display: '=', // alternate names: eq(ual)
     arity: 2,
     types: ['any', 'any'],
-    fn: (x, y) => equals(x, y)
+    fn: R.equals
   }],
   ['filter', {
-    name: 'filter',
+    display: 'filter',
     arity: 2,
     types: ['list', 'function'],
     fn: (list, cond) => list.filter(x => cond.fn.call(null, x))
+  }],
+  ['compose', {
+    display: 'compose',
+    arity: 2,
+    types: ['function', 'function'],
+    fn: (f, g) => ({
+      display: `(${f.display}, ${g.display}) compose`,
+      arity: f.arity,
+      types: f.types,
+      fn: R.pipe(f.fn, g.fn)
+    })
   }]
 ]);
 
 /* TODO
+I need to figure out how I want this to actually be used...
 ['cond', {
-  name: 'cond', // cond(ition)
+  display: 'cond', // cond(ition)
   arity: 3,
   fn: (cond, aff, neg) => cond ? aff : neg
 }], */

@@ -33,5 +33,9 @@ store.dispatch(pushInput({
   label : '"hello"',
   data  : ['h', 'e', 'l', 'l', 'o']
 }));
+store.dispatch(pushInput({
+  label : "'A'",
+  data  : 'A'
+}));
 
 store.dispatch(displayFunction('Nothing selected.'));

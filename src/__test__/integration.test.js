@@ -4,9 +4,16 @@ import { run } from './helpers';
 
 it('count the number of even numbers in a list', () => {
   expect(
-    run([3, 54, 8, 1], 2, '%', 'flip', ':', 'partial', ':', 'map', ':',
-        0, '=', 'partial', ':', 'filter', ':', 'length', ':'))
+    run([3, 54, 8, 1], 2, '%', 'flip', ':', 'curry', ':', 'map', ':',
+        0, '=', 'curry', ':', 'filter', ':', 'length', ':'))
     .toEqual(2);
+});
+
+it('capitalizes a word', () => {
+  expect(run(['h', 'i'], 'split', ':', [], 'uppercase', [], 'cons', 'curry',
+    ':', 'compose', ':', 'cons', ':', 'id', 'cons', ':', 'zip', ':', 'eval',
+    'map', ':', 'concat', 'apply', ':'
+  )).toEqual(['H', 'i']);
 });
 
 // TODO:

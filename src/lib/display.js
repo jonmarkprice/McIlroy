@@ -32,13 +32,7 @@ const display = (obj) => {
     }
   }
   else if (typeof obj === 'object') {
-    if (obj.hasOwnProperty('wraps')) {
-      const data = obj.wraps.data ? obj.wraps.data + ' ' : '';
-      return `(${data}${obj.wraps.name} ${obj.name})`;
-    }
-    else {
-      return obj.name;
-    }
+    return obj.display;
   }
   else if (typeof obj === 'string' && obj.length === 1) {
     return `'${obj}'`; // Quote characters
