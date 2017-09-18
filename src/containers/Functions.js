@@ -6,7 +6,8 @@ import { pushFunction, displayFunction } from '../actions';
 
 const FunctionPalette = ({addTokenToCanvas, displayInfo}) => {
   const appOp = <div className="function" key=":"
-                        onDoubleClick={() => addTokenToCanvas(':')}>:</div>
+                     onDoubleClick={() => addTokenToCanvas(':')}
+                     onClick={() => displayInfo(':')}>:</div>
   let fns     = [appOp],
       values  = [];
   for (let fn of library.keys()) {
