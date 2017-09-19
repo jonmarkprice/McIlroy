@@ -23,9 +23,9 @@ const Palette = () => (
 
 const Interpretter = () => (
   <div className="interpretter">
-    <Palette />
     <Input />
     <Program />
+    <Palette />
     { /* // Later: <Aliases> or <Definitions> */ }
   </div>
 );

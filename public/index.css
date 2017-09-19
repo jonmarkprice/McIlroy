@@ -22,6 +22,10 @@ p.important-notice {
   color: firebrick;
 }
 
+#example h4, #example h5   {
+  margin-bottom: 0.2em;
+}
+
 .container {
   margin-left: 1mm;
   margin-right: 1mm;
@@ -33,19 +37,22 @@ p.important-notice {
 }
 
 #palette {
-  float: right;
-  width: 5cm;
+  float: left;
+  width: 25%;
+  min-width: 3cm;
+  max-width: 10cm;
 }
 
 /* TODO: rename data -> input */
 #data {
   float: left;
-  width: 5cm;
+  width: 4cm;
 }
 
 #program {
   /*margin-left: 5.2cm;*/
-  width: calc(100% - 10cm - 8mm);
+  width: calc(75% - 4cm - 8mm);
+  min-width: 5cm;
   float: left;
   /* 6.8cm = 6mm width + 1mm + 2 elments * 2 sides * (1mm margin + 1mm padding) */
 }

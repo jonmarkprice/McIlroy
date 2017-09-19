@@ -26,7 +26,7 @@ const descriptions = new Map([
           + 'function with the rest of the list as its arguments.',
     example: {
       in: [[1, 2, '+'], 'eval', ':'],
-      example: 3
+      expect: 3
     }
   }],
   ['apply', {
@@ -149,7 +149,7 @@ const descriptions = new Map([
   }],
   ['uppercase', {
     text: 'Transform an alphabetic character into the uppercase equivalent.',
-    expect: {
+    example: {
       in: ['a', 'uppercase', ':'],
       expect: 'A'
     }
@@ -172,7 +172,7 @@ const descriptions = new Map([
     text: 'Returns the list of items that meet some criteria.',
     example: {
       in: [[true, false, true], 'not', 'filter', ':'],
-      out: [false]
+      expect: [false]
     }
   }],
   ['sum', {
@@ -187,7 +187,7 @@ const descriptions = new Map([
           + 'one less argument.',
     example: {
       in: [[1, 2], 2, '*', 'curry', ':', 'map', ':'],
-      expected: [2, 4]
+      expect: [2, 4]
     }
   }]
 ]);
