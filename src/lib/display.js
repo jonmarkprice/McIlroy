@@ -1,7 +1,8 @@
 import library from './library';
+import syntax from './syntax';
 
 const display = (obj) => {
-  if (obj === ':' || library.has(obj)) {
+  if (syntax.has(obj) || library.has(obj)) {
     return obj; // Don't quote application operator.
   }
   else if (Array.isArray(obj)) {

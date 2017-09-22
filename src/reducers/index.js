@@ -1,6 +1,6 @@
 // import { combineReducers } from 'redux' // Not using currently
 // Reducers
-import { append } from 'rambda';
+import { append } from 'ramda';
 
 // const boundPushFunction = name => dispatch(pushFunction(name));
 // function PopFunction()

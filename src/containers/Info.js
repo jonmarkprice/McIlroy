@@ -31,7 +31,7 @@ class InfoPane extends React.Component {
         <div id="information" className="box">
           <h2>Info</h2>
           <h3 id="function-name">{this.props.displayed}</h3>
-          <p><em>No descrption added.</em></p>
+          <p><em>No description added.</em></p>
         </div>
       );
     }

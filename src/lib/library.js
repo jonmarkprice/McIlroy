@@ -1,4 +1,4 @@
-import * as R from 'rambda';
+import * as R from 'ramda';
 import display from './display';
 
 // types: list, any, string, char, number, integer....

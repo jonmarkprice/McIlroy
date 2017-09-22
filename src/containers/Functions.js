@@ -1,15 +1,21 @@
 import React from 'react';
 import library from '../lib/library';
+import syntax from '../lib/syntax';
 import literals from '../lib/literals';
 import { connect } from 'react-redux';
 import { pushFunction, displayFunction } from '../actions';
 
 const FunctionPalette = ({addTokenToCanvas, displayInfo}) => {
-  const appOp = <div className="function" key=":"
-                     onDoubleClick={() => addTokenToCanvas(':')}
-                     onClick={() => displayInfo(':')}>:</div>
-  let fns     = [appOp],
+  let fns     = [],
       values  = [];
+  for (let op of syntax.keys()) {
+    fns.push(
+      <div className="function" key={op}
+        onDoubleClick={() => addTokenToCanvas(op)}
+        onClick={() => displayInfo(op)}>
+        {op}
+      </div>);
+  }
   for (let fn of library.keys()) {
     fns.push(
       <div className="function" key={fn}
