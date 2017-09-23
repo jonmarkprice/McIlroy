@@ -9,7 +9,8 @@ const initialState = {
   input     : [{label: '[No Input]', data: null}],
   selected  : 0,
   program   : [],
-  displayed : ''
+  displayed : '',
+  saved     : {name: '', program: []}
 }
 
 function app(state = initialState, action) {
@@ -37,6 +38,12 @@ function app(state = initialState, action) {
     case 'DISPLAY_FUNCTION':
       return Object.assign({}, state, {
         displayed: action.name
+      });
+    case 'SAVE_PROGRAM':
+      console.log('recieved SAVE PROGRAM.')
+      return Object.assign({}, state, {
+        // mabye try to use an actual map later on...
+        saved: {name: action.name, program: state.program}
       });
     default: return state
   }

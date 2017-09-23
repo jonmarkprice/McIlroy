@@ -17,3 +17,8 @@ export const selectInput = (index) =>
 
 export const displayFunction = (name) =>
   ({type: 'DISPLAY_FUNCTION', name});
+
+export const addProgram = (name) => {
+  console.log('adding program')
+  return ({type: 'SAVE_PROGRAM', name});
+}

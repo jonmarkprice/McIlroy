@@ -1,7 +1,7 @@
 import React from 'react';
 import ProgramRow from '../components/ProgramRow';
 import { connect } from  'react-redux';
-import { clearCanvas, popFromCanvas } from '../actions';
+import { clearCanvas, popFromCanvas, addProgram } from '../actions';
 
 const mapStateToProps = state => ({
   program: state.program,
@@ -14,6 +14,9 @@ const mapDispatchToProps = dispatch => {
     },
     onBackspace: () => {
       dispatch(popFromCanvas());
+    },
+    onAddProgram: () => {
+      dispatch(addProgram('test')) // TODO
     }
   };
 };
@@ -24,6 +27,9 @@ class ProgramInput extends React.Component {
       <div id="program-input" className="box">
         <h2>Canvas</h2>
         <ProgramRow program={this.props.program} />
+        <button id="save" onClick={this.props.onAddProgram}>
+          Save
+        </button>
         <button id="clear-canvas" onClick={this.props.onClear}>
           Clear
         </button>

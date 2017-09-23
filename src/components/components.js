@@ -5,6 +5,7 @@ import Functions from '../containers/Functions';
 import Execution from '../containers/Execution';
 import Input from '../containers/Input';
 import Info from '../containers/Info';
+import Aliases from '../containers/Aliases';
 // import PropTypes from 'prop-types'; // TODO need?
 
 const Program = () => (
@@ -24,6 +25,7 @@ const Palette = () => (
 const Interpretter = () => (
   <div className="interpretter">
     <Input />
+    <Aliases />
     <Program />
     <Palette />
     { /* // Later: <Aliases> or <Definitions> */ }
