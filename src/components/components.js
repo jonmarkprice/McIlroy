@@ -17,18 +17,24 @@ const Program = () => (
 
 const Palette = () => (
   <div id="palette" className="container">
+    <Input /> {/* Maybe move to Program */ }
     <Functions />
+    <Aliases />
     <Info />
+  </div>
+);
+
+const Data = () => (
+  <div id="data" className="container">
+    <Input />
+    <Aliases />
   </div>
 );
 
 const Interpretter = () => (
   <div className="interpretter">
-    <Input />
-    <Aliases />
-    <Program />
     <Palette />
-    { /* // Later: <Aliases> or <Definitions> */ }
+    <Program />
   </div>
 );
 

@@ -16,7 +16,7 @@ class Alias__ extends React.Component {
     console.log(`Program, at Alias is: ${JSON.stringify(this.props.program)}`);
 
     return (
-      <div id="aliases" className="container">
+      <div id="aliases" className="box">
         <h2>Aliases</h2>
         <h3>{this.props.name}</h3>
         <ProgramRow program={this.props.program} />
