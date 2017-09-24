@@ -22,3 +22,6 @@ export const addProgram = (name) => {
   console.log('adding program')
   return ({type: 'SAVE_PROGRAM', name});
 }
+
+export const updateProgramName = (name) =>
+  ({type: 'NAME_PROGRAM', name});

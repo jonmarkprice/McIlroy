@@ -24,13 +24,6 @@ const Palette = () => (
   </div>
 );
 
-const Data = () => (
-  <div id="data" className="container">
-    <Input />
-    <Aliases />
-  </div>
-);
-
 const Interpretter = () => (
   <div className="interpretter">
     <Palette />

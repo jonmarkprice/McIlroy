@@ -27,13 +27,11 @@ const mapStateToProps = state => ({
   selected: state.selected
 })
 
-const mapDispatchToProps = dispatch => {
-  return {
-    onInputSelect: text => {
-      dispatch(selectInput(text))
-    }
-  };
-};
+const mapDispatchToProps = dispatch => ({
+  onInputSelect: text => {
+    dispatch(selectInput(text))
+  }
+});
 
 const Input = connect(mapStateToProps, mapDispatchToProps)(InputList);
 

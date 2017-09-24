@@ -45,6 +45,10 @@ function app(state = initialState, action) {
         // mabye try to use an actual map later on...
         saved: {name: action.name, program: state.program}
       });
+    case 'NAME_PROGRAM':
+      return Object.assign({}, state, {
+        saved: Object.assign({}, state.saved, {name: action.name})
+      });
     default: return state
   }
 }
