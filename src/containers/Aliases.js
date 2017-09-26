@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import ProgramRow from '../components/ProgramRow';
 import { updateProgramName } from '../actions';
+
 // TODO:
 // Next, don't include program at all in this. Instead, it will be sent over
 // as the data part of an action.
@@ -22,7 +23,7 @@ const mapDispatchToProps = dispatch => ({
 class Alias__ extends React.Component {
   render() {
     console.log(`Program, at Alias is: ${JSON.stringify(this.props.program)}`);
-
+    let name = '';
     return (
       <div id="aliases" className="box">
         <h2>Aliases</h2>
@@ -30,12 +31,13 @@ class Alias__ extends React.Component {
           <h3>{this.props.name}</h3>
           <form
             onSubmit={event => {
-              event.preventDefault()
-              this.props.onNameUpdate("FROM BUTTON")
+              event.preventDefault();
+              this.props.onNameUpdate("FROM BUTTON");
+              console.log(name);
             }}
           >
-            <input type="text" id="rename" onChange={() => {
-                console.log('TODO: update state...')
+            <input type="text" id="rename" onChange={event => {
+                name = event.target.value;
               }} />
             <input type="submit" value="Update" />
           </form>
