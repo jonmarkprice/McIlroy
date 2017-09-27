@@ -48,7 +48,7 @@ class Alias__ extends React.Component {
     // "special" or b) something is going wrong, e.g. I am mutating state
     // somewhere.
     let toDisplay;
-    if (this.props.editing_name) {
+    if (this.props.editing) {
       toDisplay = <ProgramNamingForm />;
     } else {
       // TODO: mb. make this a container too...
