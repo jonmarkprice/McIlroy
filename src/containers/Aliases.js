@@ -4,6 +4,7 @@ import ProgramRow from '../components/ProgramRow';
 import { updateProgramName,
          updateProgramNameBuffer,
          editName } from '../actions';
+import FunctionName from '../components/FunctionName';
 
 // TODO:
 // Next, don't include program at all in this. Instead, it will be sent over
@@ -65,13 +66,7 @@ class Alias__ extends React.Component {
         </form>)
     } else {
       // TODO: mb. make this a container too...
-      toDisplay = (
-      <div>
-        <h3>{this.props.name}</h3>
-        <button onClick={this.props.onEditName}>
-          Edit Name
-        </button>
-      </div>);
+      toDisplay = (<FunctionName name={this.props.name} onEditName={this.props.onEditName} />);
     }
 
     //console.log(`Program, at Alias is: ${JSON.stringify(this.props.program)}`);

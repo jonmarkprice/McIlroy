@@ -46,7 +46,6 @@ function app(state = initialState, action) {
     case 'SAVE_PROGRAM':
       console.log('recieved SAVE PROGRAM.')
       return Object.assign({}, state, {
-        // mabye try to use an actual map later on...
         saved: Object.assign({}, state.saved, {program: state.program})
       });
     case 'NAME_PROGRAM':
