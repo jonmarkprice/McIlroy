@@ -10,7 +10,11 @@ const initialState = {
   selected  : 0,
   program   : [],
   displayed : '',
-  saved     : {name: '', program: []}
+  saved     : {name: '', program: []},
+
+  // TODO Later use Map/obj for buffer: {<fn>: <buffer value>, ...}
+  buffer    : '',
+  editing_name : false
 }
 
 function app(state = initialState, action) {
@@ -47,7 +51,20 @@ function app(state = initialState, action) {
       });
     case 'NAME_PROGRAM':
       return Object.assign({}, state, {
-        saved: Object.assign({}, state.saved, {name: action.name})
+        saved: Object.assign({}, state.saved, {
+          name: state.buffer,
+          buffer: '',
+          editing_name: false
+        })
+      });
+    case 'UPDATE_NAME_BUFFER':
+      return Object.assign({}, state, {
+        buffer: action.text
+      });
+    case 'EDIT_NAME':
+      console.log('editing name...');
+      return Object.assign({}, state, {
+        editing_name: true
       });
     default: return state
   }

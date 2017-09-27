@@ -23,5 +23,10 @@ export const addProgram = (name) => {
   return ({type: 'SAVE_PROGRAM', name});
 }
 
-export const updateProgramName = (name) =>
-  ({type: 'NAME_PROGRAM', name});
+export const updateProgramName = () =>
+  ({type: 'NAME_PROGRAM'});
+
+export const updateProgramNameBuffer = (text) =>
+  ({type: 'UPDATE_NAME_BUFFER', text});
+
+export const editName = () => ({type: 'EDIT_NAME'});
