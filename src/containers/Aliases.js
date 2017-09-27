@@ -11,7 +11,6 @@ import { updateProgramName,
 const mapStateToProps = state => ({
   program : state.saved.program,
   name    : state.saved.name, // would be [{name: _, program: [...]}, ...]
-  buffer  : state.buffer,
   editing : state.editing_name
 });
 
@@ -27,18 +26,24 @@ const mapDispatchToProps = dispatch => ({
   }
 });
 
-const ProgramNamingForm = (onNameUpdate, onNameChange) => (
-  <form
-    onSubmit={event => {
-      event.preventDefault();
-      onNameUpdate();
-    }}
-  >
-    <input type="text" id="rename" onChange={event =>
-      onNameChange(event.target.value)} />
-    <input type="submit" value="Update" />
-  </form>
-);
+/*
+//const ProgramNamingForm = (onNameUpdate, onNameChange) => (
+class ProgramNamingForm extends React.Component {
+  render() {
+    return (
+      <form
+        onSubmit={event => {
+          event.preventDefault();
+          this.props.onNameUpdate();
+        }}
+      >
+        <input type="text" id="rename" onChange={event =>
+          this.props.onNameChange(event.target.value)} />
+        <input type="submit" value="Update" />
+      </form>
+    );
+  }
+}*/
 
 class Alias__ extends React.Component {
   render() {
@@ -49,7 +54,15 @@ class Alias__ extends React.Component {
     // somewhere.
     let toDisplay;
     if (this.props.editing) {
-      toDisplay = <ProgramNamingForm />;
+      toDisplay = (
+        <form onSubmit={event => {
+          event.preventDefault();
+          this.props.onNameUpdate();
+        }}>
+          <input type="text" id="rename" onChange={event =>
+            this.props.onNameChange(event.target.value)} />
+          <input type="submit" value="Update" />
+        </form>)
     } else {
       // TODO: mb. make this a container too...
       toDisplay = (
@@ -61,7 +74,7 @@ class Alias__ extends React.Component {
       </div>);
     }
 
-    console.log(`Program, at Alias is: ${JSON.stringify(this.props.program)}`);
+    //console.log(`Program, at Alias is: ${JSON.stringify(this.props.program)}`);
     return (
       <div id="aliases" className="box">
         <h2>Aliases</h2>

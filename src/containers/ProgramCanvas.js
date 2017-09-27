@@ -16,7 +16,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(popFromCanvas());
     },
     onAddProgram: () => {
-      dispatch(addProgram('test')) // TODO
+      dispatch(addProgram())
     }
   };
 };
