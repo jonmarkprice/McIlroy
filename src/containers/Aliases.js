@@ -13,7 +13,7 @@ import AliasEditPanel from '../components/AliasEditPanel';
 const mapStateToProps = state => ({
   program : state.saved.program,
   name    : state.saved.name, // would be [{name: _, program: [...]}, ...]
-  editing : state.editing_name
+  editing : state.saved.editing
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -37,29 +37,17 @@ class Alias__ extends React.Component {
     // somewhere.
     let toDisplay;
     if (this.props.editing) {
-      /* toDisplay = (
-        <form onSubmit={event => {
-          event.preventDefault();
-          this.props.onNameUpdate();
-        }}>
-          <input type="text" id="rename" onChange={event =>
-            this.props.onNameChange(event.target.value)} />
-          <input type="submit" value="Update" />
-        </form>)*/
       toDisplay = (<AliasEditPanel
                     name={this.props.name}
                     onNameUpdate={this.props.onNameUpdate}
                     onNameChange={this.props.onNameChange}
                   />);
     } else {
-      // TODO: mb. make this a container too...
       toDisplay = (<FunctionName
                     name={this.props.name}
                     onEditName={this.props.onEditName}
                   />);
     }
-
-    //console.log(`Program, at Alias is: ${JSON.stringify(this.props.program)}`);
     return (
       <div id="aliases" className="box">
         <h2>Aliases</h2>

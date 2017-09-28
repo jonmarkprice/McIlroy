@@ -10,12 +10,19 @@ const initialState = {
   selected  : 0,
   program   : [],
   displayed : '',
-  saved     : {name: 'Untitled', program: []},
+  //saved     : {name: 'Untitled', program: []},
 
   // TODO Later use Map/obj for buffer: {<fn>: <buffer value>, ...}
-  buffer    : '',
-  editing_name : false
+  //buffer    : '',
+  //editing_name : false
+  saved : {
+    name    : 'Untitled',
+    program : [],
+    buffer  : '',
+    editing : false
+  }
 }
+// TODO : deprecate saved
 
 function app(state = initialState, action) {
   switch (action.type) {
@@ -46,25 +53,30 @@ function app(state = initialState, action) {
     case 'SAVE_PROGRAM':
       console.log('recieved SAVE PROGRAM.')
       return Object.assign({}, state, {
-        saved: Object.assign({}, state.saved, {program: state.program})
+        saved: Object.assign({}, state.saved, {
+          program: state.program
+        })
       });
     case 'NAME_PROGRAM':
-      console.log(`naming program ${state.buffer}`)
+      console.log(`naming program ${state.saved.buffer}`)
       return Object.assign({}, state, {
         saved: Object.assign({}, state.saved, {
-          name: state.buffer,
-        }),
-        buffer: '',
-        editing_name: false
+          name    : state.saved.buffer,
+          editing : false
+        })
       });
     case 'UPDATE_NAME_BUFFER':
       return Object.assign({}, state, {
-        buffer: action.text
+        saved: Object.assign({}, state.saved, {
+          buffer: action.text
+        })
       });
     case 'EDIT_NAME':
       console.log('editing name...');
       return Object.assign({}, state, {
-        editing_name: true
+        saved: Object.assign({}, state.saved, {
+          editing: true
+        })
       });
     default: return state
   }
