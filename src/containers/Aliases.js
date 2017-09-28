@@ -7,67 +7,55 @@ import { updateProgramName,
 import FunctionName from '../components/FunctionName';
 import AliasEditPanel from '../components/AliasEditPanel';
 
-// TODO:
-// Next, don't include program at all in this. Instead, it will be sent over
-// as the data part of an action.
-const mapStateToProps = state => ({
-  program : state.saved.program,
-  name    : state.saved.name, // would be [{name: _, program: [...]}, ...]
-  editing : state.saved.editing
-});
-
 const mapDispatchToProps = dispatch => ({
-  onNameUpdate: text => {
-    dispatch(updateProgramName())
+  onNameUpdate: id => {
+    dispatch(updateProgramName(id))
   },
-  onNameChange: text => {
-    dispatch(updateProgramNameBuffer(text))
+  onNameChange: (id, text) => {
+    dispatch(updateProgramNameBuffer(id, text))
   },
-  onEditName: () => {
-    dispatch(editName())
+  onEditName: id => {
+    dispatch(editName(id))
   }
 });
 
-class Alias__ extends React.Component {
+// TODO: How do we get the id of the current component?
+// It can come from
+//  1. the props directly (from a parent component), or
+//  2. the state, via mapStateToProps
+//
+// But it can't come from the state, since I don't know *which* of them to
+// get...
+// Presumably, in the parent I iterate over *all* saved programs and pass
+// an id via regular props to each.
+class Container extends React.Component {
   render() {
-    // XXX:
-    // This is not working. I think the Alias components does not re-render...
-    // But I'm not sure whether a) it's not supposed to, unless I do something
-    // "special" or b) something is going wrong, e.g. I am mutating state
-    // somewhere.
     let toDisplay;
-    if (this.props.editing) {
-      toDisplay = (<AliasEditPanel
-                    name={this.props.name}
-                    onNameUpdate={this.props.onNameUpdate}
-                    onNameChange={this.props.onNameChange}
-                  />);
+    if (this.props.obj.editing) {
+      toDisplay = (
+        <AliasEditPanel
+          name={this.props.obj.name}
+          onNameUpdate={() => this.props.onNameUpdate(this.props.obj.id)}
+          onNameChange={() => this.props.onNameChange(this.props.obj.id)}
+        />);
     } else {
-      toDisplay = (<FunctionName
-                    name={this.props.name}
-                    onEditName={this.props.onEditName}
-                  />);
+      toDisplay = (
+        <FunctionName
+          name={this.props.obj.name}
+          onEditName={() => this.props.onEditName(this.props.obj.id)}
+        />);
     }
     return (
       <div id="aliases" className="box">
         <h2>Aliases</h2>
         {toDisplay}
-        <ProgramRow program={this.props.program} />
+        <ProgramRow program={this.props.obj.program} />
         <button disabled="disabled">Load</button>
       </div>
     );
   }
 }
 
-/*
-const AliasPane = (program) => (
-  <div id="aliases" className="container">
-    <h2>Aliases</h2>
-    <ProgramRow program={program} />
-    <button disabled="disabled">Load</button>
-  </div>
-);*/
-
-const Aliases = connect(mapStateToProps, mapDispatchToProps)(Alias__);
+const Aliases = connect(undefined, mapDispatchToProps)(Container);
 
 export default Aliases;

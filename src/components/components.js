@@ -5,7 +5,7 @@ import Functions from '../containers/Functions';
 import Execution from '../containers/Execution';
 import Input from '../containers/Input';
 import Info from '../containers/Info';
-import Aliases from '../containers/Aliases';
+import SavedProgramList from '../containers/SavedProgramList';
 // import PropTypes from 'prop-types'; // TODO need?
 
 const Program = () => (
@@ -19,7 +19,7 @@ const Palette = () => (
   <div id="palette" className="container">
     <Input /> {/* Maybe move to Program */ }
     <Functions />
-    <Aliases />
+    <SavedProgramList />
     <Info />
   </div>
 );

@@ -10,19 +10,9 @@ const initialState = {
   selected  : 0,
   program   : [],
   displayed : '',
-  //saved     : {name: 'Untitled', program: []},
-
-  // TODO Later use Map/obj for buffer: {<fn>: <buffer value>, ...}
-  //buffer    : '',
-  //editing_name : false
-  saved : {
-    name    : 'Untitled',
-    program : [],
-    buffer  : '',
-    editing : false
-  }
+  saved     : new Map(),
+  last_id   : 0
 }
-// TODO : deprecate saved
 
 function app(state = initialState, action) {
   switch (action.type) {
@@ -51,32 +41,47 @@ function app(state = initialState, action) {
         displayed: action.name
       });
     case 'SAVE_PROGRAM':
+      // Saves a new program.
       console.log('recieved SAVE PROGRAM.')
       return Object.assign({}, state, {
-        saved: Object.assign({}, state.saved, {
-          program: state.program
-        })
+        saved: new Map(state.saved).set(state.last_id + 1, {
+          name    : 'Untitled',
+          program : state.program,
+          editing : false,
+          buffer  : '',
+          id      : state.last_id + 1
+        }),
+        last_id: state.last_id + 1,
       });
     case 'NAME_PROGRAM':
       console.log(`naming program ${state.saved.buffer}`)
       return Object.assign({}, state, {
-        saved: Object.assign({}, state.saved, {
-          name    : state.saved.buffer,
-          editing : false
-        })
+        saved: new Map(state.saved).set(action.id,
+          Object.assign(
+            {},
+            state.saved.get(action.id),
+            {name: state.saved.get(action.id).buffer, editing : false}
+          )
+        )
       });
     case 'UPDATE_NAME_BUFFER':
       return Object.assign({}, state, {
-        saved: Object.assign({}, state.saved, {
-          buffer: action.text
-        })
+        saved: new Map(state.saved).set(action.id,
+          Object.assign(
+            {},
+            state.saved.get(action.id),
+            {buffer: action.text}
+          )
+        )
       });
     case 'EDIT_NAME':
       console.log('editing name...');
       return Object.assign({}, state, {
-        saved: Object.assign({}, state.saved, {
-          editing: true
-        })
+        saved: new Map(state.saved).set(action.id,
+          Object.assign({}, state.saved.get(action.id), {
+            editing: true
+          })
+        )
       });
     default: return state
   }
