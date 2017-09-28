@@ -5,6 +5,7 @@ import { updateProgramName,
          updateProgramNameBuffer,
          editName } from '../actions';
 import FunctionName from '../components/FunctionName';
+import AliasEditPanel from '../components/AliasEditPanel';
 
 // TODO:
 // Next, don't include program at all in this. Instead, it will be sent over
@@ -27,25 +28,6 @@ const mapDispatchToProps = dispatch => ({
   }
 });
 
-/*
-//const ProgramNamingForm = (onNameUpdate, onNameChange) => (
-class ProgramNamingForm extends React.Component {
-  render() {
-    return (
-      <form
-        onSubmit={event => {
-          event.preventDefault();
-          this.props.onNameUpdate();
-        }}
-      >
-        <input type="text" id="rename" onChange={event =>
-          this.props.onNameChange(event.target.value)} />
-        <input type="submit" value="Update" />
-      </form>
-    );
-  }
-}*/
-
 class Alias__ extends React.Component {
   render() {
     // XXX:
@@ -55,7 +37,7 @@ class Alias__ extends React.Component {
     // somewhere.
     let toDisplay;
     if (this.props.editing) {
-      toDisplay = (
+      /* toDisplay = (
         <form onSubmit={event => {
           event.preventDefault();
           this.props.onNameUpdate();
@@ -63,10 +45,18 @@ class Alias__ extends React.Component {
           <input type="text" id="rename" onChange={event =>
             this.props.onNameChange(event.target.value)} />
           <input type="submit" value="Update" />
-        </form>)
+        </form>)*/
+      toDisplay = (<AliasEditPanel
+                    name={this.props.name}
+                    onNameUpdate={this.props.onNameUpdate}
+                    onNameChange={this.props.onNameChange}
+                  />);
     } else {
       // TODO: mb. make this a container too...
-      toDisplay = (<FunctionName name={this.props.name} onEditName={this.props.onEditName} />);
+      toDisplay = (<FunctionName
+                    name={this.props.name}
+                    onEditName={this.props.onEditName}
+                  />);
     }
 
     //console.log(`Program, at Alias is: ${JSON.stringify(this.props.program)}`);
