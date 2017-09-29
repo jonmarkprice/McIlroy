@@ -34,9 +34,10 @@ class Container extends React.Component {
     if (this.props.obj.editing) {
       toDisplay = (
         <AliasEditPanel
+          program_id={this.props.obj.id}
           name={this.props.obj.name}
-          onNameUpdate={() => this.props.onNameUpdate(this.props.obj.id)}
-          onNameChange={() => this.props.onNameChange(this.props.obj.id)}
+          onNameUpdate={this.props.onNameUpdate}
+          onNameChange={this.props.onNameChange}
         />);
     } else {
       toDisplay = (
@@ -47,7 +48,6 @@ class Container extends React.Component {
     }
     return (
       <div id="aliases" className="box">
-        <h2>Aliases</h2>
         {toDisplay}
         <ProgramRow program={this.props.obj.program} />
         <button disabled="disabled">Load</button>

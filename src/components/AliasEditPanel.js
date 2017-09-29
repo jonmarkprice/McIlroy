@@ -1,12 +1,12 @@
 import React from 'react';
 
-const AliasEditPanel = ({name, onNameUpdate, onNameChange}) => (
-  <form onSubmit={event => {
+const AliasEditPanel = ({program_id, name, onNameUpdate, onNameChange}) => (
+  <form className="dbg" onSubmit={event => {
     event.preventDefault();
-    onNameUpdate();
+    onNameUpdate(program_id);
   }}>
     <input type="text" id="rename" defaultValue={name} onChange={event =>
-      onNameChange(event.target.value)} />
+      onNameChange(program_id, event.target.value)} />
     <input type="submit" value="Update" />
   </form>
 );

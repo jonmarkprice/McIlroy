@@ -36,6 +36,14 @@ p.important-notice {
   margin: 1mm;
 }
 
+.dbg {
+  border: thin dotted red;
+}
+
+.saved-function-name {
+  background-color: lightgrey;
+}
+
 #palette {
   float: left;
   width: 25%;

@@ -40,38 +40,35 @@ function app(state = initialState, action) {
       return Object.assign({}, state, {
         displayed: action.name
       });
-    case 'SAVE_PROGRAM':
-      // Saves a new program.
+    case 'SAVE_PROGRAM': // Saves a new program.
       console.log('recieved SAVE PROGRAM.')
       return Object.assign({}, state, {
         saved: new Map(state.saved).set(state.last_id + 1, {
           name    : 'Untitled',
           program : state.program,
           editing : false,
-          buffer  : '',
+          buffer  : 'Untitled',
           id      : state.last_id + 1
         }),
         last_id: state.last_id + 1,
       });
     case 'NAME_PROGRAM':
-      console.log(`naming program ${state.saved.buffer}`)
+      console.log(`naming program ${state.saved.get(action.id).buffer}`)
       return Object.assign({}, state, {
         saved: new Map(state.saved).set(action.id,
-          Object.assign(
-            {},
-            state.saved.get(action.id),
-            {name: state.saved.get(action.id).buffer, editing : false}
-          )
+          Object.assign({}, state.saved.get(action.id), {
+            name    : state.saved.get(action.id).buffer,
+            editing : false
+          })
         )
       });
     case 'UPDATE_NAME_BUFFER':
+      console.log(`set buffer to ${action.text}`);
       return Object.assign({}, state, {
         saved: new Map(state.saved).set(action.id,
-          Object.assign(
-            {},
-            state.saved.get(action.id),
-            {buffer: action.text}
-          )
+          Object.assign({}, state.saved.get(action.id), {
+            buffer: action.text
+          })
         )
       });
     case 'EDIT_NAME':
