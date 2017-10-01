@@ -11,7 +11,7 @@ const initialState = {
   program   : [],
   displayed : '',
   saved     : new Map(),
-  last_id   : 0
+  next_id   : 0
 }
 
 function app(state = initialState, action) {
@@ -43,14 +43,15 @@ function app(state = initialState, action) {
     case 'SAVE_PROGRAM': // Saves a new program.
       console.log('recieved SAVE PROGRAM.')
       return Object.assign({}, state, {
-        saved: new Map(state.saved).set(state.last_id + 1, {
+        saved: new Map(state.saved).set(state.next_id, {
           name    : 'Untitled',
           program : state.program,
           editing : false,
           buffer  : 'Untitled',
-          id      : state.last_id + 1
+          id      : state.next_id,
+          editing_name: false
         }),
-        last_id: state.last_id + 1,
+        next_id: state.next_id + 1,
       });
     case 'NAME_PROGRAM':
       console.log(`naming program ${state.saved.get(action.id).buffer}`)
@@ -58,7 +59,7 @@ function app(state = initialState, action) {
         saved: new Map(state.saved).set(action.id,
           Object.assign({}, state.saved.get(action.id), {
             name    : state.saved.get(action.id).buffer,
-            editing : false
+            editing_name : false
           })
         )
       });
@@ -73,10 +74,13 @@ function app(state = initialState, action) {
       });
     case 'EDIT_NAME':
       console.log('editing name...');
+      console.log(action.id);
+      console.log(state.saved.get(action.id))
+      console.dir(state.saved)
       return Object.assign({}, state, {
         saved: new Map(state.saved).set(action.id,
           Object.assign({}, state.saved.get(action.id), {
-            editing: true
+            editing_name: true
           })
         )
       });

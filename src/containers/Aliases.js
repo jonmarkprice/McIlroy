@@ -30,8 +30,9 @@ const mapDispatchToProps = dispatch => ({
 // an id via regular props to each.
 class Container extends React.Component {
   render() {
+    console.dir(this.props.obj)
     let toDisplay;
-    if (this.props.obj.editing) {
+    if (this.props.obj.editing_name) {
       toDisplay = (
         <AliasEditPanel
           program_id={this.props.obj.id}

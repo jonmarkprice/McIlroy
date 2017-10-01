@@ -42,6 +42,18 @@ p.important-notice {
 
 .saved-function-name {
   background-color: lightgrey;
+  height: 1.8em;
+}
+
+.saved-function-name > h3 {
+  display: inline;
+}
+.saved-function-name > button {
+  float: right;
+}
+
+.update-name {
+  float: right;
 }
 
 #palette {
