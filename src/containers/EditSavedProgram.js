@@ -4,6 +4,8 @@ import ProgramRow from '../components/ProgramRow';
 import { updateProgramName
        , updateProgramNameBuffer
        , editName
+       , clearCanvas
+       , pushFunction
        , collapseProgram } from '../actions';
 
 // TODO: rename both
@@ -22,6 +24,12 @@ const mapDispatchToProps = dispatch => ({
   },
   onProgramCollapse: id => {
     dispatch(collapseProgram(id));
+  },
+  onClear: () => {
+    dispatch(clearCanvas());
+  },
+  addTokenToCanvas: text => {
+    dispatch(pushFunction(text));
   }
 });
 
@@ -30,8 +38,6 @@ const mapDispatchToProps = dispatch => ({
 class Container extends React.Component {
   render() {
     console.log('RENDERING EditSavedProgram')
-    //console.dir(this.props.obj)
-
     let toDisplay;
     if (this.props.obj.editing_name) {
       toDisplay = (
@@ -59,7 +65,12 @@ class Container extends React.Component {
       <div id="aliases" className="box">
         {toDisplay}
         <ProgramRow program={this.props.obj.program} />
-        <button disabled="disabled">Load</button>
+        <button onClick={() => {
+          this.props.onClear();
+          this.props.obj.program.forEach(f => this.props.addTokenToCanvas(f));
+        }}>
+          Load
+        </button>
         <button onClick={() => this.props.onProgramCollapse(this.props.obj.id)}
                 className="done-editing-saved-function">
           Done
