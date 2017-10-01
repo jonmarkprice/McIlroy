@@ -13,7 +13,7 @@ const mapStateToProps = state => ({
 const Container = ({programs}) => (
   <div id="aliases" className="box">
     <h2>Saved Programs</h2>
-    { Array.from(programs.values()).map(p => (<SavedProgram obj={p} key={p.id}/>)) }
+    { Array.from(programs.values()).map((p, index) => (<SavedProgram obj={p} key={index}/>)) }
   </div>
 );
 

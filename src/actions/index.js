@@ -31,3 +31,7 @@ export const updateProgramNameBuffer = (id, text) =>
 
 export const editName = id =>
   ({type: 'EDIT_NAME', id});
+
+// XXX not implemented in reducer (yet)
+export const expandSavedProgram = id =>
+  ({type: 'EXPAND_SAVED_PROGRAM', id});

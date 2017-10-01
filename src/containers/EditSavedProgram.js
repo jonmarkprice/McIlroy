@@ -25,6 +25,9 @@ const mapDispatchToProps = dispatch => ({
 // in the parent and pass an id via props to each SavedProgram.
 class Container extends React.Component {
   render() {
+    console.log('RENDERING EditSavedProgram')
+    console.dir(this.props.obj)
+
     let toDisplay;
     if (this.props.obj.editing_name) {
       toDisplay = (

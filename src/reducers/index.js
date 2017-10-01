@@ -84,7 +84,20 @@ function app(state = initialState, action) {
           })
         )
       });
-    default: return state
+    case 'EXPAND_SAVED_PROGRAM':
+      console.log('received expand...')
+      console.log(`id is ${action.id}`)
+      console.log(`which contains ${state.saved.get(action.id)}`)
+      return Object.assign({}, state, {
+        saved: new Map(state.saved).set(action.id,
+          Object.assign({}, state.saved.get(action.id), {
+            editing: true
+          })
+        )
+      });
+    default:
+      console.log('received unknown action')
+      return state
   }
 }
 
