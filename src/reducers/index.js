@@ -76,7 +76,7 @@ function app(state = initialState, action) {
       console.log('editing name...');
       console.log(action.id);
       console.log(state.saved.get(action.id))
-      console.dir(state.saved)
+      // console.dir(state.saved)
       return Object.assign({}, state, {
         saved: new Map(state.saved).set(action.id,
           Object.assign({}, state.saved.get(action.id), {
@@ -92,6 +92,17 @@ function app(state = initialState, action) {
         saved: new Map(state.saved).set(action.id,
           Object.assign({}, state.saved.get(action.id), {
             editing: true
+          })
+        )
+      });
+    case 'COLLAPSE_SAVED_PROGRAM':
+      console.log('received expand...')
+      console.log(`id is ${action.id}`)
+      console.log(`which contains ${state.saved.get(action.id)}`)
+      return Object.assign({}, state, {
+        saved: new Map(state.saved).set(action.id,
+          Object.assign({}, state.saved.get(action.id), {
+            editing: false
           })
         )
       });

@@ -35,3 +35,6 @@ export const editName = id =>
 // XXX not implemented in reducer (yet)
 export const expandSavedProgram = id =>
   ({type: 'EXPAND_SAVED_PROGRAM', id});
+
+export const collapseProgram = id =>
+  ({type: 'COLLAPSE_SAVED_PROGRAM', id})

@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import ProgramRow from '../components/ProgramRow';
 import { updateProgramName
        , updateProgramNameBuffer
-       , editName } from '../actions';
+       , editName
+       , collapseProgram } from '../actions';
 
 // TODO: rename both
 import FunctionName from '../components/FunctionName';
@@ -11,13 +12,16 @@ import AliasEditPanel from '../components/AliasEditPanel';
 
 const mapDispatchToProps = dispatch => ({
   onNameUpdate: id => {
-    dispatch(updateProgramName(id))
+    dispatch(updateProgramName(id));
   },
   onNameChange: (id, text) => {
-    dispatch(updateProgramNameBuffer(id, text))
+    dispatch(updateProgramNameBuffer(id, text));
   },
   onEditName: id => {
-    dispatch(editName(id))
+    dispatch(editName(id));
+  },
+  onProgramCollapse: id => {
+    dispatch(collapseProgram(id));
   }
 });
 
@@ -26,7 +30,7 @@ const mapDispatchToProps = dispatch => ({
 class Container extends React.Component {
   render() {
     console.log('RENDERING EditSavedProgram')
-    console.dir(this.props.obj)
+    //console.dir(this.props.obj)
 
     let toDisplay;
     if (this.props.obj.editing_name) {
@@ -56,7 +60,10 @@ class Container extends React.Component {
         {toDisplay}
         <ProgramRow program={this.props.obj.program} />
         <button disabled="disabled">Load</button>
-        <button className="done-editing-saved-function">Done</button>
+        <button onClick={() => this.props.onProgramCollapse(this.props.obj.id)}
+                className="done-editing-saved-function">
+          Done
+        </button>
       </div>
     );
   }

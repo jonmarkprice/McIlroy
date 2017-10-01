@@ -33,6 +33,7 @@ class Container extends React.Component {
     } else {
       console.log(`Passing id (${id}) to onExpand`)
       program = (
+        //<CollapsedProgram program_id={id}/>
         // TODO def, and dispatchers
         <div onClick={() => this.props.onExpand(id)} className="function">
           {this.props.obj.name}
