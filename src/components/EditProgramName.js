@@ -1,6 +1,6 @@
 import React from 'react';
 
-const AliasEditPanel = ({program_id, name, onNameUpdate, onNameChange}) => (
+const EditProgramName = ({program_id, name, onNameUpdate, onNameChange}) => (
   <form className="dbg" onSubmit={event => {
     event.preventDefault();
     onNameUpdate(program_id);
@@ -11,4 +11,4 @@ const AliasEditPanel = ({program_id, name, onNameUpdate, onNameChange}) => (
   </form>
 );
 
-export default AliasEditPanel;
+export default EditProgramName;

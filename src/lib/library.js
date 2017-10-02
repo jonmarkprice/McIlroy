@@ -105,7 +105,6 @@ const library = new Map([
     display: 'concat',
     arity: 2,
     types: ['list', 'any'],
-    /* may have to be careful with this for strings.. */
     fn: R.concat
   }],
   ['reduce', {

@@ -18,10 +18,8 @@ export const selectInput = index =>
 export const displayFunction = name =>
   ({type: 'DISPLAY_FUNCTION', name});
 
-export const addProgram = () => {
-  console.log('adding program')
-  return ({type: 'SAVE_PROGRAM'});
-}
+export const addProgram = () =>
+  ({type: 'SAVE_PROGRAM'});
 
 export const updateProgramName = id =>
   ({type: 'NAME_PROGRAM', id});
@@ -32,7 +30,6 @@ export const updateProgramNameBuffer = (id, text) =>
 export const editName = id =>
   ({type: 'EDIT_NAME', id});
 
-// XXX not implemented in reducer (yet)
 export const expandSavedProgram = id =>
   ({type: 'EXPAND_SAVED_PROGRAM', id});
 

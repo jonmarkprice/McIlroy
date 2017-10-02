@@ -3,6 +3,7 @@ import { run } from './helpers';
 
 describe('descriptions', () => {
   it('should have an in and expect field for each example', () => {
+    // TODO: Make a similar test for library
     for (desc in descriptions) {
       if (desc.hasOwnProperty(example)) {
         expect(desc.hasOwnProperty('in')).toBe(true);
@@ -21,5 +22,3 @@ describe('descriptions', () => {
     }
   });
 });
-
-// TODO: Make a similar test for library

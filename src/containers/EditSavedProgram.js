@@ -7,10 +7,8 @@ import { updateProgramName
        , clearCanvas
        , pushFunction
        , collapseProgram } from '../actions';
-
-// TODO: rename both
-import FunctionName from '../components/FunctionName';
-import AliasEditPanel from '../components/AliasEditPanel';
+import ProgramName from '../components/ProgramName';
+import EditProgramName from '../components/EditProgramName';
 
 const mapDispatchToProps = dispatch => ({
   onNameUpdate: id => {
@@ -37,11 +35,10 @@ const mapDispatchToProps = dispatch => ({
 // in the parent and pass an id via props to each SavedProgram.
 class Container extends React.Component {
   render() {
-    console.log('RENDERING EditSavedProgram')
     let toDisplay;
     if (this.props.obj.editing_name) {
       toDisplay = (
-        <AliasEditPanel
+        <EditProgramName
           program_id={this.props.obj.id}
           name={this.props.obj.name}
           onNameUpdate={this.props.onNameUpdate}
@@ -49,7 +46,7 @@ class Container extends React.Component {
         />);
     } else {
       toDisplay = (
-        <FunctionName
+        <ProgramName
           name={this.props.obj.name}
           onEditName={() => this.props.onEditName(this.props.obj.id)}
         />);

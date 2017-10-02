@@ -1,6 +1,6 @@
 import React from 'react';
 
-const FunctionName = ({name, onEditName}) => (
+const ProgramName = ({name, onEditName}) => (
   <div className="dbg">
     <h3 className="saved-function-name">{name}</h3>
     <button onClick={onEditName}>
@@ -9,4 +9,4 @@ const FunctionName = ({name, onEditName}) => (
   </div>
 );
 
-export default FunctionName;
+export default ProgramName;
