@@ -31,8 +31,8 @@ describe('UPDATE_NAME_BUFFER', () => {
           name    : 'Untitled',
           program : [],
           buffer  : '',
-          editing : false,
-          editing_name: false,
+          editing : true,
+          editing_name: true,
           id      : 0
         }]
       ]),
@@ -48,8 +48,8 @@ describe('UPDATE_NAME_BUFFER', () => {
           name    : 'Untitled',
           program : [],
           buffer  : 'Test', // <- Only change
-          editing : false,
-          editing_name: false,
+          editing : true,
+          editing_name: true,
           id      : 0
         }]
       ]),
@@ -115,8 +115,8 @@ describe('SAVE_PROGRAM', () => {
           program: [],
           name: 'Untitled',
           buffer: 'Untitled',
-          editing_name: false,
-          editing: false,
+          editing_name: true,
+          editing: true,
         }
       ]]),
       next_id   : 1
@@ -135,7 +135,7 @@ describe('SAVE_PROGRAM', () => {
           program: ['+', 1, 'curry', ':', 'map', ':'],
           name: 'Untitled',
           buffer: 'Untitled',
-          editing_name: false,
+          editing_name: true,
           editing: true,
         }
       ]]),
