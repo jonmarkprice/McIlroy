@@ -1,3 +1,5 @@
+// GOAL: remove value
+
 const R = require('ramda');
 
 const library = new Map([
@@ -18,9 +20,9 @@ function runProgram(input) {
     // TODO: this is bad! A step needs to contain the entire stack
     // in addition to a value, and index.
     n += 1;
-    console.log(JSON.stringify(program.slice(index)));
-    console.log(`index ${index} of |${program.length}|`)
-    let state = [...R.dropLast(1, stack), value, ...program.slice(index)];
+    // console.log(JSON.stringify(program.slice(index)));
+    // console.log(`index ${index} of |${program.length}|`)
+    let state = [...stack, ...program.slice(index)];
     //let stateDisplay = state.map(x => display(x)); // later
     console.log(`Step ${n}: ${JSON.stringify(state)}`);
   }
@@ -34,7 +36,21 @@ const program = [5, {type: 'alias', display: 'incr', value: [1, 'plus', ':']}, '
 // Currently 5 incr : is one step. It should be two:
 // 1. 5 incr : -> 5 (1 plus :)
 // 2. 5 1 plus : -> 6
+printProgram(program);
 runProgram(program);
+
+function printProgram(program) {
+  tokens = [];
+  for (let token of program) {
+    if (typeof token === "object") {
+      tokens.push(token.display);
+    }
+    else {
+      tokens.push(token);
+    }
+  }
+  console.log(`Input : ${JSON.stringify(tokens)}`);
+}
 
 function parseProgram(list, inStack, first, index) {
   //console.log('in ')
@@ -76,8 +92,8 @@ function parseToken(agg, token) { // also  index, array
     const fn = R.last(agg.stack);  //agg.stack.slice(0, -1); // take last
     const rest = R.dropLast(1, agg.stack);
     [steps, stack] = parseFunction(fn, rest, newIndex); // will need a copy of stack
-    console.log(`stack: ${JSON.stringify(stack)}`);
-    console.log(`steps: ${JSON.stringify(steps)}`);
+    //console.log(`stack: ${JSON.stringify(stack)}`);
+    //console.log(`steps: ${JSON.stringify(steps)}`);
   }
   // ... do whatever parsing is necessary
   else {
@@ -93,9 +109,9 @@ function parseFunction(parsed, inStack, index) {
   let stack = [];
   if (parsed.type === 'alias') {
     // Currently this *doesn't* use the given stack... it should, shouldn't it?
-    console.log(`program ${JSON.stringify(parsed.value)}`);
-    console.log(`inStack ${JSON.stringify(inStack)}`);
-    console.log('---------------');
+    //console.log(`program ${JSON.stringify(parsed.value)}`);
+    //console.log(`inStack ${JSON.stringify(inStack)}`);
+    //console.log('---------------');
     let result = parseProgram(parsed.value, inStack, false, index);
 
     // It would be better not to have a 'value' field at all, but rather
@@ -103,22 +119,21 @@ function parseFunction(parsed, inStack, index) {
     // for typechecking etc., in this way we can denote multiple objects as
     // resulting from a step -- as is the case in alias-expansion.
     expansionStep = {
-      stack: inStack,
-      value: parsed.value , //XXX Not applicable
+      stack: [...inStack, ...parsed.value],
       index: index
     };
     steps = [expansionStep, ...result.steps];
     stack = [...result.steps]; // [...x] needed?
-
-    console.log('---------------');
+    //console.log(`expansion: ${JSON.stringify(parsed.value)}`);
+    //console.log(`steps: ${JSON.stringify(steps)}`)
+    //console.log('---------------');
   }
   else {
     //[steps, stack] = exec(parsed, inStack, index);
-    ({value, stack} = exec(parsed, inStack, index));
+    stack = exec(parsed, inStack, index);
     // TODO: deal with value
-    steps = [...steps, {stack, value, index}]; // steps is a pair of value, index
-
-    console.log(stack);
+    steps = [...steps, {stack, index}]; // steps is a pair of stack, index
+    //console.log(stack);
   }
   // index is returned as part of steps
   return [steps, stack];
@@ -134,20 +149,17 @@ function exec(tok, stack, index) {
     //const newStack = stack.slice(0, func.arity);
     //const args = stack.slice(-func.arity);
     const [rest, args] = R.splitAt(-func.arity, stack);
-    console.log(`stack: ${JSON.stringify(stack)}`);
-    console.log(`rest: ${JSON.stringify(rest)}`);
-    console.log(`args: ${JSON.stringify(args)}`);
+    //console.log(`stack: ${JSON.stringify(stack)}`);
+    // console.log(`rest: ${JSON.stringify(rest)}`);
+    // console.log(`args: ${JSON.stringify(args)}`);
 
     const result = func.fn(...args);
-    console.log(`result: ${result}`)
+    //console.log(`result: ${result}`)
     // This raises a question: do we really need to duplicate the stack under
     // left? For that matter, do we need right either?
     // We *will* need in steps eventually, but could we just return value
     // from here?
-    return {
-      value: result,
-      stack: [...rest, result]
-    };
+    return [...rest, result];
   }
   else {
     throw Error('Not a function');
