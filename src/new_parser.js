@@ -1,17 +1,45 @@
-// GOAL: remove value
+// GOAL: still work with new "parse"
 
 const R = require('ramda');
+//const library = require('./lib/library');
+
 
 const library = new Map([
   ['plus', {
     arity: 2,
     fn: (x,y) => x + y
   }]
-]);
+]);//*/
 
 //const run = (program) => parseProgram(program, [], true, 0);
 
+// XXX: this is rather ugly. Especially since I already *have* all the data,
+// it's just organized by step and is missing the "rest" part.
+// Also, do I really need stack? Is it just used for the final result?
+const parse = (program) => {
+  let steps = [];
+  const output = parseProgram(program, [], true, 0);
+  const leftover = R.last(output.stack).stack;
+  //console.dir(leftover);
+  //console.log(`leftover ${leftover}`)
+  //console.log(output);
+  for (let {stack, index} of output.steps) { // TODO: try destructuring assign. in loop
+    steps.push([...stack, ...program.slice(index)]);
+  }
+  return {stack: leftover, steps};
+};
+
 function runProgram(input) {
+  const output = parse(input);
+  let n = 0;
+  for (let state of output.steps) { // TODO: try destructuring assign. in loop
+    n += 1;
+    console.log(`Step ${n}: ${JSON.stringify(state)}`);
+  }
+}
+
+// TODO: where do I hook this up?
+function runProgram__OLD(input) {
   const program = input;
   const output = parseProgram(program, [], true, 0);
 
@@ -30,7 +58,7 @@ function runProgram(input) {
 
 // Main
 //const program = [1, 1, 'plus', ':'];
-const program = [5, {type: 'alias', display: 'incr', value: [1, 'plus', ':']}, ':'];
+// const program = [5, {type: 'alias', display: 'incr', value: [1, 'plus', ':']}, ':'];
 //const program = [5, {type: 'alias', display: 'incr', value: [1, 'plus']}, ':'];
 
 // Currently 5 incr : is one step. It should be two:
@@ -38,6 +66,7 @@ const program = [5, {type: 'alias', display: 'incr', value: [1, 'plus', ':']}, '
 // 2. 5 1 plus : -> 6
 printProgram(program);
 runProgram(program);
+console.dir(parse(program));
 
 function printProgram(program) {
   tokens = [];
