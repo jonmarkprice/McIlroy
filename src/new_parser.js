@@ -1,4 +1,5 @@
 // GOAL: still work with new "parse"
+// SUBGOAL: stack should be a pure array
 
 const R = require('ramda');
 //const library = require('./lib/library');
@@ -19,7 +20,7 @@ const library = new Map([
 const parse = (program) => {
   let steps = [];
   const output = parseProgram(program, [], true, 0);
-  const leftover = R.last(output.stack).stack;
+  const leftover = output.stack.slice(-1);
   //console.dir(leftover);
   //console.log(`leftover ${leftover}`)
   //console.log(output);
@@ -58,8 +59,7 @@ function runProgram__OLD(input) {
 
 // Main
 //const program = [1, 1, 'plus', ':'];
-// const program = [5, {type: 'alias', display: 'incr', value: [1, 'plus', ':']}, ':'];
-//const program = [5, {type: 'alias', display: 'incr', value: [1, 'plus']}, ':'];
+const program = [5, {type: 'alias', display: 'incr', value: [1, 'plus', ':']}, ':'];
 
 // Currently 5 incr : is one step. It should be two:
 // 1. 5 incr : -> 5 (1 plus :)
@@ -148,11 +148,15 @@ function parseFunction(parsed, inStack, index) {
     // for typechecking etc., in this way we can denote multiple objects as
     // resulting from a step -- as is the case in alias-expansion.
     expansionStep = {
-      stack: [...inStack, ...parsed.value],
+      stack: [...inStack, ...parsed.value], // NOTE: OK
       index: index
     };
     steps = [expansionStep, ...result.steps];
-    stack = [...result.steps]; // [...x] needed?
+    console.dir(result)
+    // XXX this may be it
+    // TODO: what is this? This is coming from parseProgram
+    // what does it return? {stack, index, first, steps}
+    stack = [...result.stack]; // [...x] needed?
     //console.log(`expansion: ${JSON.stringify(parsed.value)}`);
     //console.log(`steps: ${JSON.stringify(steps)}`)
     //console.log('---------------');
@@ -168,6 +172,7 @@ function parseFunction(parsed, inStack, index) {
   return [steps, stack];
 }
 
+// NOTE: looks ok
 // This is non-recursive, so it should return a single value. It will
 // also not change the index.
 function exec(tok, stack, index) {
