@@ -12,12 +12,8 @@ import library from './library';
 // Also, do I really need stack? Is it just used for the final result?
 const parse = (program) => {
   let steps = [];
-  const output = parseProgram(program, [], true, 0);
-  console.log(output)
-  const leftover = output.stack.slice(-1);
-  //console.dir(leftover);
-  //console.log(`leftover ${leftover}`)
-  //console.log(output);
+  const output    = parseProgram(program, [], true, 0);
+  const leftover  = output.stack.slice(-1);
   for (let {stack, index} of output.steps) {
     steps.push([...stack, ...program.slice(index)]);
   }
@@ -25,7 +21,6 @@ const parse = (program) => {
 };
 
 function parseProgram(list, inStack, first, index) {
-  //console.log('in ')
   return list.reduce(execToken, {
     stack: inStack,
     steps: [],
@@ -58,6 +53,9 @@ const parseToken = (token) => {
     return token;
   }
   // TODO: add support for aliases
+  else if (typeof token === 'object' && token.type === 'alias') {
+    return token;
+  }
   // TODO: add support for special syntax ([, ])
   else {
     throw Error('Not parsable');
@@ -91,8 +89,28 @@ function execToken(agg, token) { // also  index, array
     const fn = R.last(agg.stack);  //agg.stack.slice(0, -1); // take last
     const rest = R.dropLast(1, agg.stack);
     [steps, stack] = parseFunction(fn, rest, newIndex); // will need a copy of stack
-    //console.log(`stack: ${JSON.stringify(stack)}`);
-    //console.log(`steps: ${JSON.stringify(steps)}`);
+  }
+  // if token === '['
+  else if (token === ']') {
+    // traverse bacwards until if find the latest '['
+    // then split the stack and make the right half into a list.
+    const stackSize = agg.stack.length;
+
+    // Could use R.reduceRight
+    let found = false;
+    for (let i = stackSize; i >= 0; i -= 1) {
+      if (agg.stack[i] === '[') {
+        const [left, right] = R.splitAt(i, agg.stack);
+        const contents = R.drop(1, right); // drop the literal '['.
+        stack = [...left, contents];
+        steps = [{stack, index: newIndex}] // prepend ...steps
+        found = true;
+        break;
+      }
+    }
+    if (! found) {
+      throw Error('No matching "[" found!')
+    }
   }
   // TODO do whatever parsing is necessary
   else {
@@ -102,36 +120,32 @@ function execToken(agg, token) { // also  index, array
   return {stack, steps, first: agg.first, index: newIndex};
 }
 
+const expandAlias = (parsed, inStack, index) => {
+  // Currently this *doesn't* use the given stack... it should, shouldn't it?
+  let result = parseProgram(parsed.value, inStack, false, index);
+  // It would be better not to have a 'value' field at all, but rather
+  // to include any style in the objects (which will be later needed anyway
+  // for typechecking etc., in this way we can denote multiple objects as
+  // resulting from a step -- as is the case in alias-expansion.
+  const expansionStep = {
+    stack: [...inStack, ...parsed.value],
+    index: index
+  };
+  const steps = [expansionStep, ...result.steps];
+  const stack = [...result.stack]; // [...x] needed?
+  return [steps, stack];
+}
+
 // TODO: this needs to be passing the entire stack back as part of the steps.
 function parseFunction(parsed, inStack, index) {
   let steps = [];
   let stack = [];
   if (parsed.type === 'alias') {
-    // Currently this *doesn't* use the given stack... it should, shouldn't it?
-    //console.log(`program ${JSON.stringify(parsed.value)}`);
-    //console.log(`inStack ${JSON.stringify(inStack)}`);
-    //console.log('---------------');
-    let result = parseProgram(parsed.value, inStack, false, index);
-
-    // It would be better not to have a 'value' field at all, but rather
-    // to include any style in the objects (which will be later needed anyway
-    // for typechecking etc., in this way we can denote multiple objects as
-    // resulting from a step -- as is the case in alias-expansion.
-    expansionStep = {
-      stack: [...inStack, ...parsed.value],
-      index: index
-    };
-    steps = [expansionStep, ...result.steps];
-    stack = [...result.stack]; // [...x] needed?
-    //console.log(`expansion: ${JSON.stringify(parsed.value)}`);
-    //console.log(`steps: ${JSON.stringify(steps)}`)
-    //console.log('---------------');
+    return expandAlias(parsed, inStack, index);
   }
   else {
-    //[steps, stack] = exec(parsed, inStack, index);
     stack = exec(parsed, inStack, index);
     steps = [...steps, {stack, index}]; // steps is a pair of stack, index
-    //console.log(stack);
   }
   // index is returned as part of steps
   return [steps, stack];
@@ -143,7 +157,7 @@ function exec(func, stack, index) {
   const requiredProperties = ['fn', 'arity', 'display'];
   requiredProperties.forEach(p => {
     if (! func.hasOwnProperty(p)) {
-      throw Error('no property "fn"');
+      throw Error('no property ');
     }
   });
   // TODO: later check others
@@ -155,14 +169,9 @@ function exec(func, stack, index) {
   //const newStack = stack.slice(0, func.arity);
   //const args = stack.slice(-func.arity);
   const [rest, args] = R.splitAt(-func.arity, stack);
-  //console.log(`stack: ${JSON.stringify(stack)}`);
-  console.log(`rest: ${JSON.stringify(rest)}`);
-  console.log(`args: ${JSON.stringify(args)}`);
-
   const result = func.fn.apply(null, args);
   //func.fn(...args);
 
-  //console.log(`result: ${result}`)
   // This raises a question: do we really need to duplicate the stack under
   // left? For that matter, do we need right either?
   // We *will* need in steps eventually, but could we just return value

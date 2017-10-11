@@ -25,8 +25,13 @@ class ExecutionRows extends React.Component {
 
     // Populate steps
     const result = parse(applied);
+    // TODO everything after this has to be updated
+    //console.dir(result);
+
     result.steps.forEach((step, stepIndex) => {
+
       // Wrap tokens
+      /*
       const offset = step.left.length;
       const newToken = <Token text={step.value}
                               classList={['em']} key='new' />;
@@ -37,9 +42,13 @@ class ExecutionRows extends React.Component {
         <Token text={text} key={index + offset} />
       ));
       const joined = consumedTokens.concat(newToken, remainingTokens);
+     */
+     const tokens = step.map((text, index) => (
+       <Token text={text} key={index} />
+     ));
 
       // Fill row with step
-      rows.push(<div className="row" key={stepIndex}>{joined}</div>);
+      rows.push(<div className="row" key={stepIndex}>{tokens}</div>);
     });
 
     return (

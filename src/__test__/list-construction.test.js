@@ -1,4 +1,4 @@
-/* TODO: add once I support list lit. in new parser
+//* TODO: add once I support list lit. in new parser
 import syntax from '../lib/syntax';
 import { run } from './helpers';
 
@@ -14,4 +14,4 @@ describe('List construction', () => {
     .toEqual([1, [2, 3, [4], 5], 6]);
   });
 });
-*/
+//*/
