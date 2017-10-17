@@ -16,7 +16,6 @@ describe('integration tests', () => {
     )).toEqual(['H', 'i']);
   });
 
-  // TODO RE-INTRODUCE with the list constructor
   it('capitalizes a word using list constructor', () => {
     expect(run(['h', 'i'], 'split', ':', '[', 'uppercase', [], 'cons',
       'curry', ':', 'compose', ':', 'id', ']', 'zip', ':', 'eval', 'map', ':',
