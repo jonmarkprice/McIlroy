@@ -1,14 +1,13 @@
-import ReactDOMServer from 'react-dom/server';
-import App from './app';
-import reducer from './reducers'; // index.js
-import { createStore } from 'redux';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import ReactDOMServer from 'react-dom/server';
+import { createStore } from 'redux';
 import { Provider } from 'react-redux'
+import App from './app';
+import reducer from './reducers';
 
-// http://redux.js.org/docs/recipes/ServerRendering.html#security-considerations
 function renderPage(message) {
-  const preloadedState = message; // wrap with { }?
+  const preloadedState = message;
   const store = createStore(reducer, preloadedState);
   const finalState = store.getState();
   const stateString = JSON.stringify(finalState).replace(/</g, '\\u003c');
@@ -18,6 +17,7 @@ function renderPage(message) {
     </Provider>
   );
 
+  // See http://redux.js.org/docs/recipes/ServerRendering.html#security-considerations
   return `
   <!DOCTYPE html>
   <html>
@@ -34,5 +34,4 @@ function renderPage(message) {
   </html>`;
 }
 
-module.exports = renderPage;
-//export default render; // doesn't seem to work with require() in server/index
+export default renderPage;

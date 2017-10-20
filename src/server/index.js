@@ -1,6 +1,6 @@
-const express = require('express');
-const qs = require('qs');
-const renderPage  = require('../common/render');
+import express from 'express';
+import qs from 'qs';
+import renderPage from '../common/render';
 
 const app = express();
 const port = 3000;
