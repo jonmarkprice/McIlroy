@@ -1,14 +1,16 @@
-const Express = require('express');
+const express = require('express');
+const qs = require('qs');
 const renderPage  = require('../common/render');
-//const fs = require('fs');
-//const path = require('path');
 
-const app = Express();
+const app = express();
 const port = 3000;
 
-app.use('/static', Express.static('dist'));
+app.use('/static', express.static('dist'));
 app.get('/', (req, res) => {
-  res.send(renderPage());
+  const params = qs.parse(req.query);
+  const message = params.msg || "Redux";
+
+  res.send(renderPage(message));
 });
 
 console.log(`Listening on port ${port}...`);

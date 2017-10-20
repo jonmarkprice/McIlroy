@@ -6,19 +6,18 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux'
 
-const store = createStore(reducer);
-
-const html = ReactDOMServer.renderToString(
-  <Provider store={store}>
-    <App />
-  </Provider>
-);
-
-const preloadedState = store.getState();
-
 // http://redux.js.org/docs/recipes/ServerRendering.html#security-considerations
-function renderPage() {
-  const stateString = JSON.stringify(preloadedState).replace(/</g, '\\u003c');
+function renderPage(message) {
+  const preloadedState = message; // wrap with { }?
+  const store = createStore(reducer, preloadedState);
+  const finalState = store.getState();
+  const stateString = JSON.stringify(finalState).replace(/</g, '\\u003c');
+  const html = ReactDOMServer.renderToString(
+    <Provider store={store}>
+      <App />
+    </Provider>
+  );
+
   return `
   <!DOCTYPE html>
   <html>
