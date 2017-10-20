@@ -1,5 +1,5 @@
 const Express = require('express');
-const render  = require('../common/render');
+const renderPage  = require('../common/render');
 //const fs = require('fs');
 //const path = require('path');
 
@@ -8,7 +8,7 @@ const port = 3000;
 
 app.use('/static', Express.static('dist'));
 app.get('/', (req, res) => {
-  res.send(render());
+  res.send(renderPage());
 });
 
 console.log(`Listening on port ${port}...`);
