@@ -4,13 +4,15 @@
   "description": "",
   "scripts": {
     "start": "babel-node src/server/index.js",
-    "build": "webpack -d"
+    "build": "webpack -d",
+    "test": "jest"
   },
   "author": "Jonathan Price",
   "dependencies": {
     "babel-cli": "^6.26.0",
     "express": "^4.16.2",
     "qs": "^6.5.1",
+    "ramda": "^0.25.0",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "react-redux": "^5.0.6",
@@ -20,6 +22,7 @@
     "babel-loader": "^7.1.2",
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
+    "jest": "^21.2.1",
     "webpack": "^3.8.1"
   }
 }

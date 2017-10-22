@@ -1,8 +1,9 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { createStore } from 'redux';
 import { Provider } from 'react-redux';
-import App from '../common/app';
+import { createStore } from 'redux';
+
+import Interpretter from '../common/components/components';
 import reducer from '../common/reducers';
 
 console.log('Started successfully...');
@@ -15,7 +16,7 @@ const store = createStore(reducer, preloadedState);
 
 render(
   <Provider store={store}>
-    <App />
+    <Interpretter />
   </Provider>,
-  document.getElementById('app') // TODO double check
+  document.getElementById('app')
 );

@@ -3,17 +3,45 @@ import ReactDOM from 'react-dom';
 import ReactDOMServer from 'react-dom/server';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux'
-import App from './app';
-import reducer from './reducers';
 
-function renderPage(message) {
-  const preloadedState = message;
-  const store = createStore(reducer, preloadedState);
+//import App from './app';
+import Interpretter from './components/components';
+import reducer from './reducers';
+import { pushInput, displayFunction } from './actions';
+
+//const preloadedState = message;
+const store = createStore(reducer); //, preloadedState);
+
+// dispatch some actions
+store.dispatch(pushInput({
+  label : '1',
+  data  : 1
+}));
+store.dispatch(pushInput({
+  label : '[1, 2, 3]',
+  data  : [1, 2, 3]
+}));
+store.dispatch(pushInput({
+  label : '[true, false]',
+  data  : [true, false]
+}));
+store.dispatch(pushInput({
+  label : '"hello"',
+  data  : ['h', 'e', 'l', 'l', 'o']
+}));
+store.dispatch(pushInput({
+  label : "'A'",
+  data  : 'A'
+}));
+
+store.dispatch(displayFunction('Nothing selected.'));
+
+function renderPage() {
   const finalState = store.getState();
   const stateString = JSON.stringify(finalState).replace(/</g, '\\u003c');
   const html = ReactDOMServer.renderToString(
     <Provider store={store}>
-      <App />
+      <Interpretter />
     </Provider>
   );
 
@@ -23,6 +51,7 @@ function renderPage(message) {
   <html>
     <head>
       <title>Redux Universal</title>
+      <link rel="stylesheet" href="public/index.css" />
     </head>
     <body>
       <div id="app">${html}</div>
