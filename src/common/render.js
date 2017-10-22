@@ -50,8 +50,9 @@ function renderPage() {
   <!DOCTYPE html>
   <html>
     <head>
-      <title>Redux Universal</title>
+      <title>McIlroy</title>
       <link rel="stylesheet" href="public/index.css" />
+      <link rel="shortcut icon" href="public/favicon.ico" />
     </head>
     <body>
       <div id="app">${html}</div>
