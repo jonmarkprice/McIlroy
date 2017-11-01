@@ -12,9 +12,9 @@ class ExecutionRows extends React.Component {
   render() {
     // The program applied to the data
     // NOTE: We use null for no input, so do not include.
-    const input = this.props.inputData;
-    const applied = (input !== null)
-                  ? [input].concat(this.props.program)
+    const input : string[] = this.props.inputData;
+    const applied :  string[] = (input !== null)
+                  ? R.concat([input], this.props.program) //[input].concat(this.props.program)
                   : this.props.program;
 
     // Populate rows

@@ -33,4 +33,11 @@ describe('reduce', () => {
   });
 });
 
+describe('into', () => {
+  it('should capitalize the first letter only', () => {
+    expect(run(['h', 'i'], '[', 'uppercase', 'id', ']', 'into', ':'))
+    .toEqual(['H', 'i']);
+  })
+})
+
 // describe('filter'); // Can be implement with reduce

@@ -1,0 +1,10 @@
+"hello" split : [ uppercase id ] into :
+-> crash
+
+TypeError: char.toUpperCase is not a function
+library.js : 174
+
+--> caught with unit test.
+
+Cause: user error. Still we should return some sort of
+failure object..., rather than getting a TypeError.

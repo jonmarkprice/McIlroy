@@ -1,0 +1,4 @@
+The old and new parser's are not compatible.
+I am trying to get a stable version working quickly so that I can commit the 
+SSR without breaking existing functionality.
+
