@@ -1,7 +1,11 @@
 import library from './library';
 import syntax from './syntax';
 
-const display = (obj) => {
+// type Token = string | any[] | 
+// if object, then displayable
+
+// const display = (obj) => {
+function display(obj : any) : string {
   if (syntax.has(obj) || library.has(obj)) {
     return obj; // Don't quote application operator.
   }
