@@ -5,4 +5,5 @@ const syntax = new Map([
   [']', {name: 'List close'}]
 ]);
 
-export default syntax;
+//export default syntax;
+module.exports = syntax;

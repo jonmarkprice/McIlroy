@@ -5,9 +5,13 @@
 // TODO: consider first parsing each token...
 // @flow
 
-import * as R from 'ramda';
-import library from './library';
-import { StackSlice, StackError, StackToken } from './functors';
+//import * as R from 'ramda';
+const R = require('ramda');
+//import library from './library';
+const library = require('./library');
+
+//import { StackSlice, StackError, StackToken } from './functors';
+const { StackSlice, StackError, StackToken } = require('./functors');
 
 // This is the accumulator that execToken is reduced with
 type Accumulator = {
@@ -40,10 +44,11 @@ function parse(program : any[])
   }
   return {stack: leftover, steps};
 };
+module.exports.parse = parse;
 
 // The main parsing loop, which calls reduces execToken over the list
 // of inputs.
-export function parseProgram(
+function parseProgram(
     list    : Input[],
     inStack : any[],
     first   : boolean,
@@ -57,8 +62,9 @@ export function parseProgram(
     index: index // ''
   });
 }
+module.exports.parseProgram = parseProgram;
 
-export function parseToken(token : Input) : Parsed {
+function parseToken(token : Input) : Parsed {
   // This case is never reached, since we execute immediately upon :
   //if (token === ':') {
   //  return {type: 'syntax', value: ':'};
@@ -96,6 +102,7 @@ export function parseToken(token : Input) : Parsed {
     throw Error('Not parsable');
   }
 }
+module.exports.parseToken = parseToken;
 
 // This function is called from reduce()
 // We may have a problem here with steps... currently, no function can generate
@@ -154,6 +161,7 @@ function execToken(agg, token) { // also  index, array
   // do not return agg, only use slices from its properties
   return {stack, steps, first: agg.first, index: newIndex};
 }
+
 
 const expandAlias = (parsed, inStack, index) => {
   // Currently this *doesn't* use the given stack... it should, shouldn't it?
@@ -226,4 +234,4 @@ function exec(func, stack, index) {
 // TODO: try this with plus(x,y) and incr(x)
 // where incr is an alias that expands to `x 1 plus`
 
-export default parse;
+//export default parse;

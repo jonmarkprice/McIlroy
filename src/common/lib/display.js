@@ -1,5 +1,7 @@
-import library from './library';
-import syntax from './syntax';
+//import library from './library';
+//import syntax from './syntax';
+const library = require('./library');
+const syntax  = require('./syntax');
 
 // type Token = string | any[] | 
 // if object, then displayable
@@ -47,4 +49,5 @@ function display(obj : any) : string {
   }
 }
 
-export default display;
+//export default display;
+module.exports = display

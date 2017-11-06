@@ -1,8 +1,8 @@
-import {has, prop, all, equals} from 'ramda';
-import * as R from 'ramda';
+const {has, prop, all, equals} = require('ramda');
+const R = require('ramda');
 
 // @flow
-export class StackSlice {
+class StackSlice {
   // properties
 
   constructor(args : any[]) : void {
@@ -56,7 +56,7 @@ export class StackSlice {
   }
 }
 
-export class StackError {
+class StackError {
   constructor(msg : string) : void {
     this.__message = msg;
   }
@@ -70,7 +70,7 @@ export class StackError {
   }
 }
 
-export class StackToken {
+class StackToken {
   constructor(data : any) { // T
     this.__data = data; // value (?)
   }
@@ -83,3 +83,5 @@ export class StackToken {
     return this.__data;
   }
 }
+
+module.exports = {StackSlice, StackError, StackToken};

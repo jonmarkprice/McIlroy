@@ -1,5 +1,8 @@
-import * as R from 'ramda';
-import display from './display';
+//import * as R from 'ramda';
+const R = require('ramda');
+
+//import display from './display';
+const display = require('./display');
 
 // types: list, any, string, char, number, integer....
 const library = new Map([
@@ -224,4 +227,5 @@ I need to figure out how I want this to actually be used...
   fn: (cond, aff, neg) => cond ? aff : neg
 }], */
 
-export default library;
+//export default library;
+module.exports = library;

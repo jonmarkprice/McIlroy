@@ -5,7 +5,7 @@
   "scripts": {
     "start": "babel-node src/server/index.js",
     "build": "webpack -d",
-    "test": "jest"
+    "test": "babel-tape-runner src/tests/aliases.test.js"
   },
   "author": "Jonathan Price",
   "dependencies": {
@@ -24,7 +24,9 @@
     "babel-loader": "^7.1.2",
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
+    "babel-tape-runner": "^2.0.1",
     "jest": "^21.2.1",
+    "tape": "^4.8.0",
     "webpack": "^3.8.1"
   }
 }

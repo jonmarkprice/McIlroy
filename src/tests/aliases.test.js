@@ -1,15 +1,16 @@
 // Write unit tests for aliases, should get 'Not parsable'
-import { run } from './helpers';
+//import { run } from './helpers';
+const { run } = require('./helpers');
+const test = require('tape');
 
 // sum
 const sum = {type: 'alias', value: ['+', 0, 'reduce', ':']} // need display?
 
-describe('sum', () => {
-  it('sums a list of numbers', () => {
-    // fails with 'not parsable'
-    expect(run([1, 3, 4], sum, ':')).toBe(8);
-  })
-})
+test('sums a list of numbers', (assert) => {
+  // fails with 'not parsable'
+  assert.equal(run([1, 3, 4], sum, ':'), 8);
+  assert.end();
+});
 
 // TODO: run could output steps... potentially. Maybe with a 'verbose' argument
 // it seems that it is getting to exec somehow...
