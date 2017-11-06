@@ -1,0 +1,169 @@
+// TODO: set this up as a library
+// use import = require() in ts, or import .. from
+
+import monet = require('monet'); //.Either;
+import R = require('ramda');
+const view = R.view,
+      set  = R.set,
+      over = R.over,
+      keys = R.keys;
+const Either = monet.Either;
+
+//@flow
+type Literal = string | number | boolean; //| any[];
+
+type Token = {
+  type : string,
+  value : Literal
+};
+
+type Agg = {
+  steps : Token[], // or Error
+  stack : Token[]
+};
+
+// type Either<T, S> = Left<T> | Right<S>;
+
+// Parse a simple program
+function parse(program : Token[]) : Either<string, Agg> { //Step[] {
+  // Optional: map a parser over the Literals
+  // or run an any() with a checker function
+  const init : Either<string, Agg> = Either.Right({steps: [], stack: []});
+
+  // Array.reduce :: (b -> a -> b) -> b -> [a] -> [b]
+  return program.reduce(reducer, init);
+}
+
+function reducer(agg : Either<string, Agg>, curr : Token) : Either<string, Agg> {
+  if (curr.type == 'syntax') {
+    switch(curr.value) {
+      case ':':
+        return application(agg);
+        //break;
+      case '[':
+        break;
+      case ']':
+        break;
+    }
+    return Either.Right({steps: [], stack: []});
+  }
+  else {
+    const stack = R.lensProp('stack');
+    return agg.map(R.over(stack, R.append(curr)));
+  }
+}
+
+//
+type TypeDescriptor = {
+   in : string[],
+   out : any   // this could be recursively nested, 
+               // if it returns a function... and so on.
+};
+
+type LibFn = {
+   name  : string,
+   types : TypeDescriptor,
+   arity : number,
+   fn    : (...args : any[]) => any
+};
+
+/// @breif Apply the application operator.
+export function application(agg : Either<string, Agg>) : Either<string, Agg> {
+  const last  = R.lens(R.last, R.update(-1));
+  const stack = R.lensProp('stack');
+  const top = R.compose(stack, last);
+  if (agg
+      .map(R.view(R.compose(top, R.lensProp('type'))))
+      .map(R.equals(Either.Right('string')))
+  ) {
+    const lib = {
+      '+': {
+        name   : 'plus',
+        arity  : 2,
+        types  : {'in': ['number', 'number'], 'out': 'number'},
+        fn     : (x, y) => x + y
+      }
+    };
+
+    const value = R.compose(top, R.lensProp('value'));
+    const eq = (x) => agg.map(R.view(value)).map(R.equals(x));
+    // use Array.from(lib.keys()) or just [...lib.keys()]
+    const fnNames = [...keys(lib)];
+    if (R.any(eq, fnNames) && agg.isRight()) {
+      // debugging
+      const tok : string = view(value, agg.right());
+      console.log(tok);
+      
+      const fn : (...args : any[]) => any = lib[tok].fn; // ok since checked R.any(eq, fnNames)
+      
+      // TODO execute
+      // TODO: can I just pass an Either to execute? It's going to return one anyway...
+      const newTok = execute(fn, view(stack, agg.right()));
+      console.log(newTok);
+      
+      const x : any = exec2(lib[tok], view(stack, agg.right()));
+    }
+  }
+  else {
+    console.log('NOPE');
+  }
+
+  return Either.Left('Functions not supported.');
+}
+
+// TODO: write unit tests, run on generated .js files
+// TODO: return type
+// return Either<string, Token>
+function exec2(fd : LibFn, stack : Token[]) : Either<string, Token> {
+   return Either.Left('Bad fn');
+}
+
+// Take a function descriptor
+function execute(fn : (...args : any[]) => any, stack : Token[]) : Either<string, Token> {
+  // TODO: can we actually take a Token[] type? or does it need to be a maybe?
+  // Also, can I refactor to make:
+  // {stack : Token[], steps: Either<error, Token[]>} ?
+  console.log(typeof fn);
+  console.log(stack);
+  
+  // TODO: expand
+  //   if 
+  const ans : number | string | boolean = fn();
+  
+  return Either.Left('Not supported');
+}
+
+
+function inferType(lit : Literal) : Token {
+  switch (typeof lit) {
+    case 'string':
+      if (lit === ':') {
+        return {type: 'syntax', value: lit};
+      }
+      else {
+        return {type: 'string', value: lit};
+      }
+    case 'number':
+      return {type: 'number', value: lit};
+    case 'boolean':
+      return {type: 'boolean', value: lit};
+    default:
+      return {type: 'unk', value: false};
+  }
+}
+
+module.exports = application;
+
+/////////////// TESTS ////////////////////
+// TODO: move to import.js
+// const tokens : Token[] = [1, 2, 3].map((x : Literal) => inferType(x));
+//console.log(tokens);
+
+//const result : Either<string, Agg> = parse(tokens);
+//console.log(result);
+// console.log('JSON: ');
+// console.log(JSON.stringify(result));
+
+// const tokens2 : Token[] = [1, 1, '+', ':'].map(inferType);
+// const result2 : Either<string, Agg> = parse(tokens2);
+// console.log(result2);

@@ -3,14 +3,35 @@
 // Get list construction working
 
 // TODO: consider first parsing each token...
+// @flow
 
 import * as R from 'ramda';
 import library from './library';
+import { StackSlice, StackError, StackToken } from './functors';
+
+// This is the accumulator that execToken is reduced with
+type Accumulator = {
+  stack   : Input[],
+  steps   : any[],    // XXX
+  first   : boolean,
+  index   : number
+};
+
+// The pre-parsed tokens on the stack
+type Input = string | boolean | number | any[]; // XXX is this complete?
+
+// The post-parsed tokens
+// Eventually, I want these to be objects like:
+// {type: __, value: __}
+type Parsed = string | boolean | number | any[]; // TODfunction too.
 
 // XXX: this is rather ugly. Especially since I already *have* all the data,
 // it's just organized by step and is missing the "rest" part.
 // Also, do I really need stack? Is it just used for the final result?
-const parse = (program) => {
+//const parse = (program) => {
+function parse(program : any[])
+  : {stack: any[], steps: any[]}
+{
   let steps = [];
   const output    = parseProgram(program, [], true, 0);
   const leftover  = output.stack.slice(-1);
@@ -20,7 +41,15 @@ const parse = (program) => {
   return {stack: leftover, steps};
 };
 
-function parseProgram(list, inStack, first, index) {
+// The main parsing loop, which calls reduces execToken over the list
+// of inputs.
+export function parseProgram(
+    list    : Input[],
+    inStack : any[],
+    first   : boolean,
+    index   : number
+    )  : Accumulator
+{
   return list.reduce(execToken, {
     stack: inStack,
     steps: [],
@@ -29,20 +58,26 @@ function parseProgram(list, inStack, first, index) {
   });
 }
 
-const parseToken = (token) => {
-  if (token === ':') {
-    return ':';
-  }
-  else if (library.has(token)) {
+export function parseToken(token : Input) : Parsed {
+  // This case is never reached, since we execute immediately upon :
+  //if (token === ':') {
+  //  return {type: 'syntax', value: ':'};
+  //}
+  if (library.has(token)) {
     return library.get(token);
   }
   // Process arrays
   else if (Array.isArray(token)) {
     return token.map(parseToken);
+//    return {
+//      type  : 'list',
+//      value : token.map(parseToken)
+//    }
   }
   // Check for booleans
   else if (typeof token === 'boolean') {
-    return Boolean(token)
+    //return Boolean(token);
+    return {'type': 'boolean', value: token};
   }
   // Check for number
   else if (typeof token === 'number') {
@@ -170,14 +205,22 @@ function exec(func, stack, index) {
   //const newStack = stack.slice(0, func.arity);
   //const args = stack.slice(-func.arity);
   const [rest, args] = R.splitAt(-func.arity, stack);
-  const result = func.fn.apply(null, args);
-  //func.fn(...args);
+  //const result = func.fn.apply(null, args);
+  
+  const argF = new StackSlice(args);
+  const result = argF.apply(func);
+  // TODO: unwrap result
+  //if (result instanceof StackToken || result instanceof StackError) {
+  if (result.ok()) {
+    return [...rest, result.unwrap()];
+  }
+  else throw Error(result.error());
 
   // This raises a question: do we really need to duplicate the stack under
   // left? For that matter, do we need right either?
   // We *will* need in steps eventually, but could we just return value
   // from here?
-  return [...rest, result];
+  // return [...rest, result];
 }
 
 // TODO: try this with plus(x,y) and incr(x)
