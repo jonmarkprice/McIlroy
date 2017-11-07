@@ -1,6 +1,7 @@
 //import library from './library';
 //import syntax from './syntax';
-const library = require('./library');
+//const library = require('./library');
+const functions = require('./functions');
 const syntax  = require('./syntax');
 
 // type Token = string | any[] | 
@@ -8,7 +9,7 @@ const syntax  = require('./syntax');
 
 // const display = (obj) => {
 function display(obj : any) : string {
-  if (syntax.has(obj) || library.has(obj)) {
+  if (syntax.has(obj) || functions.has(obj)) {
     return obj; // Don't quote application operator.
   }
   else if (Array.isArray(obj)) {

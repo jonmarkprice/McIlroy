@@ -1,15 +1,16 @@
-import display from '../common/lib/display';
+const test = require('tape');
+const display = require('../common/lib/display');
 
-describe('Display', () => {
-  it('should print characters with quotes.', () => {
-    expect(display("a")).toEqual("'a'");
-  });
-
-  it('should print special tokens without quotes', () => {
-    expect(display(":")).toEqual(":");
-  });
-
-  it('should recursively display lists');
-
-  it('should use the display (property) of on object.');
+test('should print characters with quotes.', (assert) => {
+  assert.equal(display("a"), "'a'");
+  assert.end();
 });
+
+test('should print special tokens without quotes', (assert) => {
+  assert.equal(display(":"), ":");
+  assert.end();
+});
+
+// test('should recursively display lists');
+
+// test('should use the display (property) of on object.');

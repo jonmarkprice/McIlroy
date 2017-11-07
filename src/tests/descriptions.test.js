@@ -1,24 +1,25 @@
-import descriptions from '../common/lib/descriptions';
-import { run } from './helpers';
+const descriptions = require('../common/lib/descriptions');
+const { run } = require('./helpers');
+const test = require('tape');
 
-describe('descriptions', () => {
-  it('should have an in and expect field for each example', () => {
-    // TODO: Make a similar test for library
-    for (desc in descriptions) {
-      if (desc.hasOwnProperty(example)) {
-        expect(desc.hasOwnProperty('in')).toBe(true);
-        expect(desc.hasOwnProperty('expect')).toBe(true);
+test('should have an in and expect field for each example', (assert) => {
+  // TODO: Make a similar test for library
+  for (let desc in descriptions) {
+    if (desc.hasOwnProperty('example')) {
+      assert.equal(desc.hasOwnProperty('in'), true);
+      assert.equal(desc.hasOwnProperty('expect'), true);
 
-        expect(run(desc.in)).toEqual(desc.expect);
-      }
+      assert.deepEqual(run(desc.in), desc.expect);
     }
-  });
+  } 
+  assert.end();
+});
 
-  it('should have the expected result for each example', () => {
-    for (desc in descriptions) {
-      if (desc.hasOwnProperty(example)) {
-        expect(run(desc.in)).toEqual(desc.expect);
-      }
+test('should have the expected result for each example', (assert) => {
+  for (let desc in descriptions) {
+    if (desc.hasOwnProperty('example')) {
+      assert.deepEqual(run(desc.in), desc.expect);
     }
-  });
+  }
+  assert.end();
 });

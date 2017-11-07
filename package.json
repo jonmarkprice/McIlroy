@@ -5,7 +5,7 @@
   "scripts": {
     "start": "babel-node src/server/index.js",
     "build": "webpack -d",
-    "test": "babel-tape-runner src/tests/aliases.test.js"
+    "test": "babel-tape-runner src/tests/*.test.js"
   },
   "author": "Jonathan Price",
   "dependencies": {
