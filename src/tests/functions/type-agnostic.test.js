@@ -1,11 +1,9 @@
-import { run } from '../helpers';
+const test    = require('tape');
+const { run } = require('../helpers');
 
-describe('equal', () => {
-  it('should compare numbers', () => {
-    expect(run(0, 0, '=', ':')).toBe(true);
-  });
+test('Equal should compare numbers', (assert) => {
+  assert.equal(run(0, 0, '=', ':'), true);
+  assert.end();
 });
 
-describe('id', () => {
-  it('should work for integers');
-})
+// test('id should work for integers');

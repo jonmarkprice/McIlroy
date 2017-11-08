@@ -1,9 +1,9 @@
-import React from 'react';
-import { connect } from 'react-redux';
+const React = require('react');
+const { connect } = require('react-redux');
 
 // TODO rename to SavedProgram
 // import EditSavedProgram from './EditSavedProgram';
-import SavedProgram from './SavedProgram';
+const SavedProgram = require('./SavedProgram');
 
 const mapStateToProps = state => ({
   programs: state.saved
@@ -32,5 +32,4 @@ const Container = ({programs}) => (
 );
 
 const SavedProgramList = connect(mapStateToProps, undefined)(Container);
-
-export default SavedProgramList;
+module.exports = SavedProgramList;

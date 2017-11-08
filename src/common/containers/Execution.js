@@ -1,7 +1,7 @@
-import React from 'react';
-import { connect } from  'react-redux';
-import Token from '../components/Token';
-import parse from '../lib/parser';
+const React       = require('react');
+const { connect } = require('react-redux');
+const Token       = require('../components/Token');
+const { parse }   = require('../lib/parser');
 
 const mapStateToProps = state => ({
   program: state.program,
@@ -61,5 +61,4 @@ class ExecutionRows extends React.Component {
 }
 
 const Execution = connect(mapStateToProps, undefined)(ExecutionRows);
-
-export default Execution;
+module.exports = Execution;

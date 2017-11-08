@@ -1,5 +1,5 @@
 // import { combineReducers } from 'redux' // Not using currently
-import { append } from 'ramda';
+const { append } = require('ramda');
 
 // In order to do SSR, we need pass our state as JSON. JSON doesn't have a
 // Map, so I need to either transform my Map into a list of pairs, or use a
@@ -106,4 +106,5 @@ function reducer(state = initialState, action) {
   }
 }
 
-export default reducer;
+//export default reducer;
+module.exports = reducer;

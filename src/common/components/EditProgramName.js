@@ -1,4 +1,4 @@
-import React from 'react';
+const React = require('react');
 
 const EditProgramName = ({program_id, name, onNameUpdate, onNameChange}) => (
   <form className="dbg" onSubmit={event => {
@@ -11,4 +11,4 @@ const EditProgramName = ({program_id, name, onNameUpdate, onNameChange}) => (
   </form>
 );
 
-export default EditProgramName;
+module.exports = EditProgramName;

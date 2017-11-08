@@ -1,13 +1,14 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import ReactDOMServer from 'react-dom/server';
-import { createStore } from 'redux';
-import { Provider } from 'react-redux'
+const React = require('react');
+const ReactDOM = require('react-dom');
+const ReactDOMServer = require('react-dom/server');
+const { createStore } = require('redux');
+const { Provider } = require('react-redux');
 
-//import App from './app';
-import Interpretter from './components/components';
-import reducer from './reducers';
-import { pushInput, displayFunction } from './actions';
+//const App = require('./app');
+const Interpretter = require('./components/components');
+//const reducer = require('./reducers');
+const reducer = require('./reducers');
+const { pushInput, displayFunction } = require('./actions');
 
 //const preloadedState = message;
 const store = createStore(reducer); //, preloadedState);
@@ -64,4 +65,4 @@ function renderPage() {
   </html>`;
 }
 
-export default renderPage;
+module.exports = renderPage;

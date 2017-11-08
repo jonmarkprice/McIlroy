@@ -1,5 +1,7 @@
-import { parseToken } from '../common/lib/parser';
+const test = require('tape');
+const { parseToken } = require('../common/lib/parser');
 
-it('should convert raw types into wrapped ones.', () => {
-  expect(parseToken(true)).toEqual({'type': 'boolean', value: true});
+test('should convert raw types into wrapped ones.', (assert) => {
+  assert.deepEqual(parseToken(true), {'type': 'boolean', value: true});
+  assert.end();
 });

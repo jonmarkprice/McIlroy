@@ -1,11 +1,13 @@
-import { run } from '../helpers';
+const test    = require('tape');
+const { run } = require('../helpers');
 
-describe('plus', () => {
-  it('should add small integers', () => {
-    expect(run(1, 1, '+', ':')).toBe(2);
-  });
+// describe('plus', () => {
+test('Plus should add small integers', (assert) => {
+  assert.equal(run(1, 1, '+', ':'), 2);
+  assert.end();
 });
 
+/*
 describe('subtract', () => {
   it('should subtract two integers');
 });
@@ -41,3 +43,4 @@ describe('sum', () => {
 });
 
 // TODO implement (test-first) greater than, less than
+*/

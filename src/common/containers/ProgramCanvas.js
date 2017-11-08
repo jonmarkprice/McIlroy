@@ -1,7 +1,7 @@
-import React from 'react';
-import ProgramRow from '../components/ProgramRow';
-import { connect } from  'react-redux';
-import { clearCanvas, popFromCanvas, addProgram } from '../actions';
+const React       = require('react');
+const ProgramRow  = require('../components/ProgramRow');
+const { connect } = require( 'react-redux');
+const { clearCanvas, popFromCanvas, addProgram } = require('../actions');
 
 const mapStateToProps = state => ({
   program: state.program,
@@ -42,5 +42,4 @@ class ProgramInput extends React.Component {
 }
 
 const ProgramCanvas = connect(mapStateToProps, mapDispatchToProps)(ProgramInput);
-
-export default ProgramCanvas;
+module.exports = ProgramCanvas;

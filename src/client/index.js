@@ -1,10 +1,9 @@
-import React from 'react';
-import { render } from 'react-dom';
-import { Provider } from 'react-redux';
-import { createStore } from 'redux';
-
-import Interpretter from '../common/components/components';
-import reducer from '../common/reducers';
+const React           = require('react');
+const { render }      = require('react-dom');
+const { Provider }    = require('react-redux');
+const { createStore } = require('redux');
+const Interpretter    = require('../common/components/components');
+const reducer         = require('../common/reducers');
 
 console.log('Started successfully...');
 

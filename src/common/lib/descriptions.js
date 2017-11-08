@@ -192,4 +192,4 @@ const descriptions = new Map([
   }]
 ]);
 
-export default descriptions;
+module.exports = descriptions;

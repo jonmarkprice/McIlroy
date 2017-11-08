@@ -1,37 +1,40 @@
 // Action Creators
-
-export const pushFunction = name =>
+const pushFunction = name =>
   ({ type: 'PUSH_FUNCTION', name });
-
-export const clearCanvas = () =>
+const clearCanvas = () =>
   ({type: 'CLEAR_CANVAS'});
-
-export const popFromCanvas = () =>
+const popFromCanvas = () =>
   ({type: 'BACKSPACE'});
-
-export const pushInput = input =>
+const pushInput = input =>
   ({type: 'PUSH_INPUT', input});
-
-export const selectInput = index =>
+const selectInput = index =>
   ({type: 'SELECT_INPUT', index});
-
-export const displayFunction = name =>
+const displayFunction = name =>
   ({type: 'DISPLAY_FUNCTION', name});
-
-export const addProgram = () =>
+const addProgram = () =>
   ({type: 'SAVE_PROGRAM'});
-
-export const updateProgramName = id =>
+const updateProgramName = id =>
   ({type: 'NAME_PROGRAM', id});
-
-export const updateProgramNameBuffer = (id, text) =>
+const updateProgramNameBuffer = (id, text) =>
   ({type: 'UPDATE_NAME_BUFFER', id, text});
-
-export const editName = id =>
+const editName = id =>
   ({type: 'EDIT_NAME', id});
-
-export const expandSavedProgram = id =>
+const expandSavedProgram = id =>
   ({type: 'EXPAND_SAVED_PROGRAM', id});
-
-export const collapseProgram = id =>
+const collapseProgram = id =>
   ({type: 'COLLAPSE_SAVED_PROGRAM', id})
+
+module.exports = {
+    pushFunction
+  , clearCanvas
+  , popFromCanvas
+  , pushInput
+  , selectInput
+  , displayFunction
+  , addProgram
+  , updateProgramName
+  , updateProgramNameBuffer
+  , editName
+  , expandSavedProgram
+  , collapseProgram
+}

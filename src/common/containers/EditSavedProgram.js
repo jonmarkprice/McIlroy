@@ -1,14 +1,14 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import ProgramRow from '../components/ProgramRow';
-import { updateProgramName
+const React       = require('react');
+const { connect } = require('react-redux');
+const ProgramRow  = require('../components/ProgramRow');
+const { updateProgramName
        , updateProgramNameBuffer
        , editName
        , clearCanvas
        , pushFunction
-       , collapseProgram } from '../actions';
-import ProgramName from '../components/ProgramName';
-import EditProgramName from '../components/EditProgramName';
+       , collapseProgram } = require('../actions');
+const ProgramName     = require('../components/ProgramName');
+const EditProgramName = require('../components/EditProgramName');
 
 const mapDispatchToProps = dispatch => ({
   onNameUpdate: id => {
@@ -82,6 +82,5 @@ class Container extends React.Component {
   }
 }
 
-const SavedFunction = connect(undefined, mapDispatchToProps)(Container);
-
-export default SavedFunction;
+module.exports = connect(undefined, mapDispatchToProps)(Container);
+//export default SavedFunction;

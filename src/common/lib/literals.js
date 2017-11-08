@@ -5,4 +5,4 @@ const literals  = new Map([
   ['0', 0]
 ]);
 
-export default literals;
+module.exports = literals;

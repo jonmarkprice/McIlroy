@@ -1,6 +1,6 @@
-import React from 'react';
-import ProgramRow from './ProgramRow';
-import Token from './Token';
+const React      = require('react');
+const ProgramRow = require('./ProgramRow');
+const Token      = require('./Token');
 
 const Example = ({program, result}) => (
   <div id="example">
@@ -11,4 +11,4 @@ const Example = ({program, result}) => (
   </div>
 );
 
-export default Example;
+module.exports = Example;

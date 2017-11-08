@@ -1,9 +1,9 @@
-import React from 'react';
-import library from '../lib/library';
-import syntax from '../lib/syntax';
-import literals from '../lib/literals';
-import { connect } from 'react-redux';
-import { pushFunction, displayFunction } from '../actions';
+const React       = require('react');
+const library     = require('../lib/library');
+const syntax      = require('../lib/syntax');
+const literals    = require('../lib/literals');
+const { connect } = require('react-redux');
+const { pushFunction, displayFunction } = require('../actions');
 
 const FunctionPalette = ({addTokenToCanvas, displayInfo}) => {
   let fns     = [],
@@ -66,4 +66,4 @@ const Functions = connect(
   mapDispatchToProps
 )(FunctionPalette);
 
-export default Functions;
+module.exports = Functions;

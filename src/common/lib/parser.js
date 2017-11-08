@@ -44,7 +44,6 @@ function parse(program : any[])
   }
   return {stack: leftover, steps};
 };
-module.exports.parse = parse;
 
 // The main parsing loop, which calls reduces execToken over the list
 // of inputs.
@@ -62,7 +61,6 @@ function parseProgram(
     index: index // ''
   });
 }
-module.exports.parseProgram = parseProgram;
 
 function parseToken(token : Input) : Parsed {
   // This case is never reached, since we execute immediately upon :
@@ -102,7 +100,6 @@ function parseToken(token : Input) : Parsed {
     throw Error('Not parsable');
   }
 }
-module.exports.parseToken = parseToken;
 
 // This function is called from reduce()
 // We may have a problem here with steps... currently, no function can generate
@@ -214,7 +211,7 @@ function exec(func, stack, index) {
   //const args = stack.slice(-func.arity);
   const [rest, args] = R.splitAt(-func.arity, stack);
   //const result = func.fn.apply(null, args);
-  
+
   const argF = new StackSlice(args);
   const result = argF.apply(func);
   // TODO: unwrap result
@@ -235,3 +232,4 @@ function exec(func, stack, index) {
 // where incr is an alias that expands to `x 1 plus`
 
 //export default parse;
+module.exports = { parse, parseToken, parseProgram };

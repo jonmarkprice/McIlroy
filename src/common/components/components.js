@@ -1,11 +1,11 @@
 // Presentational components
-import React from 'react';
-import ProgramCanvas from '../containers/ProgramCanvas';
-import Functions from '../containers/Functions';
-import Execution from '../containers/Execution';
-import Input from '../containers/Input';
-import Info from '../containers/Info';
-import SavedProgramList from '../containers/SavedProgramList';
+const React = require('react');
+const ProgramCanvas = require('../containers/ProgramCanvas');
+const Functions = require('../containers/Functions');
+const Execution = require('../containers/Execution');
+const Input = require('../containers/Input');
+const Info = require('../containers/Info');
+const SavedProgramList = require('../containers/SavedProgramList');
 // import PropTypes from 'prop-types'; // TODO need?
 
 const Program = () => (
@@ -31,4 +31,4 @@ const Interpretter = () => (
   </div>
 );
 
-export default Interpretter;
+module.exports = Interpretter;

@@ -1,7 +1,7 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import descriptions from '../lib/descriptions';
-import Example from '../components/Example';
+const React         = require('react');
+const { connect }   = require('react-redux');
+const descriptions  = require('../lib/descriptions');
+const Example       = require('../components/Example');
 
 // NOTE: Consider encapsulating into larger component
 // since we will always need at least "Info" header.
@@ -44,4 +44,4 @@ const mapStateToProps = (state) => ({
 
 const Info = connect(mapStateToProps, undefined)(InfoPane);
 
-export default Info;
+module.exports = Info;

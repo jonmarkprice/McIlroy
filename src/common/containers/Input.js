@@ -1,6 +1,6 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { selectInput } from '../actions';
+const React           = require('react');
+const { connect }     = require('react-redux');
+const { selectInput } = require('../actions');
 
 class InputList extends React.Component {
   render() {
@@ -34,5 +34,4 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const Input = connect(mapStateToProps, mapDispatchToProps)(InputList);
-
-export default Input;
+module.exports = Input;

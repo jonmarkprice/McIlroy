@@ -10,7 +10,7 @@ test('count the number of even numbers in a list', (assert) => {
   assert.end();
 });
 
-test('capitalizeis a word', (assert) => {
+test('capitalizes a word', (assert) => {
   assert.deepEqual(run(['h', 'i'], 'split', ':', [], 'uppercase', [], 'cons',
     'curry', ':', 'compose', ':', 'cons', ':', 'id', 'cons', ':', 'zip', ':',
     'eval', 'map', ':', 'concat', 'apply', ':'), ['H', 'i']);
@@ -24,5 +24,4 @@ test('capitalizes a word using list constructor', (assert) => {
   assert.end();
 });
 
-// TODO:
-// try all examples from src/parser.js
+// TODO: try all examples from src/parser.js

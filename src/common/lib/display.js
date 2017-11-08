@@ -2,9 +2,9 @@
 //import syntax from './syntax';
 //const library = require('./library');
 const functions = require('./functions');
-const syntax  = require('./syntax');
+const syntax    = require('./syntax');
 
-// type Token = string | any[] | 
+// type Token = string | any[] |
 // if object, then displayable
 
 // const display = (obj) => {
@@ -50,5 +50,4 @@ function display(obj : any) : string {
   }
 }
 
-//export default display;
 module.exports = display

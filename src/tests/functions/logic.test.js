@@ -1,31 +1,29 @@
-import { run } from '../helpers';
+const test    = require('tape');
+const { run } = require('../helpers');
 
-describe('not', () => {
-  it('should implement the truth-table for NOT', () => {
-    expect(run(false, 'not', ':')).toBe(true);
-    expect(run(true, 'not', ':')).toBe(false);
-  });
-  it('should return null for non-logic input');
+test('Not should implement the truth-table for NOT', (assert) => {
+  assert.equal(run(false, 'not', ':'), true);
+  assert.equal(run(true, 'not', ':'), false);
+  assert.end();
 });
+// it('should return null for non-logic input');
 
-describe('and', () => {
-  it('should implement the truth-table for AND', () => {
-    expect(run(false, false, 'and', ':')).toBe(false);
-    expect(run(false, true, 'and', ':')).toBe(false);
-    expect(run(true, false, 'and', ':')).toBe(false);
-    expect(run(true, true, 'and', ':')).toBe(true);
-  });
-  it('should return null for non-logic input');
+test('And should implement the truth-table for AND', (assert) => {
+  assert.equal(run(false, false, 'and', ':'), false);
+  assert.equal(run(false, true, 'and', ':'), false);
+  assert.equal(run(true, false, 'and', ':'), false);
+  assert.equal(run(true, true, 'and', ':'), true);
+  assert.end();
 });
+// it('And should return null for non-logic input');
 
-describe('or', () => {
-  it('should implement the truth-table for inclusive OR', () => {
-    expect(run(false, false, 'or', ':')).toBe(false);
-    expect(run(false, true, 'or', ':')).toBe(true);
-    expect(run(true, false, 'or', ':')).toBe(true);
-    expect(run(true, true, 'or', ':')).toBe(true);
-  });
-  it('should return null for non-logic input');
+test('should implement the truth-table for inclusive OR', (assert) => {
+  assert.equal(run(false, false, 'or', ':'), false);
+  assert.equal(run(false, true, 'or', ':'), true);
+  assert.equal(run(true, false, 'or', ':'), true);
+  assert.equal(run(true, true, 'or', ':'), true);
+  assert.end();
 });
+// it('should return null for non-logic input');
 
 //describe('cond') // XXX currently deprecated

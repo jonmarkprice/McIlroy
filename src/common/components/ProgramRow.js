@@ -1,5 +1,5 @@
-import React from 'react';
-import Token from './Token';
+const React = require('react');
+const Token = require('./Token');
 
 class ProgramRow extends React.Component {
   render() {
@@ -11,4 +11,4 @@ class ProgramRow extends React.Component {
   }
 }
 
-export default ProgramRow;
+module.exports = ProgramRow;

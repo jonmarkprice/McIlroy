@@ -1,4 +1,4 @@
-import React from 'react';
+const React = require('react');
 
 const ProgramName = ({name, onEditName}) => (
   <div className="dbg">
@@ -9,4 +9,4 @@ const ProgramName = ({name, onEditName}) => (
   </div>
 );
 
-export default ProgramName;
+module.exports = ProgramName;

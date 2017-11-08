@@ -1,7 +1,7 @@
-import React from 'react';
-import EditSavedProgram from '../containers/EditSavedProgram';
-import { connect } from 'react-redux';
-import { expandSavedProgram } from '../actions/index';
+const React = require('react');
+const EditSavedProgram = require('../containers/EditSavedProgram');
+const { connect } = require('react-redux');
+const { expandSavedProgram } = require('../actions/index');
 
 const mapDispatchToProps = dispatch => ({
   onExpand: id => {
@@ -33,5 +33,4 @@ class Container extends React.Component {
 }
 
 const SavedProgram = connect(undefined, mapDispatchToProps)(Container);
-
-export default SavedProgram;
+module.exports = SavedProgram;

@@ -1,5 +1,5 @@
-import React from 'react';
-import display from '../lib/display.js'
+const React   = require('react');
+const display = require('../lib/display.js');
 
 const Token = ({text, classList=[]}) => (
   <div className={`item ${classList.join(' ')}`}>
@@ -7,4 +7,4 @@ const Token = ({text, classList=[]}) => (
   </div>
 );
 
-export default Token;
+module.exports = Token;

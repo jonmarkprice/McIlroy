@@ -1,13 +1,10 @@
-// TODO: actually test the reducer... and actions
-// since purely functional, it shouldn't be hard at all...
+// TODO: I should have several tests per action.
 
-// I should have several tests per action.
-//
-
-import app from '../common/reducers';
-import { updateProgramNameBuffer,
-         updateProgramName,
-         addProgram } from '../common/actions';
+const test = require('tape');
+const reducer = require('../common/reducers/index');
+const { updateProgramNameBuffer,
+        updateProgramName,
+        addProgram } = require('../common/actions');
 
 const initialState = {
   input     : [{label: '[No Input]', data: null}],
@@ -19,127 +16,130 @@ const initialState = {
 }
 
 
-describe('UPDATE_NAME_BUFFER', () => {
-  it('should update the correct buffer from the action text', () => {
-    const given_state = {
-      input     : [{label: '[No Input]', data: null}],
-      selected  : 0,
-      program   : [],
-      displayed : '',
-      saved     : {
-        '0': {
-          name    : 'Untitled',
-          program : [],
-          buffer  : '',
-          editing : true,
-          editing_name: true,
-          id      : 0
-        }
-      },
-      next_id   : 1
-    }
-    const expected_state = {
-      input     : [{label: '[No Input]', data: null}],
-      selected  : 0,
-      program   : [],
-      displayed : '',
-      saved     : {
-        '0': {
-          name    : 'Untitled',
-          program : [],
-          buffer  : 'Test', // <- Only change
-          editing : true,
-          editing_name: true,
-          id      : 0
-        }
-      },
-      next_id   : 1
-    };
-    expect(app(given_state, updateProgramNameBuffer(0, 'Test')))
-      .toEqual(expected_state);
-  });
+// 'UPDATE_NAME_BUFFER'
+test('should update the correct buffer from the action text', (assert) => {
+  const given_state = {
+    input     : [{label: '[No Input]', data: null}],
+    selected  : 0,
+    program   : [],
+    displayed : '',
+    saved     : {
+      '0': {
+        name    : 'Untitled',
+        program : [],
+        buffer  : '',
+        editing : true,
+        editing_name: true,
+        id      : 0
+      }
+    },
+    next_id   : 1
+  }
+
+  const expected_state = {
+    input     : [{label: '[No Input]', data: null}],
+    selected  : 0,
+    program   : [],
+    displayed : '',
+    saved     : {
+      '0': {
+        name    : 'Untitled',
+        program : [],
+        buffer  : 'Test', // <- Only change
+        editing : true,
+        editing_name: true,
+        id      : 0
+      }
+    },
+    next_id   : 1
+  };
+  assert.deepEqual(reducer(given_state, updateProgramNameBuffer(0, 'Test')),
+                   expected_state);
+  assert.end();
 });
 
 // TODO: should we also clear the buffer?
-describe('NAME_PROGRAM', () => {
-  it('should update the name from the buffer', () => {
-    const given_state = {
-      input     : [{label: '[No Input]', data: null}],
-      selected  : 0,
-      program   : [],
-      displayed : '',
-      saved     : {
-        '0': {
-          name    : 'Untitled',
-          program : [],
-          buffer  : 'Test',
-          editing_name : true,
-          editing: false,
-          id      : 0
-        }
-      },
-      next_id   : 1
-    }
-    const expected_state = {
-      input     : [{label: '[No Input]', data: null}],
-      selected  : 0,
-      program   : [],
-      displayed : '',
-      saved     : {
-        '0': {
-          name    : 'Test',
-          program : [],
-          buffer  : 'Test',
-          editing_name : false,
-          editing: false,
-          id      : 0
-        }
-      },
-      next_id   : 1
-    };
-    expect(app(given_state, updateProgramName(0)))
-      .toEqual(expected_state);
-  });
+// 'NAME_PROGRAM'
+test('should update the name from the buffer', (assert) => {
+  const given_state = {
+    input     : [{label: '[No Input]', data: null}],
+    selected  : 0,
+    program   : [],
+    displayed : '',
+    saved     : {
+      '0': {
+        name    : 'Untitled',
+        program : [],
+        buffer  : 'Test',
+        editing_name : true,
+        editing: false,
+        id      : 0
+      }
+    },
+    next_id   : 1
+  }
+  const expected_state = {
+    input     : [{label: '[No Input]', data: null}],
+    selected  : 0,
+    program   : [],
+    displayed : '',
+    saved     : {
+      '0': {
+        name    : 'Test',
+        program : [],
+        buffer  : 'Test',
+        editing_name : false,
+        editing: false,
+        id      : 0
+      }
+    },
+    next_id   : 1
+  };
+
+  assert.deepEqual(reducer(given_state, updateProgramName(0)), expected_state);
+  assert.end();
 });
 
-describe('SAVE_PROGRAM', () => {
-  it('should save an empty program', () => {
-    const expected_state = {
-      input     : [{label: '[No Input]', data: null}],
-      selected  : 0,
-      program   : [],
-      displayed : '',
-      saved     : {
-        '0': {
-          id: 0,
-          program: [],
-          name: 'Untitled',
-          buffer: 'Untitled',
-          editing_name: true,
-          editing: true,
-        }
-      },
-      next_id   : 1
-    }
-    expect(app(initialState, addProgram())).toEqual(expected_state);
-  });
-  it('should save a short program', () => {
-    const expected_state = {
-      input     : [{label: '[No Input]', data: null}],
-      selected  : 0,
-      program   : ['+', 1, 'curry', ':', 'map', ':'],
-      displayed : '',
-      saved     : {
-        '0': {
-          id: 0,
-          program: ['+', 1, 'curry', ':', 'map', ':'],
-          name: 'Untitled',
-          buffer: 'Untitled',
-          editing_name: true,
-          editing: true,
-        }
-      },
-      next_id   : 1
-    }
-  })
-})
+// 'SAVE_PROGRAM'
+test('should save an empty program', (assert) => {
+  const expected_state = {
+    input     : [{label: '[No Input]', data: null}],
+    selected  : 0,
+    program   : [],
+    displayed : '',
+    saved     : {
+      '0': {
+        id: 0,
+        program: [],
+        name: 'Untitled',
+        buffer: 'Untitled',
+        editing_name: true,
+        editing: true,
+      }
+    },
+    next_id   : 1
+  }
+  assert.deepEqual(reducer(initialState, addProgram()), expected_state);
+  assert.end();
+});
+
+/* XXX: This test never did anythig!
+test('should save a short program', (assert) => {
+  const expected_state = {
+    input     : [{label: '[No Input]', data: null}],
+    selected  : 0,
+    program   : ['+', 1, 'curry', ':', 'map', ':'],
+    displayed : '',
+    saved     : {
+      '0': {
+        id: 0,
+        program: ['+', 1, 'curry', ':', 'map', ':'],
+        name: 'Untitled',
+        buffer: 'Untitled',
+        editing_name: true,
+        editing: true,
+      }
+    },
+    next_id   : 1
+  }
+}) */
