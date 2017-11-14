@@ -30,15 +30,16 @@ const { interpretTypes } = require('./typecheck');
 const library = require('./library');
 
 //type Alias   = {type: string, expansion: Array<Literal | Alias>}; // recursive types ok?
-export type AliasLiteral = {name: string, expansion: Literal[]};
-export type Literal = string | number | boolean | AliasLiteral;
-export type Token = SyntaxToken | PrimitiveToken | AliasToken | ValueToken;
-export type SyntaxToken = {type: 'Syntax', value: string};
-export type PrimitiveToken = {type: 'Primitive', value: string};
-export type AliasToken = {type: 'Alias', value: AliasLiteral};
-export type ValueToken = {type: 'Boolean', value: boolean} 
-    | {type: 'Number', value: number}
-    | {type: 'Char', value: string};
+export type AliasLiteral = {name: string, expansion: Token[]};
+export type Literal = string | number | boolean;
+export type Token = SyntaxToken | AliasToken | ValueToken;
+export type SyntaxToken = {token: 'Syntax', value: string};
+export type AliasToken = {token: 'Alias', value: AliasLiteral};
+export type ValueToken = {token: 'Value', type: {name: 'Boolean'}, value: boolean} 
+    | {token: 'Value', type: {name: 'Number'}, value: number}
+    | {token: 'Value', type: {name: 'Char'}, value: string}
+    | {token: 'Value', type: {name: 'List'}, value: Literal[]}
+    | {token: 'Value', type: {name: 'Function'}, value: string};
 
 // TODO: potentially make function / alias sub-types
 
@@ -56,34 +57,35 @@ type Accumulator = Either<{
 
 // NOTE: This funtion is intended to be mapped over.
 // Assume there can't be any lists, only cons or list literals '[', ']'
-function tokenize(value : Literal, config : TokenizerConfig) : Token
+function tokenize(value : Literal | AliasLiteral, config : TokenizerConfig) : Token
 {
     if (value.name !== undefined && value.expansion !== undefined) {
         // Any object that has 'name' and 'expansion' fields is considered to
         // be an alias.
-        return {type: 'Alias', value};
+        return {token: 'Alias', value};
+        //return {token: 'Value', type: {name: 'List'}, value: []}; // TEST
     }
     // Check strings
     else if (typeof value == 'string') {
         if (config.syntax.has(value)) {
             // We could also use a Map or Set to define syntax and use .has()
-            return {type: 'Syntax', value};
+            return {token: 'Syntax', value};
         }
         else if (config.primitives.has(value)) { // not what I want! -- includes()
-            return {type: 'Primitive', value};
+            return {token: 'Value', type: {name: 'Function'}, value};
         }
         else if (value.length === 1) {
-            return {type: 'Char', value};
+            return {token: 'Value', type: {name: 'Char'}, value};
         }
         else {
             throw Error('Abritrary strings not supported.');
         }
     }
     else if (typeof value == 'boolean') {
-        return {type: 'Boolean', value};
+        return {token: 'Value', type: {name: 'Boolean'}, value};
     }
     else if (typeof value == 'number') {
-        return {type: 'Number', value};
+        return {token: 'Value', type: {name: 'Number'}, value};
     }
     // TODO: support lists? `
     else {
@@ -117,15 +119,15 @@ function parseStack(
 ///         or pushing to the stack. 
 function parseToken(
     acc   : Accumulator,
-    token : Token
+    current : Token
 ) : Accumulator
 {
     // return R.identity(acc);
-    if (token.type === 'Syntax') {
+    if (current.token === 'Syntax') {
         //return acc;
-        switch (token.value) {
+        switch (current.value) {
             case ':': return compose(parseFunction, popInput)(acc); // XXX This should check the type (Prim., Alias)
-            case '[': return pushToStack(acc, token);
+            case '[': return pushToStack(acc, current);
             case ']': return buildList(acc);
             default : return Left.of('Unknown syntax.');
         }
@@ -133,7 +135,7 @@ function parseToken(
         // what if token.type is Syntax, token.value is '['?
         // I don't want to duplicate all the code below (function?)
     }
-    else return pushToStack(acc, token);
+    else return pushToStack(acc, current);
 }
 
 // Just remove the last input
@@ -178,11 +180,12 @@ function parseFunction(acc : Accumulator) : Accumulator {
     // Pop the function (top/last of the stack).
     const fn : Either<Token>    = acc.map(compose(last, prop('stack')));
     const updated : Accumulator = acc.map(over(lensProp('stack'), dropLast(1)));
+    const fnTok  = fn.map(prop('token'));
     const fnType = fn.map(prop('type'));
-    if (equals(Right.of('Alias'), fnType)) {
+    if (equals(Right.of('Alias'), fnTok)) {
         return expandAlias(fn.right(), updated)
     }
-    else if (equals(Right.of('Primitive'), fnType)) {
+    else if (equals(Right.of('Value'), fnTok) && equals(Right.of({name: 'Function'}), fnType)) {
         return runPrimitive(fn.right(), updated);
     }
     else {
@@ -197,7 +200,7 @@ function expandAlias(alias : Token, acc : Accumulator) : Accumulator {
     return Left.of('[INTERNAL] expandAlias not implemented.');
 }
 
-function runPrimitive(fn : PrimitiveToken, acc : Accumulator) : Accumulator {
+function runPrimitive(fn : ValueToken, acc : Accumulator) : Accumulator {
     const lenses = {stack: lensProp('stack')}; // TODO: generalize
 
     if (library.has(fn.value)) {
@@ -254,7 +257,6 @@ type LibDef = {
     fn: (any) => any
 }
 
-// TODO type check
 // sure... I just need to map over something that either returns
 // a Left() or echos the input
 // maybe just concat() instead of appending...
@@ -262,24 +264,12 @@ function applyDef(def : LibDef, args : Either<Token[]>) : Either<Token> {
     if (args.ok()) {
         const list = args.right();
         const raw : Literal[] = list.map(prop('value'));
-        const types : TokenType[] = list.map(prop('type'));
-        /*
-        return Right.of({
-            value: R.apply(def.fn, raw),
-            type: 'TODO'
-        });*/
-
-        // return Right.of({ value: R.apply(def.fn, raw) })
-        //     .map(x => R.assoc('type', x))
-        //     .ap(interpretTypes(types, def.types));
-        // XXX This is wrong!!!!!!
-        const value = Right.of({value: R.apply(def.fn, raw)});
-        
-        const res = Right.of(x => y => R.assoc('type', x, y))
-            .ap(interpretTypes(types, def.types))
-            //.ap(Right.of('TODO'))
+        //const types : TokenType[]   = list.map(prop('type'));
+        const value = Right.of({token: 'Value', value: R.apply(def.fn, raw)});
+        const res   = Right.of(x => y => R.assoc('type', x, y))
+            //.ap(interpretTypes(types, def.types)) // to do type inference, will need the whole thing, not just types
+            .ap(interpretTypes(list, def.types))
             .ap(value);
-            //.ap(Right.of({value: 0}))
         return res;
     }
     else {

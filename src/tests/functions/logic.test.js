@@ -1,5 +1,4 @@
 const test    = require('tape');
-const { run } = require('../helpers');
 const { ap, fn, tok, True, False } = require('../tokens');
 const { parse } = require('../../common/lang/helpers');
 
@@ -20,10 +19,10 @@ test('And should implement the truth-table for AND', (assert) => {
 // it('And should return null for non-logic input');
 
 test('should implement the truth-table for inclusive OR', (assert) => {
-  assert.equal(run(false, false, 'or', ':'), false);
-  assert.equal(run(false, true, 'or', ':'), true);
-  assert.equal(run(true, false, 'or', ':'), true);
-  assert.equal(run(true, true, 'or', ':'), true);
+  assert.deepEqual(parse(False, False, fn.or, ap), False);
+  assert.deepEqual(parse(False, True, fn.or, ap), True);
+  assert.deepEqual(parse(True, False, fn.or, ap), True);
+  assert.deepEqual(parse(True, True, fn.or, ap), True);
   assert.end();
 });
 // it('should return null for non-logic input');

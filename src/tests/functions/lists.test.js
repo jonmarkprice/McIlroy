@@ -1,5 +1,7 @@
 const test    = require('tape');
 const { run } = require('../helpers');
+const { parse } = require('../../common/lang/helpers');
+const { t, fn, ap, tok, empty } = require('../tokens');
 
 // describe('cons', () => {
 // it('should create a singleton list from atoms');
@@ -10,7 +12,10 @@ const { run } = require('../helpers');
 
 // describe('replicate', () => {
 test('should return an empty list on 0', (assert) => {
-  assert.deepEqual(run(1, 0, 'replicate', ':'), []);
+  assert.deepEqual(
+    parse(tok(1), tok(0), fn.replicate, ap),
+    empty
+  );
   assert.end();
 });
 // it('should return null unless the second argument is a non-negative integer');

@@ -1,15 +1,6 @@
 const R = require('ramda');
 const display = require('./display');
-
-const t = { // types
-  bool: {type: 'Boolean'},
-  num: {type: 'Number'},
-  str: {type: 'String'},
-  list: x => ({type: 'List', of: x}), // of is a keyword
-  fn: (from, to) => ({type: 'Function', from, to}),
-  any: id => ({type: 'Any', id}),
-  int: {type: 'Integer'} // XXX: not implemented
-};
+const { t } = require('../../tests/tokens');
 
 // types: list, any, string, char, number, integer....
 const library = new Map([
@@ -22,7 +13,10 @@ const library = new Map([
   ['replicate', {
     display: 'replicate',
     arity: 2,
-    types: ['any', 'integer'],
+    types: {
+      in: [t.var(1), t.num], // or int?
+      out: t.list
+    },
     fn: R.repeat
   }],
   ['sum', {
@@ -114,7 +108,10 @@ const library = new Map([
   ['or', {
     display: 'or',
     arity: 2,
-    types: ['boolean', 'boolean'],
+    types: {
+      in: [t.bool, t.bool],
+      out: t.bool
+    },
     fn: (x,y) => x || y //R.or
   }],
   ['concat', {
@@ -147,8 +144,8 @@ const library = new Map([
     display: 'id',
     arity: 1,
     types: {
-      in: [t.any(1)],
-      out: t.any(1)
+      in: [t.var(1)],
+      out: t.var(1)
     },
     fn: R.identity
   }],

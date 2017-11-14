@@ -19,20 +19,20 @@ const tokenize_ = x => tokenize(x, config);
 test('tokenize', (assert) => {
     assert.deepEqual(
         tokenize_(3),
-        {type: 'Number', value: 3}
+        {token: 'Value', type: {name: 'Number'}, value: 3}
     );
 
     assert.deepEqual(
         tokenize_('id'),
-        {type: 'Primitive', value: 'id'}
+        {token: 'Value', value: 'id', type: {name: 'Function'}}
     );
 
     assert.deepEqual(
         [0, 'id', ':'].map(tokenize_),
         [
-            {type: 'Number'   , value: 0},
-            {type: 'Primitive', value: 'id'},
-            {type: 'Syntax'   , value: ':'}
+            {token: 'Value',  value: 0,    type: {name: 'Number'}},
+            {token: 'Value',  value: 'id', type: {name: 'Function'}},
+            {token: 'Syntax', value: ':'}
         ]
     );
 
@@ -58,7 +58,7 @@ test('parseStack', (assert) => {
         //Left.of('[INTERNAL] runPrimitive not implemented.')
         Right.of({
             input: [],
-            stack: [{type: 'Number', value: 0}],
+            stack: [{token: 'Value', type: {name: 'Number'}, value: 0}],
             index: 2,       // Don't care
             first: true     // Don't care
         })
@@ -75,7 +75,7 @@ test('parseStack', (assert) => {
         parseStack([3, 4, '+', ':'].map(tokenize_), [], true, 0),
         Right.of({
             input: [],
-            stack: [{type: 'Number', value: 7}],
+            stack: [{token: 'Value', type: {name: 'Number'}, value: 7}],
             index: 3,       // Don't care
             first: true     // Don't care
         })
