@@ -29,6 +29,16 @@ const { Left, Right } = require('./lib/either');
 const { interpretTypes } = require('./typecheck');
 const library = require('./library');
 
+const old = require('../lib/parser');
+// parse,          // createSteps
+// parseProgram,   // parseStack
+// execToken,      // parseToken
+// parseFunction,  // .
+// parseToken,     // [DEL] partially replaced by tokenize
+// expandAlias,    // .
+// exec            // parsePrimitive
+// };
+
 //type Alias   = {type: string, expansion: Array<Literal | Alias>}; // recursive types ok?
 export type AliasLiteral = {name: string, expansion: Token[]};
 export type Literal = string | number | boolean;
@@ -198,6 +208,8 @@ function parseFunction(acc : Accumulator) : Accumulator {
 // use in expandAlias and runPrimitive
 function expandAlias(alias : Token, acc : Accumulator) : Accumulator {
     return Left.of('[INTERNAL] expandAlias not implemented.');
+
+    //return Right.of(old.expandAlias())
 }
 
 function runPrimitive(fn : ValueToken, acc : Accumulator) : Accumulator {

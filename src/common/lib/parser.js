@@ -232,4 +232,12 @@ function exec(func, stack, index) {
 // where incr is an alias that expands to `x 1 plus`
 
 //export default parse;
-module.exports = { parse, parseToken, parseProgram };
+module.exports = { 
+  parse,          // createSteps
+  parseProgram,   // parseStack
+  execToken,      // parseToken
+  parseFunction,  // .
+  parseToken,     // [DEL] partially replaced by tokenize
+  expandAlias,    // .
+  exec            // parsePrimitive
+};
