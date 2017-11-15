@@ -34,18 +34,19 @@ function matchAny(index : number, actual : TokenType)
 function interpretTypes (
     // actual : TokenType[], 
     tokens : Token[],
-    annotation : {in: Type[], out: Type}
+    annotation : {in: Type[], out: Type},
+    value : any,
 ) : Either<Type> 
 {
     const actual : Type[] = R.map(R.prop('type'), tokens);
  
     if (annotation.out.name === 'Any') {
-        return Left.of("Not implemented");
+        return inferType(value);
     }
     else  if (annotation.out.name === 'Variable') {
         const index = findIndex(propEq('id', annotation.out.id), annotation.in);
         if (index === undefined) {
-            return Left.of("Can't match Any type");
+            return Left.of("Can't match variable type");
         }
         else {
             const resolved : Type = R.nth(index, actual);
@@ -53,7 +54,8 @@ function interpretTypes (
         }
     }
     else if (annotation.out.name === 'Function') {
-        return Left.of("Not Implemented");
+        //return Left.of("Function support not Implemented");
+        return Right.of(annotation.out.to);
     }
     else if (annotation.out.name === 'Char'
         || annotation.out.name === 'Number' 
@@ -63,6 +65,39 @@ function interpretTypes (
         return Right.of(annotation.out); // This won't work..
     }
     else return Left.of("Unmatched case.");
+}
+
+// TODO : try to use this is tokenizer to reduce duplicated effort.
+// This should also be easier to test.
+function inferType(value : any) : Either<string> { // maybe Literal
+    // NOTE: This is simpler than tokenize() because it does not
+    // need to look up a string to see if it a token. It also does
+    // not need to deal with Aliases.
+    const supported = new Set(['Array', 'Boolean', 'Number']);
+    const inferred : string = R.type(value);
+    if (supported.has(inferred)) {
+        return Right.of(inferred);
+    }
+    else if (inferred === 'String' && value.length === 1) {
+        return Right.of('Char');
+    }
+    else if (inferred === 'Object') {
+        const allTrue = R.reduce(R.and, true);
+        const propChecks = R.juxt([
+            R.propIs('Function', 'fn'),
+            R.propIs('Number', 'arity'),
+            R.propIs('String', 'display')
+        ]);
+        if (allTrue(propChecks(value))) {
+            return Right.of('Function');
+        }
+        else {
+            return Left.of('Object is not a proper function.');
+        }
+    }
+    else {
+        return Left.of('Cannot infer type.');
+    }
 }
 
 type TypeCheck = {ok: boolean, msg: string};

@@ -67,6 +67,7 @@ type Accumulator = Either<{
 
 // NOTE: This funtion is intended to be mapped over.
 // Assume there can't be any lists, only cons or list literals '[', ']'
+// TODO: consider wrapping this Token in an Either
 function tokenize(value : Literal | AliasLiteral, config : TokenizerConfig) : Token
 {
     if (value.name !== undefined && value.expansion !== undefined) {
@@ -81,8 +82,12 @@ function tokenize(value : Literal | AliasLiteral, config : TokenizerConfig) : To
             // We could also use a Map or Set to define syntax and use .has()
             return {token: 'Syntax', value};
         }
-        else if (config.primitives.has(value)) { // not what I want! -- includes()
-            return {token: 'Value', type: {name: 'Function'}, value};
+        else if (config.primitives.has(value)) {
+            return {
+                token: 'Value',
+                type: {name: 'Function'/* Eventually support from, to fields */},
+                value: library.get(value)
+            };
         }
         else if (value.length === 1) {
             return {token: 'Value', type: {name: 'Char'}, value};
@@ -111,7 +116,7 @@ function tokenize(value : Literal | AliasLiteral, config : TokenizerConfig) : To
 function createSteps()
 { // previously parse
     // TODO
-    throw Error('Not implemented.');
+    throw Error('[INTERNAL] createSteps not implemented.');
 }
 
 // previously parseProgram
@@ -214,49 +219,51 @@ function expandAlias(alias : Token, acc : Accumulator) : Accumulator {
     //return Right.of(old.expandAlias())
 }
 
-function runPrimitive(fn : ValueToken, acc : Accumulator) : Accumulator {
+function runPrimitive(fn : FunctionToken, acc : Accumulator) : Accumulator {
     const lenses = {stack: lensProp('stack')}; // TODO: generalize
 
-    if (library.has(fn.value)) {
-        const libdef = library.get(fn.value)
-        if (libdef === undefined) {
-            return Left.of(`Error: ${fn.value} is not a function.`);
-        }
-        else {
-            if (has('fn', libdef)) {
+    // TODO: run all of these checks in the tokenization step.
+
+    //if (library.has(fn.value)) {
+        //const libdef = library.get(fn.value)
+        //if (libdef === undefined) {
+        //    return Left.of(`Error: ${fn.value} is not a function.`);
+        //}
+        //else {
+            //if (has('fn', libdef)) {
                 // const result = Right
                 //.of(applyOverTokens)
                 //.of(curry(applyOverTokens)(libdef.fn))
                 //.ap(acc.map(prop('stack'))
                     //.map(R.takeLast(libdef.arity)));
-         
-                const args = acc.map(R.prop('stack'))
-                                .map(R.takeLast(libdef.arity));
-                const result = applyDef(libdef, acc.map(R.prop('stack')))
-                
-                //const result = acc.map(prop('stack'))
-                    //.map(R.takeLast(libdef.arity))
-                    //.map(R.apply(libdef.fn));
-                    //.map(curry(applyOverTokens)(libdef.fn));
-                // XXX const result = Right.of({type: 'Number', value: 0})
-                // Ok, I see the problem we need to apply with the tokens...
-                // Currently we are trying to do: 
-                //  {type: '', value: 3} + {type: '', value: 4}
-                // which of course is NaN!
+    const libdef = fn.value;     
+    const args = acc.map(R.prop('stack'))
+                    .map(R.takeLast(libdef.arity));
+    const result = applyDef(libdef, acc.map(R.prop('stack')))
+    
+    //const result = acc.map(prop('stack'))
+        //.map(R.takeLast(libdef.arity))
+        //.map(R.apply(libdef.fn));
+        //.map(curry(applyOverTokens)(libdef.fn));
+    // XXX const result = Right.of({type: 'Number', value: 0})
+    // Ok, I see the problem we need to apply with the tokens...
+    // Currently we are trying to do: 
+    //  {type: '', value: 3} + {type: '', value: 4}
+    // which of course is NaN!
 
-                const rest = acc.map(R.over(lenses.stack, R.dropLast(libdef.arity)));
-                return Right.of(x => R.over(lenses.stack, R.append(x)))
-                    .ap(result)
-                    .ap(rest);
-            }
-            else {
-                return Left.of(`Error ${fn.value} has no implementation.`);
-            }
-        }
-    }
-    else {
-        return Left.of(`Function ${fn.value} not found.`);
-    }
+    const rest = acc.map(R.over(lenses.stack, R.dropLast(libdef.arity)));
+    return Right.of(x => R.over(lenses.stack, R.append(x)))
+        .ap(result)
+        .ap(rest);
+            //}
+            //else {
+            //    return Left.of(`Error ${fn.value} has no implementation.`);
+            //}
+        //}
+    //}
+    //else {
+    //    return Left.of(`Function ${fn.value} not found.`);
+    //}
     
     // return Left.of('[INTERNAL] runPrimitive not implemented.');
 }
@@ -274,16 +281,17 @@ type LibDef = {
 // sure... I just need to map over something that either returns
 // a Left() or echos the input
 // maybe just concat() instead of appending...
-function applyDef(def : LibDef, args : Either<Token[]>) : Either<Token> { 
+function applyDef(def : LibDef, args : Either<Token[]>) : Right<Token> | Left { 
     if (args.ok()) {
         const list = args.right();
         const raw : Literal[] = list.map(prop('value'));
         //const types : TokenType[]   = list.map(prop('type'));
-        const value = Right.of({token: 'Value', value: R.apply(def.fn, raw)});
+        const value = R.apply(def.fn, raw);
+        const token = Right.of({token: 'Value', value});
         const res   = Right.of(x => y => R.assoc('type', x, y))
             //.ap(interpretTypes(types, def.types)) // to do type inference, will need the whole thing, not just types
-            .ap(interpretTypes(list, def.types))
-            .ap(value);
+            .ap(interpretTypes(list, def.types, value))
+            .ap(token);
         return res;
     }
     else {

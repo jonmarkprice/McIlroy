@@ -165,8 +165,18 @@ const library = new Map([
   ['apply', {
     display: 'apply',
     arity: 2,
-    types: ['list', 'function'],
-    fn: (args, f) => f.fn.apply(null, args)
+    types: {
+      in: [t.list, t.fn],
+      out: t.any // TODO: later use the fn ret type
+    },
+    // XXX: This could easily break
+    fn: (args, f) => {
+      console.log(f);
+      console.log(typeof f);
+      console.log(args);
+      return f.fn.apply(null, args);
+    }
+    //fn: (args, f) => R.apply(f.fn, args)
   }],
   // renamed apply to eval() since that is what it does.
   // it takes a data structure and evaluates it as a function call

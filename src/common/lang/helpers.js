@@ -18,6 +18,13 @@ function result(...program : Literal[]) : Either<?Token> {
     return stack.map(R.head).map(R.prop('value'));
   }
   else {
+    if (stack.ok()) {
+      console.log(stack.right());
+    }
+    else {
+      console.log(stack.left());
+    }
+
     return Left.of('Too many items on stack.');
   }
 }

@@ -2,6 +2,7 @@
 import type { TokenizerConfig, Literal, Token } from '../common/lang/parse';
 
 const test = require('tape')
+const library = require('../common/lang/library');
 const { tokenize, parseStack } = require('../common/lang/parse');
 const { Right, Left } = require('../common/lang/lib/either');
 
@@ -24,14 +25,14 @@ test('tokenize', (assert) => {
 
     assert.deepEqual(
         tokenize_('id'),
-        {token: 'Value', value: 'id', type: {name: 'Function'}}
+        {token: 'Value', value: library.get('id'), type: {name: 'Function'}}
     );
 
     assert.deepEqual(
         [0, 'id', ':'].map(tokenize_),
         [
             {token: 'Value',  value: 0,    type: {name: 'Number'}},
-            {token: 'Value',  value: 'id', type: {name: 'Function'}},
+            {token: 'Value',  value: library.get('id'), type: {name: 'Function'}},
             {token: 'Syntax', value: ':'}
         ]
     );
