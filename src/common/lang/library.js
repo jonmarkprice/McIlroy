@@ -129,7 +129,10 @@ const library = new Map([
   ['zip', {
     display: 'zip',
     arity: 2,
-    types: ['list', 'list'],
+    types: {
+      in: [t.list, t.list],
+      out: t.list
+    },
     fn: (a, b) => {
       const len = Math.min(a.length, b.length);
       let result = [];
@@ -198,7 +201,10 @@ const library = new Map([
   ['length', {
     display: 'length',
     arity: 1,
-    types: ['list'],
+    types: {
+      in: [t.list],
+      out: t.num // technically int
+    },
     fn: R.length
   }],
   ['succ', {

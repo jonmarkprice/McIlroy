@@ -97,7 +97,9 @@ function tokenize(value : Literal | AliasLiteral, config : TokenizerConfig) : To
     else if (typeof value == 'number') {
         return {token: 'Value', type: {name: 'Number'}, value};
     }
-    // TODO: support lists? `
+    else if (Array.isArray(value)) {
+        return {token: 'Value', type: {name: 'List'}, value};
+    }
     else {
         // Throw an error if not. This should never ever happen.
         throw Error('Invalid token!');

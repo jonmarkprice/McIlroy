@@ -1,7 +1,6 @@
 const test    = require('tape');
-const { run } = require('../helpers');
-const { parse } = require('../../common/lang/helpers');
-const { t, fn, ap, tok, empty } = require('../tokens');
+const { result } = require('../../common/lang/helpers');
+const { Left, Right } = require('../../common/lang/lib/either');
 
 // describe('cons', () => {
 // it('should create a singleton list from atoms');
@@ -12,9 +11,10 @@ const { t, fn, ap, tok, empty } = require('../tokens');
 
 // describe('replicate', () => {
 test('should return an empty list on 0', (assert) => {
+  assert.deepEqual(result(1, 0, 'replicate', ':'), Right.of([]));
   assert.deepEqual(
-    parse(tok(1), tok(0), fn.replicate, ap),
-    empty
+    result(true, 3, 'replicate', ':'),
+    Right.of([true, true, true])
   );
   assert.end();
 });
@@ -22,13 +22,32 @@ test('should return an empty list on 0', (assert) => {
 
 // describe('zip', () => {
 test('should work on two empty lists', (assert) => {
-  assert.deepEqual(run([], [], 'zip', ':'), []);
+  assert.deepEqual(
+    result([], [], 'zip', ':'),
+    Right.of([])
+  );
+  assert.deepEqual(
+    result(['a', 'b'], [1, 2, 3], 'zip', ':'),
+    Right.of([['a', 1], ['b', 2]])
+  );
   assert.end();
 });
 
 //describe('length', () => {
 test('should return 0 from an empty list', (assert) => {
-  assert.equal(run([], 'length', ':'), 0);
+  assert.deepEqual(
+    result([], 'length', ':'),
+    Right.of(0)
+  );
+  assert.deepEqual(
+    result([1, 'x', true, []], 'length', ':'),
+    Right.of(4)
+  );
+  /* TODO: no type checking yet...
+  assert.deepEqual(
+    result(1, 'length', ':'),
+    Left.of('...')
+  );*/
   assert.end();
 });
 
