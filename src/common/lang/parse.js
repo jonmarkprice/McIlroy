@@ -103,12 +103,36 @@ function tokenize(value : Literal | AliasLiteral, config : TokenizerConfig) : To
         return {token: 'Value', type: {name: 'Number'}, value};
     }
     else if (Array.isArray(value)) {
-        return {token: 'Value', type: {name: 'List'}, value};
+        return {
+            token: 'Value',
+            type: {name: 'List'},
+            value: value.map(x => tokenize(x, config))
+        };
     }
     else {
         // Throw an error if not. This should never ever happen.
         throw Error('Invalid token!');
     }
+}
+
+// Takes a token and (recursively) extracts the values from it.
+function extractValue(tok : Token) : any /*or literal*/ {
+  if (tok.token !== 'Value') {
+    throw Error('Not a value token'); // Either?
+  }
+  else {
+    switch (tok.type.name) { // potentially unsafe if type undef
+      case 'List':
+        return tok.value.map(extractValue);
+      case 'Number':
+      case 'Char':
+      case 'Boolean':
+      case 'Function':
+        return tok.value;
+      default:
+        throw Error('Unknown token type');
+    }
+  }
 }
 
 ///// Actual parser starts here
@@ -284,15 +308,12 @@ type LibDef = {
 function applyDef(def : LibDef, args : Either<Token[]>) : Right<Token> | Left { 
     if (args.ok()) {
         const list = args.right();
-        const raw : Literal[] = list.map(prop('value'));
-        //const types : TokenType[]   = list.map(prop('type'));
+        const raw : Literal[] = list.map(extractValue);
         const value = R.apply(def.fn, raw);
         const token = Right.of({token: 'Value', value});
-        const res   = Right.of(x => y => R.assoc('type', x, y))
-            //.ap(interpretTypes(types, def.types)) // to do type inference, will need the whole thing, not just types
-            .ap(interpretTypes(list, def.types, value))
-            .ap(token);
-        return res;
+        return Right.of(x => y => R.assoc('type', x, y))
+                .ap(interpretTypes(list, def.types, value))
+                .ap(token);
     }
     else {
         return args; // pass error through
@@ -303,3 +324,4 @@ module.exports = {
     tokenize
     , parseStack
 };
+

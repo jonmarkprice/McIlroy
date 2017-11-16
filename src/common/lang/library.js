@@ -28,7 +28,10 @@ const library = new Map([
   ['map', {
     display: 'map',
     arity: 2,
-    types: ['list', 'function'],
+    types: {
+      in: [t.list, t.fn],
+      out: t.any
+    },
     fn: (list, f) => list.map(f.fn)
   }],
   ['not', {
@@ -123,7 +126,10 @@ const library = new Map([
   ['reduce', {
     display: 'reduce',
     arity: 3,
-    types: ['list', 'function', 'any'],
+    types: {
+      in: [t.list, t.fn, t.any],
+      out: t.any
+    },
     fn: (list, f, base) => list.reduce(f.fn, base)
   }],
   ['zip', {
@@ -183,7 +189,10 @@ const library = new Map([
   ['eval', {
     display: 'eval',
     arity: 1,
-    types: ['list'],
+    types: {
+      in: [t.list],
+      out: t.any
+    },
     fn: list => R.last(list).fn.apply(null, list.slice(0, -1))
   }],
   /* This can be implemented with:
@@ -199,7 +208,10 @@ const library = new Map([
   ['uppercase', {
     display: 'uppercase',
     arity: 1,
-    types: ['char'],
+    types: {
+      in: [t.char],
+      out: t.char
+    },
     fn: char => char.toUpperCase()
   }],
   ['lowercase', {

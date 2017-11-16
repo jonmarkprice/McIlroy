@@ -37,6 +37,15 @@ test('tokenize', (assert) => {
         ]
     );
 
+    assert.deepEqual(
+        tokenize_([0, 'id', ':']),
+        {token: 'Value', type: {name: 'List'}, value: [
+            {token: 'Value',  value: 0,    type: {name: 'Number'}},
+            {token: 'Value',  value: library.get('id'), type: {name: 'Function'}},
+            {token: 'Syntax', value: ':'}
+        ]}
+    );
+
     assert.end();
 });
 
