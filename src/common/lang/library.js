@@ -137,7 +137,7 @@ const library = new Map([
       in: [t.num, t.num],
       out: t.num
     },
-    fn: (x, y) => x - y
+    fn: (x, y) => x / y
   }],
   ['%', {
     display: '%',

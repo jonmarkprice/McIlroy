@@ -3,77 +3,109 @@ const { run } = require('../helpers');
 const { result } = require('../../common/lang/helpers');
 const { Left, Right } = require('../../common/lang/lib/either');
 
-// describe('plus', () => {
-test('Plus should add small integers', (assert) => {
+test('Plus', (assert) => {
   assert.equal(run(1, 1, '+', ':'), 2);
 
   assert.deepEqual(
     result(2, 1, '+', ':'),
-    Right.of(3)
+    Right.of(3),
+    'Plus should add small integers'
   );
   
   assert.end();
 });
 
-/*test('expression', (assert) => {
+
+// TODO: move to integration
+test('expression', (assert) => {
   assert.deepEqual(
     result(3, 2, 3, '^', ':', '*', ':'),
     Right.of(24)
   );
   assert.end()
-}); */
-
-test('exponent', (assert) => {
-  assert.deepEqual(
-    result(2, 3, '^', ':'),
-    Right.of(8)
-  );
-  assert.end();
 });
+
 
 /*
 describe('subtract', () => {
   it('should subtract two integers');
 });
 */
-test('subtract', (assert) => {
+test('Subtraction', (assert) => {
   assert.deepEqual(
     result(3, 2, '-', ':'),
     Right.of(1)
   );
+
   assert.end();
 });
-/*
-describe('multiplication', () => {
-  it('should mulitply two integers');
+
+
+test('Multiplication', (assert) => {
+  assert.deepEqual(
+    result(7, 3, '*', ':'),
+    Right.of(21),
+    'should mulitply two integers'
+  );
+
+  assert.end();
 });
 
-describe('division', () => {
-  it('should divide two integers');
-  it('should return null or NaN for division-by-zero')
+
+test('Division', (assert) => {
+  assert.deepEqual(
+    result(42, 6, '/', ':'),
+    Right.of(7),
+    'should divide two integers'
+  );
+
+  assert.deepEqual(
+    result(32, 0, '/', ':'),
+    Right.of(Infinity), // TODO: eventually make this a Left()
+    'should return null or NaN for division-by-zero'
+  );
+
+  assert.end();
 });
 
-describe('exponent', () => {
-  it('should take one integer to the power of another');
-  it('should return 1 if the second argument is 0')
+test('Exponentiation', (assert) => {
+  assert.deepEqual(
+    result(7, 2, '^', ':'),
+    Right.of(49),
+    'should take one integer to the power of another'
+  );
+
+  assert.deepEqual(
+    result(3, 0, '^', ':'),
+    Right.of(1),
+    'should return 1 if the second argument is 0'
+  );
+
+  assert.end();
 });
 
-describe('succ', () => {
-  it('should increment an integer');
-  it('should return null for non-integers');
+test('Successor', (assert) => {
+  assert.deepEqual(
+    result(23, 'succ', ':'),
+    Right.of(24),
+    'should increment an integer'
+  );
+
+  // it('should return null for non-integers');
+
+  assert.end();
 });
 
-describe('modulo', () => {
-  it('should find the modulo of two integers');
-});
+test('Modulo', (assert) => {
+  assert.deepEqual(
+    result(29, 5, '%', ':'),
+    Right.of(4),
+    'should find the modulo of two integers'
+  );
 
-// May not be necessary since we can implement with reduce
-describe('sum', () => {
-  it('should return 0 for an empty list');
-  it('should return the only number for a singleton list');
-  it('should sum small lists of integers');
+  assert.end();
 });
 
 // TODO implement (test-first) greater than, less than
-*/
+
  
