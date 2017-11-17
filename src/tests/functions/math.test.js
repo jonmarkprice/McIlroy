@@ -1,10 +1,20 @@
 const test    = require('tape');
 const { run } = require('../helpers');
+const { result } = require('../../common/lang/helpers');
+const { Left, Right } = require('../../common/lang/lib/either');
 
 // describe('plus', () => {
 test('Plus should add small integers', (assert) => {
   assert.equal(run(1, 1, '+', ':'), 2);
   assert.end();
+});
+
+test('expression', (assert) => {
+  assert.deepEqual(
+    result(3, 2, 3, '^', ':', '*', ':'),
+    Right.of(24)
+  );
+  assert.end()
 });
 
 /*

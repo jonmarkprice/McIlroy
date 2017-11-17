@@ -6,6 +6,8 @@ const library = require('../common/lang/library');
 const { tokenize, parseStack } = require('../common/lang/parse');
 const { Right, Left } = require('../common/lang/lib/either');
 
+const { interpretTypes } = require('../common/lang/typecheck');
+
 // TODO:
 // try moving this somewhere ... getting name already bound...
 // declare function test(name: string, cb: (...any) => any) : void;
@@ -55,7 +57,6 @@ test('parseStack', (assert) => {
     assert.deepEqual(
         parseStack([0, 'id'].map(tokenize_), [], true, 0),
         Right.of({
-            input: [], 
             stack: [0, 'id'].map(tokenize_), 
             first: true, 
             index: 2
@@ -67,7 +68,6 @@ test('parseStack', (assert) => {
         parseStack([0, 'id', ':'].map(tokenize_), [], true, 0),
         //Left.of('[INTERNAL] runPrimitive not implemented.')
         Right.of({
-            input: [],
             stack: [{token: 'Value', type: {name: 'Number'}, value: 0}],
             index: 2,       // Don't care
             first: true     // Don't care
@@ -84,12 +84,45 @@ test('parseStack', (assert) => {
     assert.deepEqual(
         parseStack([3, 4, '+', ':'].map(tokenize_), [], true, 0),
         Right.of({
-            input: [],
             stack: [{token: 'Value', type: {name: 'Number'}, value: 7}],
             index: 3,       // Don't care
             first: true     // Don't care
         })
     );
-    //*/
+    
     assert.end();
+});
+
+
+test('interpretTypes', (assert) => {
+
+  // Annotation and potential value for succ function on 3
+  assert.deepEqual(
+    interpretTypes(
+      [
+        {token: 'Value', type: {name: 'Number'}, value: 3}
+      ],
+      {in: [{name: 'Number'}], out: {name: 'Number'}},
+      4
+    ),
+    Right.of({name: 'Number'})
+  );
+
+  // Now try a function
+  assert.deepEqual(
+    interpretTypes(
+      [
+        {token: 'Value', type: {name: 'Number'}, value: 1},
+        {token: 'Value', type: {name: 'Function'}} // no value
+      ],
+      {
+        in: [{name: 'Number'}, {name: 'Function'}],
+        out: {name: 'Function'}
+      },
+      () => 2, // bogus function, shouldn't matter
+    ),
+    Right.of({name: 'Function'})
+  );  
+
+  assert.end();
 });

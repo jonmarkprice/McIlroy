@@ -54,8 +54,7 @@ function interpretTypes (
         }
     }
     else if (annotation.out.name === 'Function') {
-        //return Left.of("Function support not Implemented");
-        return Right.of(annotation.out.to);
+        return Right.of(annotation.out);
     }
     else if (annotation.out.name === 'Char'
         || annotation.out.name === 'Number' 
