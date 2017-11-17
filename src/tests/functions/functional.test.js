@@ -1,17 +1,31 @@
 const test    = require('tape');
 const { run } = require('../helpers');
+const { result } = require('../../common/lang/helpers');
+const { Right, Left } = require('../../common/lang/lib/either');
 
 // describe('curry', () => {
 test('should be able to consume 1 argument', (assert) => {
-  assert.deepEqual(run([3, 18, 0], 1, '+', 'curry', ':', 'map', ':'),
-    [4, 19, 1]);
+  // Try a useless curry
+  assert.deepEqual(
+    result(1, 2, '+', 'curry', ':', ':'),
+    Right.of(3)
+  );
+  
+  // May a curried function over a list
+  assert.deepEqual(
+    result([3, 18, 0], 1, '+', 'curry', ':', 'map', ':'),
+    Right.of([4, 19, 1])
+  );
+  
   assert.end();
 });
+
 test('should work with flip', (assert) => {
   assert.deepEqual(run([3, 12, 0], 2, '^', 'flip', ':', 'curry', ':', 'map', ':'),
     [9, 144, 0]);
   assert.end();
 });
+
 test('should be chainable', (assert) => {
   assert.equal(run(3, 4, '+', 'curry', ':', 'curry', ':', ':'), 7);
   assert.end();
@@ -32,10 +46,13 @@ test('should be able to compose a curried function', (assert) => {
     ['A']);
   assert.end();
 });
+
 test('Compse should work for two unary functions', (assert) => {
   assert.equal(run([], 'length', 'succ', 'compose', ':', ':'), 1);
   assert.end();
 });
+
+
 test('should be mappable', (assert) => {
   assert.deepEqual(run([[], [1], [1, 2]], 'length', 'succ', 'compose', ':', 'map', ':'),
     [1, 2, 3]);

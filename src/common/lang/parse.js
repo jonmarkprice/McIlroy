@@ -156,8 +156,13 @@ function parseStack(
 }
 
 // previously execToken
-/// @brief  This should split on each token, making lists, executing functions,
-/// or pushing to the stack. 
+/** 
+ * This should split on each token, making lists, executing functions,
+ * or pushing to the stack.
+ * @param {Accumulator} acc
+ * @param {Token} current the current token
+ * @returns {Accumulator} the updated accumulator from one of the "child" functions.
+ */
 function parseToken(
   acc   : Accumulator,
   current : Token
@@ -172,11 +177,7 @@ function parseToken(
       default : return Left.of('Unknown syntax.');
     }
   }
-  // TODO: shouldn't this also pop?
-  // XXX: in the old 'execToken', we would expand/tokenize (parseToken) the token before pushing
   else return pushToStack(current, acc);
-  //else return pushToStack(acc, current);
-  // XXX: This also needs to run
 }
 
 // TODO: consider creating a parseSyntax helper
@@ -207,10 +208,18 @@ function buildList(acc : Accumulator) : Accumulator {
 //    to to pass back an index, first, etc.
 
 // XXX: Doesn't seem to care about whether or not the type is Primitive or Alias
+/**
+ * Checks whether the top of te stack contains a function, and if it does
+ * calls the appropriate function to run it.
+ * @param {Accumulator} acc the accumulator which should contain a function at the top
+ *    of the stack.
+ * @returns {Accumulator} the updated accumulator.
+ */
 function parseFunction(acc : Accumulator) : Accumulator {
   // Pop the function (top/last of the stack).
   const fn : Either<Token>  = acc.map(compose(last, prop('stack')));
-  const updated : Accumulator = acc.map(over(lensProp('stack'), dropLast(1)));
+  // if undefined, mb. return different error
+  const updated : Accumulator = acc.map(over(lenses.stack, dropLast(1)));
   const fnTok  = fn.map(prop('token'));
   const fnType = fn.map(prop('type'));
   if (equals(Right.of('Alias'), fnTok)) {
@@ -227,7 +236,7 @@ function parseFunction(acc : Accumulator) : Accumulator {
     console.log(JSON.stringify(acc, null, 3));
     
     console.log('-'.repeat(30));
-    return Left.of('ERROR: Invalid function type.');
+    return Left.of('ERROR: Invalid function type.'); // XXX This would overwrite any previous erros
   }
 }
 
@@ -238,6 +247,10 @@ function expandAlias(alias : Token, acc : Accumulator) : Accumulator {
   //return Right.of(old.expandAlias())
 }
 
+
+/**
+ * Calls the function [definition] on a portion of the stack.
+ */
 function runPrimitive(fn : FunctionToken, acc : Accumulator) : Accumulator {
   const lenses = {stack: lensProp('stack')}; // TODO: generalize
 
@@ -265,7 +278,7 @@ function runPrimitive(fn : FunctionToken, acc : Accumulator) : Accumulator {
 
   const args = acc.map(R.prop('stack'))
           .map(R.takeLast(libdef.arity));
-  const result = applyDef(libdef, acc.map(R.prop('stack')))
+  const result = applyDef(libdef, args);
   
   //const result = acc.map(prop('stack'))
     //.map(R.takeLast(libdef.arity))
@@ -321,7 +334,7 @@ function applyDef(def : LibDef, args : Either<Token[]>) : Right<Token> | Left {
     console.log('raw args: ');
     console.log(raw);
 
-    const value = R.apply(def.fn, raw);
+    const value = def.fn(...raw);
     const token = Right.of({token: 'Value', value});
     return Right.of(x => y => R.assoc('type', x, y))
         .ap(interpretTypes(list, def.types, value))

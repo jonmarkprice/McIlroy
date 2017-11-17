@@ -106,7 +106,7 @@ const library = new Map([
       in: [t.num, t.num],
       out: t.num
     },
-    fn: (x, y) => y - x
+    fn: (x, y) => x - y
   }],
   ['*', {
     display: '*',
@@ -115,7 +115,7 @@ const library = new Map([
       in: [t.num, t.num],
       out: t.num
     },
-    fn: (x, y) => y * x
+    fn: (x, y) => x * y
   }],
   ['^', {
     display: '^',
@@ -124,7 +124,7 @@ const library = new Map([
       in: [t.num, t.num],
       out: t.num
     },
-    fn: (x, y) => Math.pow(y, x)
+    fn: (x, y) => Math.pow(x, y)
   }],
   ['/', {
     display: '/',
@@ -133,7 +133,7 @@ const library = new Map([
       in: [t.num, t.num],
       out: t.num
     },
-    fn: (x, y) => y / x
+    fn: (x, y) => x - y
   }],
   ['%', {
     display: '%',
@@ -142,7 +142,7 @@ const library = new Map([
       in: [t.num, t.nu],
       out: t.num
     },
-    fn: (x, y) => y % x
+    fn: (x, y) => x % y
   }],
   ['and', {
     display: 'and',
@@ -151,7 +151,7 @@ const library = new Map([
       in: [t.bool, t.bool],
       out: t.bool
     },
-    fn: (x,y) => y && x //R.and
+    fn: (x,y) => x && y //R.and
   }],
   ['or', {
     display: 'or',
@@ -160,7 +160,7 @@ const library = new Map([
       in: [t.bool, t.bool],
       out: t.bool
     },
-    fn: (x,y) => y || x //R.or
+    fn: (x,y) => x || y //R.or
   }],
   ['concat', {
     display: 'concat',

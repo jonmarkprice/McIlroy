@@ -6,22 +6,44 @@ const { Left, Right } = require('../../common/lang/lib/either');
 // describe('plus', () => {
 test('Plus should add small integers', (assert) => {
   assert.equal(run(1, 1, '+', ':'), 2);
+
+  assert.deepEqual(
+    result(2, 1, '+', ':'),
+    Right.of(3)
+  );
+  
   assert.end();
 });
 
-test('expression', (assert) => {
+/*test('expression', (assert) => {
   assert.deepEqual(
     result(3, 2, 3, '^', ':', '*', ':'),
     Right.of(24)
   );
   assert.end()
+}); */
+
+test('exponent', (assert) => {
+  assert.deepEqual(
+    result(2, 3, '^', ':'),
+    Right.of(8)
+  );
+  assert.end();
 });
 
 /*
 describe('subtract', () => {
   it('should subtract two integers');
 });
-
+*/
+test('subtract', (assert) => {
+  assert.deepEqual(
+    result(3, 2, '-', ':'),
+    Right.of(1)
+  );
+  assert.end();
+});
+/*
 describe('multiplication', () => {
   it('should mulitply two integers');
 });
@@ -54,3 +76,4 @@ describe('sum', () => {
 
 // TODO implement (test-first) greater than, less than
 */
+ 
