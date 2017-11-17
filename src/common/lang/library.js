@@ -57,9 +57,9 @@ const library = new Map([
       out: t.fn
     },
     fn: (x, f) => {
-      console.log(x);
-      console.log(f);
-      console.log('--------');
+      // console.log(x);
+      // console.log(f);
+      // console.log('--------');
       return ({
         display: `(${display(x)} ${f.display}) curry`,
         arity: 1,
@@ -68,9 +68,9 @@ const library = new Map([
           out: t.any
         },
         fn: (y) => {
-          console.log(f);
-          console.log(x);
-          console.log(y);
+          //console.log(f);
+          //console.log(x);
+          //console.log(y);
           return f.fn.call(null, x, y)
         }
       })
@@ -86,6 +86,10 @@ const library = new Map([
     fn: f => ({
       display: `(${f.display}) flip`,
       arity: 2,
+      types: {
+        in: [t.any, t.any], // will be dependent on f's in's
+        out: t.any
+      },
       fn: (x, y) => f.fn.call(null, y, x),
     })
   }],

@@ -270,12 +270,12 @@ function runPrimitive(fn : FunctionToken, acc : Accumulator) : Accumulator {
           //.map(R.takeLast(libdef.arity)));
 
   const libdef = fn.value;   
-
+  /*
   console.log("===========================");
   console.log('arity: ');
   console.log(libdef.arity);
   console.log(libdef);
-
+  */
   const args = acc.map(R.prop('stack'))
           .map(R.takeLast(libdef.arity));
   const result = applyDef(libdef, args);
@@ -326,13 +326,13 @@ function applyDef(def : LibDef, args : Either<Token[]>) : Right<Token> | Left {
     const list = args.right();
     // XXX is this necessary?
 
-    console.log('arg tokens');
-    console.log(list);
+    // console.log('arg tokens');
+    // console.log(list);
 
     const raw : Literal[] = list.map(extractValue);
 
-    console.log('raw args: ');
-    console.log(raw);
+    // console.log('raw args: ');
+    // console.log(raw);
 
     const value = def.fn(...raw);
     const token = Right.of({token: 'Value', value});
