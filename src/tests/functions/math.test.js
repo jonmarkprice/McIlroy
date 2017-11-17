@@ -1,11 +1,8 @@
 const test    = require('tape');
-const { run } = require('../helpers');
 const { result } = require('../../common/lang/helpers');
 const { Left, Right } = require('../../common/lang/lib/either');
 
 test('Plus', (assert) => {
-  assert.equal(run(1, 1, '+', ':'), 2);
-
   assert.deepEqual(
     result(2, 1, '+', ':'),
     Right.of(3),

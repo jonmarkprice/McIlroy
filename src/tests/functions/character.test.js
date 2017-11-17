@@ -1,9 +1,13 @@
 const test    = require('tape');
-const { run } = require('../helpers');
+const { result } = require('../../common/lang/helpers');
+const { Left, Right } = require('../../common/lang/lib/either');
 
-// describe('uppercase', () => {
-test('should transform a lowercase character to uppercase', (assert) => {
-  assert.equal(run('a', 'uppercase', ':'), 'A');
+test('Uppercase', (assert) => {
+  assert.deepEqual(
+    result('a', 'uppercase', ':'), 
+    Right.of('A'),
+    'should transform a lowercase character to uppercase'
+  );
   assert.end();
 });
 // it('should return an already uppercase character as is');

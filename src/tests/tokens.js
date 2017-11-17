@@ -3,7 +3,7 @@ const t = { // types
 	prim: {name: 'Primitive'},
 	bool: {name: 'Boolean'},
 	num: {name: 'Number'},
-	str: {name: 'String'},
+	char: {name: 'Char'},
 	list: {name: 'List'},
 	any: {name: 'Any'},
 	// fn: (from, to) => ({name: 'Function', from, to}),
