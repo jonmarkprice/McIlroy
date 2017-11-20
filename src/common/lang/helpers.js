@@ -3,30 +3,22 @@ import type { Token, Literal } from './parse';
 import type { Either } from './lib/either';
 
 const R = require('ramda');
-const { Left, Right } = require('./lib/either');
+const S = require('sanctuary');
+const { Left, Right } = S;
 const { parseStack, tokenize } = require('./parse.js');
 const syntax = require('./syntax');
 const primitives = require('./functions');
 
-// After testing, rename to just 'run'
 function result(...program : Literal[]) : Either<?Token> {
   const tokens = program.map(x => tokenize(x, {syntax, primitives}));
-  const acc = parseStack(tokens, [], true, 0);
-  //return Left.of('Unimplemented');
-  const stack : Either<?Token[]> = acc.map(R.prop('stack'));
-  if (R.equals(stack.map(R.length), Right.of(1))) {
-    return stack.map(R.head).map(R.prop('value'));
+  const acc = parseStack(tokens, Right([]), true, 0);
+  if (S.equals(S.pluck('length', acc.stack), Right(1))) {
+    return S.pipe([S.map(R.head), S.pluck('value')], acc.stack);
   }
   else {
-    if (stack.ok()) {
-      console.log(stack.right());
-    }
-    else {
-      console.log(stack.left());
-    }
-
-    return Left.of('Too many items on stack.');
+    return Left('Too many items on stack.');
   }
 }
 
 module.exports = { result };
+

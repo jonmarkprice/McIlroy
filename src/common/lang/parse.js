@@ -463,8 +463,16 @@ function applyDef(def : Either<LibDef>, tokenList : Either<Token[]>) : Either<To
   // Transform Right([t1, t2, ...]) to [Right(t1), Right(t2), ...]
   const tokens  = S.traverse(Array, R.identity, tokenList);
 
+  console.log('=============')
+  console.log(def);
+  console.log(tokens);
+  console.log('==============')
+
   const fn      = S.pluck('fn', def);
   const result  = apply(fn, tokens); // or value
+
+  console.log(result);
+  console.log('=====================');
  
   // clean up?
   const valueToken = {token: 'Value'};

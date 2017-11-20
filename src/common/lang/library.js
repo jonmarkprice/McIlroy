@@ -154,7 +154,7 @@ const library = new Map([
       in: [t.bool, t.bool],
       out: t.bool
     },
-    fn: (x,y) => x && y //R.and
+    fn: R.and
   }],
   ['or', {
     display: 'or',
@@ -221,7 +221,7 @@ const library = new Map([
       in: [t.any, t.list], // of functions
       out: t.list
     },
-    fn: (data, fns) => fns.map(f => f.fn(data))
+    fn: data => fns => fns.map(f => f.fn(data))
   }],
   ['apply', {
     display: 'apply',
@@ -325,7 +325,7 @@ const library = new Map([
       in: [t.fn, t.fn],
       out: t.fn
     },
-    fn: (f, g) => ({
+    fn: f => g => ({
       display: `(${f.display}, ${g.display}) compose`,
       arity: f.arity,
       types: {
