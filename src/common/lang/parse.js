@@ -18,13 +18,14 @@ const {
   nth,        // n 
   over,       // o
   pipe,
-  prop,       // p q r s t u
+  prop,       // p q r
+  set,        // s t u
   view        // v w x y z
 } = R; // from ramda
 const S = require('sanctuary');
 const {Left, Right} = S;
 // TODO
-const { last, dropLast, takeLast } = require('./lib/sanctuary-either');
+const { last, dropLast, takeLast, gets } = require('./lib/sanctuary-either');
 
 import type { Type, TokenType } from './typecheck';
 // import type { Either } from './lib/either';
@@ -189,7 +190,7 @@ function createSteps(tokens : Token[]) // <-- take here and tokenize
 // call with ([...Token], [], true, 0)
 function parseStack(
   input : Token[],
-  stack : Token[],
+  stack : Either<Token[]>,
   first : boolean,
   index : number ) : Accumulator
 {
@@ -212,7 +213,7 @@ function parseStack(
 
 //////////////////
 const stackLens = R.lensProp('stack');
-const indexLens = R.lensProp('stack');
+const indexLens = R.lensProp('index');
 
 // previously execToken
 /** 
@@ -243,8 +244,6 @@ function parseToken(
 // TODO: consider creating a parseSyntax helper
 
 function pushToStack(token : Token, acc : Accumulator) : Accumulator {
-  // return acc.map(over(stackLens, append(token)))
-  //          .map(over(indexLens, inc));
   return S.pipe([
       over(stackLens, S.map(append(token))),
       over(indexLens, inc)
@@ -275,17 +274,26 @@ function buildList(acc : Accumulator) : Accumulator {
  * @returns {Accumulator} the updated accumulator.
  */
 function parseFunction(acc : Accumulator) : Accumulator {
+  // XXX: it appears that acc.stack is [] rather than Right([...])
+
   // Pop the function (top/last of the stack).
   // const fn : Either<Token>  = acc.map(compose(last, prop('stack')));
   //const fn : Accumulator = over(stackLens, S.map(last), acc);
+  console.log('-- acc.stack -----');
+  console.log(acc.stack);
+
+  // XXX: TYPE IS WRONG!!!
+  // I am somehow getting [], when I should be getting a Left()
   const fn : Either<Token> = S.chain(last, acc.stack);
   // if undefined, mb. return different error
   // const updated : Accumulator = acc.map(over(lenses.stack, dropLast(1)));
 
+  console.log('-- FN ------');
   console.log(fn);
 
   const fnTok  = S.pluck('token', fn);
-  const fnType = S.pluck('type', fn);
+  //const fnType = S.pluck('type', fn); // may not have Type (if Alias, Syntax...)
+  const fnType = S.chain(gets(S.is(String), ['type', 'name']), fn);
 
   // Update the acc. to drop the last item (e.g. fn) from stack.
   const updated = over(stackLens, S.chain(dropLast(1)), acc);
@@ -300,7 +308,7 @@ function parseFunction(acc : Accumulator) : Accumulator {
   if (S.equals(Right('Alias'), fnTok)) {
     return expandAlias(fn, updated); // was fn.right()
   }
-  else if (equals(Right('Value'), fnTok) && equals(Right({name: 'Function'}), fnType)) {
+  else if (equals(Right('Value'), fnTok) && equals(Right('Function'), fnType)) {
     // return runPrimitive(fn, updated); // was fn.right()
     // NOTE: we know that runPrimitive will return either a Left, or a Right(Token)
     // it will not recur/expand. Thus, we need only pass the stack, and not the rest
@@ -315,12 +323,17 @@ function parseFunction(acc : Accumulator) : Accumulator {
     // XXX Unreachable - by design
     console.log('-'.repeat(30));
     console.log(fn);
+    console.log('FnType: ');
+    console.log(fnType);
+
+    console.log('FnTok: ');
+    console.log(fnTok);
     // console.log(JSON.stringify(updated, null, 3));
     console.log(JSON.stringify(acc, null, 3));
     
     console.log('-'.repeat(30));
     // return Left.of('ERROR: Invalid function type.'); 
-      // XXX This would overwrite any previous erros
+      // XXX This would overwrite any previous errors
     return set(stackLens, Left('Invalid function type'), acc);
   }
 }

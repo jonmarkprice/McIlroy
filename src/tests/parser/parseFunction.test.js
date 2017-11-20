@@ -18,7 +18,7 @@ test('parseFunction', (assert) => {
   assert.deepEqual(
     parseFunction(acc),
     {
-      stack: Right([2]),
+      stack: Right([tokenize_(3)]),
       steps: [],  // don't care
       index: 3,   // ''
       first: true // '' 
