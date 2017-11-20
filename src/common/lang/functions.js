@@ -27,7 +27,7 @@ const functions = new Set([
 	"length",
 	"succ",
 	"=",
-	"filter",
+	// "filter",
 	"compose",
 	"cond"
 ]);

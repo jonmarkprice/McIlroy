@@ -7,13 +7,13 @@ const {
   curry,      // c
   compose,
   drop,       // d
-  dropLast,
+  // dropLast,
   equals,     // e
   findIndex,  // f g
   has,        // h 
   head,       // 
   inc,        // i j k
-  last,     
+  // last,     
   lensProp,   // l m 
   nth,        // n 
   over,       // o
@@ -21,11 +21,15 @@ const {
   prop,       // p q r s t u
   view        // v w x y z
 } = R; // from ramda
+const S = require('sanctuary');
+const {Left, Right} = S;
+// TODO
+const { last, dropLast, takeLast } = require('./lib/sanctuary-either');
 
 import type { Type, TokenType } from './typecheck';
-import type { Either } from './lib/either';
+// import type { Either } from './lib/either';
 
-const { Left, Right } = require('./lib/either');
+// const { Left, Right } = require('./lib/either');
 const { interpretTypes } = require('./typecheck');
 const library = require('./library');
 
@@ -137,10 +141,48 @@ function extractValue(tok : Token) : any /*or literal*/ {
 
 ///// Actual parser starts here
 // TODO: start at the buttom, and test your way up.
-function createSteps()
+// NOTE:
+// Looking at parse, it seems the old parser had a very different accumulator,
+// or else parse() is based on incorrect assumptions (maybe explaining why
+// it doesn't seem to work very well).
+// Essentially the structure seems to be: 
+/* 
+{
+  steps: [
+    {
+      index : number,
+      stack : [...tokens] // snapshot 
+    }
+    ...
+  ]
+}
+
+*/
+
+
+function createSteps(tokens : Token[]) // <-- take here and tokenize
 { // previously parse
   // TODO
-  throw Error('[INTERNAL] createSteps not implemented.');
+  
+  //throw Error('[INTERNAL] createSteps not implemented.');
+  /*
+  let steps = [];  
+
+  // Call parseStack to do the actual work
+  const output : Accumulator = parseStack(tokens, [], true, 0);
+  
+  // XXX: need to map since ouput is an Either
+  // const leftover = output.stack.slice(-1) // saves last item of stack
+
+  // Iterates through output.steps and appends to steps, at each "point"
+  // 1. a copy of the stack
+  // 2. the program up until the index
+  for (let {stack, index} of output.steps) {
+    // already have steps...
+    steps.push([...stack, ...program.slice(index)]);
+  }
+  return {stack: leftover, steps}; 
+  */
 }
 
 // previously parseProgram
@@ -151,9 +193,26 @@ function parseStack(
   first : boolean,
   index : number ) : Accumulator
 {
-  const init : Accumulator = Right.of({stack, first, index});
+  const init : Accumulator = {
+    stack, // S.Right([...tokens])
+    steps: [],
+    /* steps will be a list of:
+    {
+      snapshot: [], // of strings
+      consumed: 0   // number of input tokens consumed
+    }
+    */
+    first,
+    index
+  };
+
+  //Right.of({stack, first, index});
   return input.reduce(parseToken, init);
 }
+
+//////////////////
+const stackLens = R.lensProp('stack');
+const indexLens = R.lensProp('stack');
 
 // previously execToken
 /** 
@@ -165,7 +224,7 @@ function parseStack(
  */
 function parseToken(
   acc   : Accumulator,
-  current : Token
+  current : Token // This comes from input
 ) : Accumulator
 {
   if (current.token === 'Syntax') {
@@ -174,7 +233,8 @@ function parseToken(
         // XXX This should check the type (Prim., Alias)
       case '[': return pushToStack(current, acc);
       case ']': return buildList(acc);
-      default : return Left.of('Unknown syntax.');
+      default :
+        return set(stackLens, Left(`Unknown syntax ${current.value}`), acc);
     }
   }
   else return pushToStack(current, acc);
@@ -182,19 +242,18 @@ function parseToken(
 
 // TODO: consider creating a parseSyntax helper
 
-const lenses = {
-  stack: lensProp('stack'),
-  index: lensProp('index')
-  // first: lensProp('first'); // Not used
-}
-
 function pushToStack(token : Token, acc : Accumulator) : Accumulator {
-  return acc.map(over(lenses.stack, append(token)))
-            .map(over(lenses.index, inc));
+  // return acc.map(over(stackLens, append(token)))
+  //          .map(over(indexLens, inc));
+  return S.pipe([
+      over(stackLens, S.map(append(token))),
+      over(indexLens, inc)
+    ], acc);
 }
 
 function buildList(acc : Accumulator) : Accumulator {
-  return Left.of('buildList not implemented.');
+  // return Left.of('buildList not implemented.');
+  return set(stackLens, Left('buildList not implemented.'), acc);
 }
 
 // This used to take 2 args, a fn and a stack
@@ -217,16 +276,40 @@ function buildList(acc : Accumulator) : Accumulator {
  */
 function parseFunction(acc : Accumulator) : Accumulator {
   // Pop the function (top/last of the stack).
-  const fn : Either<Token>  = acc.map(compose(last, prop('stack')));
+  // const fn : Either<Token>  = acc.map(compose(last, prop('stack')));
+  //const fn : Accumulator = over(stackLens, S.map(last), acc);
+  const fn : Either<Token> = S.chain(last, acc.stack);
   // if undefined, mb. return different error
-  const updated : Accumulator = acc.map(over(lenses.stack, dropLast(1)));
-  const fnTok  = fn.map(prop('token'));
-  const fnType = fn.map(prop('type'));
-  if (equals(Right.of('Alias'), fnTok)) {
-    return expandAlias(fn.right(), updated)
+  // const updated : Accumulator = acc.map(over(lenses.stack, dropLast(1)));
+
+  console.log(fn);
+
+  const fnTok  = S.pluck('token', fn);
+  const fnType = S.pluck('type', fn);
+
+  // Update the acc. to drop the last item (e.g. fn) from stack.
+  const updated = over(stackLens, S.chain(dropLast(1)), acc);
+
+  console.log('-- UPDATED ---------');
+  console.log(updated);
+  //console.log('-- ACC -------');
+  // console.log(acc);
+  // console.log('--------------');
+
+  //...
+  if (S.equals(Right('Alias'), fnTok)) {
+    return expandAlias(fn, updated); // was fn.right()
   }
-  else if (equals(Right.of('Value'), fnTok) && equals(Right.of({name: 'Function'}), fnType)) {
-    return runPrimitive(fn.right(), updated);
+  else if (equals(Right('Value'), fnTok) && equals(Right({name: 'Function'}), fnType)) {
+    // return runPrimitive(fn, updated); // was fn.right()
+    // NOTE: we know that runPrimitive will return either a Left, or a Right(Token)
+    // it will not recur/expand. Thus, we need only pass the stack, and not the rest
+    // of the accumulator.
+    // return over(stackLens, S.chain(S.append(result)), updated);
+    // XXX: runPrimitive will need to add its own steps
+    return runPrimitive(fn, updated);
+
+    return set(stackLens, newStack, updated);
   }
   else {
     // XXX Unreachable - by design
@@ -236,24 +319,29 @@ function parseFunction(acc : Accumulator) : Accumulator {
     console.log(JSON.stringify(acc, null, 3));
     
     console.log('-'.repeat(30));
-    return Left.of('ERROR: Invalid function type.'); // XXX This would overwrite any previous erros
+    // return Left.of('ERROR: Invalid function type.'); 
+      // XXX This would overwrite any previous erros
+    return set(stackLens, Left('Invalid function type'), acc);
   }
 }
 
 // use in expandAlias and runPrimitive
 function expandAlias(alias : Token, acc : Accumulator) : Accumulator {
-  return Left.of('[INTERNAL] expandAlias not implemented.');
-
-  //return Right.of(old.expandAlias())
+  // return Left.of('[INTERNAL] expandAlias not implemented.');
+  return set(stackLens, Left('[DEV] expandAlias not implemented'), acc);
 }
 
 
 /**
  * Calls the function [definition] on a portion of the stack.
  */
-function runPrimitive(fn : FunctionToken, acc : Accumulator) : Accumulator {
-  const lenses = {stack: lensProp('stack')}; // TODO: generalize
+// NOTE: While I could, in theory pass only the stack, we would still need to return
+// a whole stack because we have not yet decoded the arity, so we would not know how
+// many to pop off, and since we will have all the needed information HERE, it makes
+// sense to manage adding the step under this function as well.
 
+// function runPrimitive(fn : Either<Token>,  stack: Either<Token[]>) : Either<Token> {
+function runPrimitive(fn : Either<Token>, acc : Accumulator) : Accumulator {
   // TODO: run all of these checks in the tokenization step.
 
   //if (library.has(fn.value)) {
@@ -269,16 +357,43 @@ function runPrimitive(fn : FunctionToken, acc : Accumulator) : Accumulator {
         //.ap(acc.map(prop('stack'))
           //.map(R.takeLast(libdef.arity)));
 
-  const libdef = fn.value;   
+  // const libdef = fn.value; // XXX
   /*
   console.log("===========================");
   console.log('arity: ');
   console.log(libdef.arity);
   console.log(libdef);
   */
-  const args = acc.map(R.prop('stack'))
-          .map(R.takeLast(libdef.arity));
-  const result = applyDef(libdef, args);
+  // const args = acc.map(R.prop('stack'))
+  //        .map(R.takeLast(libdef.arity));
+
+  //console.log('---------------');
+  //console.log(fn);
+  //console.log('---------------');
+  const def : Either<LibDef> = S.pluck('value', fn);
+  const arity : Either<number> = S.pluck('arity', def);
+
+  // shouldn't acc itself be an Either?
+  // --> no, only stack is an either...
+  //const updated = //over(stackLens, x => S.chain(takeLast(arity))(x), acc);
+
+  // XXX: THIS IS STUPID...
+  // no reason to use over()... I just use prop!!!
+  const argsAcc = over(stackLens, x => S.join(S.lift2(takeLast, arity)(x)), acc); // no chain..
+
+  console.log('-- ARGS ACC ----');
+  console.log(argsAcc);
+
+  const args = S.prop('stack', argsAcc);
+
+  console.log('-- ARGS -------------');
+  console.log(args);
+  console.log('-- DEF --------------');
+  console.log(def);
+  console.log('---------------------');
+
+  // TODO
+  const result = applyDef(def, args);
   
   //const result = acc.map(prop('stack'))
     //.map(R.takeLast(libdef.arity))
@@ -290,10 +405,17 @@ function runPrimitive(fn : FunctionToken, acc : Accumulator) : Accumulator {
   //  {type: '', value: 3} + {type: '', value: 4}
   // which of course is NaN!
 
-  const rest = acc.map(R.over(lenses.stack, R.dropLast(libdef.arity)));
-  return Right.of(x => R.over(lenses.stack, R.append(x)))
-    .ap(result)
-    .ap(rest);
+  //const rest = acc.map(R.over(lenses.stack, R.dropLast(libdef.arity)));
+  const updated = over(stackLens, x => S.join(S.lift2(dropLast, arity)(x)), acc);
+  // or, instead of rest, call it  updated, as in parseFunction
+
+  // return Right.of(x => R.over(lenses.stack, R.append(x)))
+  //  .ap(result)
+  //  .ap(rest);
+
+  // TODO: ADD STEPS HERE!!!!
+  return over(stackLens, S.lift2(S.append, result), updated);
+
       //}
       //else {
       //  return Left.of(`Error ${fn.value} has no implementation.`);
@@ -317,36 +439,42 @@ type LibDef = {
   fn: (any) => any
 }
 
+// TODO: make global
+const partial = x => f => S.ap(f, S.pluck('value', x));
+const apply = (f, xs) => S.pipe(S.map(partial, xs), f);
+
 // sure... I just need to map over something that either returns
 // a Left() or echos the input
 // maybe just concat() instead of appending...
-function applyDef(def : LibDef, args : Either<Token[]>) : Right<Token> | Left { 
-  if (args.ok()) {
+function applyDef(def : Either<LibDef>, tokenList : Either<Token[]>) : Either<Token> { 
+  // Transform Right([t1, t2, ...]) to [Right(t1), Right(t2), ...]
+  const tokens  = S.traverse(Array, R.identity, tokenList);
 
-    const list = args.right();
-    // XXX is this necessary?
+  const fn      = S.pluck('fn', def);
+  const result  = apply(fn, tokens); // or value
+ 
+  // clean up?
+  const valueToken = {token: 'Value'};
+  const token = S.map(x => R.assoc('value', x, valueToken), result);
+  //lift2(x => y => R.assoc('type', x, y), interpretTypes(...), token); 
 
-    // console.log('arg tokens');
-    // console.log(list);
+  const annotation = S.pluck('types', def);
+  const type = S.join(S.lift3(interpretTypes, tokenList, annotation, result));
 
-    const raw : Literal[] = list.map(extractValue);
-
-    // console.log('raw args: ');
-    // console.log(raw);
-
-    const value = def.fn(...raw);
-    const token = Right.of({token: 'Value', value});
-    return Right.of(x => y => R.assoc('type', x, y))
-        .ap(interpretTypes(list, def.types, value))
-        .ap(token);
-  }
-  else {
-    return args; // pass error through
-  }
+  return S.lift2(R.assoc('type'), type, token);
 }
 
 module.exports = {
-  tokenize
+  tokenize // TODO: move
+  , extractValue
+  , createSteps
   , parseStack
+  , parseFunction
+  , runPrimitive
+  , applyDef
+  // TODO test, eithers:
+  , dropLast
+  // , drop_
+  , takeLast
 };
 

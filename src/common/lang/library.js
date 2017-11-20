@@ -11,7 +11,7 @@ const library = new Map([
       in: [t.list, t.any],
       out: t.list
     },
-    fn: (list, elem) => R.append(elem, list)
+    fn: list => elem => R.append(elem, list)
   }],
   ['replicate', {
     display: 'replicate',
@@ -38,7 +38,7 @@ const library = new Map([
       in: [t.list, t.fn],
       out: t.any // fn.types.out
     },
-    fn: (list, f) => list.map(f.fn)
+    fn: R.map
   }],
   ['not', {
     display: 'not',
@@ -56,7 +56,7 @@ const library = new Map([
       in: [t.any, t.fn], // f.types.in[0]
       out: t.fn
     },
-    fn: (x, f) => {
+    fn: x => f => {
       // console.log(x);
       // console.log(f);
       // console.log('--------');
@@ -67,7 +67,7 @@ const library = new Map([
           in: [t.any],
           out: t.any
         },
-        fn: (y) => {
+        fn: y => {
           //console.log(f);
           //console.log(x);
           //console.log(y);
@@ -90,7 +90,7 @@ const library = new Map([
         in: [t.any, t.any], // will be dependent on f's in's
         out: t.any
       },
-      fn: (x, y) => f.fn.call(null, y, x),
+      fn: x => y => f.fn.call(null, y, x),
     })
   }],
   ['+', {
@@ -100,8 +100,7 @@ const library = new Map([
       in: [t.num, t.num],
       out: t.num
     },
-    fn: (x, y) => y + x 
-    // R.add
+    fn: R.add
   }],
   ['-', {
     display: '-',
@@ -110,7 +109,7 @@ const library = new Map([
       in: [t.num, t.num],
       out: t.num
     },
-    fn: (x, y) => x - y
+    fn: R.subtract
   }],
   ['*', {
     display: '*',
@@ -119,7 +118,7 @@ const library = new Map([
       in: [t.num, t.num],
       out: t.num
     },
-    fn: (x, y) => x * y
+    fn: R.multiply
   }],
   ['^', {
     display: '^',
@@ -128,7 +127,7 @@ const library = new Map([
       in: [t.num, t.num],
       out: t.num
     },
-    fn: (x, y) => Math.pow(x, y)
+    fn: x => y => Math.pow(x, y)
   }],
   ['/', {
     display: '/',
@@ -137,7 +136,7 @@ const library = new Map([
       in: [t.num, t.num],
       out: t.num
     },
-    fn: (x, y) => x / y
+    fn: x => y => x / y
   }],
   ['%', {
     display: '%',
@@ -146,7 +145,7 @@ const library = new Map([
       in: [t.num, t.nu],
       out: t.num
     },
-    fn: (x, y) => x % y
+    fn: x => y => x % y
   }],
   ['and', {
     display: 'and',
@@ -164,7 +163,7 @@ const library = new Map([
       in: [t.bool, t.bool],
       out: t.bool
     },
-    fn: (x,y) => x || y //R.or
+    fn: R.or
   }],
   ['concat', {
     display: 'concat',
@@ -173,7 +172,7 @@ const library = new Map([
       in: [t.list, t.list],
       out: t.list
     },
-    fn: (x, y) => R.concat(x, y) // Don't curry
+    fn: R.concat
   }],
   ['reduce', {
     display: 'reduce',
@@ -182,7 +181,8 @@ const library = new Map([
       in: [t.list, t.fn, t.any], // f.types.in[0]
       out: t.any // f.types.out
     },
-    fn: (list, f, base) => list.reduce(f.fn, base)
+    fn: list => f => base => list.reduce(f.fn, base)
+    // R.reduce
   }],
   ['zip', {
     display: 'zip',
@@ -191,7 +191,7 @@ const library = new Map([
       in: [t.list, t.list],
       out: t.list
     },
-    fn: (a, b) => {
+    fn: a => b => {
       const len = Math.min(a.length, b.length);
       let result = [];
       for (let i = 0; i < len; i += 1) {
@@ -231,7 +231,7 @@ const library = new Map([
       out: t.any // TODO: later use the fn ret type
     },
     // XXX: This could easily break
-    fn: (args, f) => {
+    fn: args => f => {
       console.log(f);
       console.log(typeof f);
       console.log(args);
@@ -308,6 +308,7 @@ const library = new Map([
     },
     fn: R.equals
   }],
+  /*
   ['filter', {
     display: 'filter',
     arity: 2,
@@ -316,7 +317,7 @@ const library = new Map([
       out: t.list // of bool
     },
     fn: (list, cond) => list.filter(x => cond.fn.call(null, x))
-  }],
+  }],*/
   ['compose', {
     display: 'compose',
     arity: 2,
@@ -331,7 +332,7 @@ const library = new Map([
         in: f.types.in,
         out: g.types.out,
       },
-      fn: R.pipe(f.fn, g.fn) // this seems wrong... why not compose?
+      fn: f => g => R.pipe(f.fn, g.fn) // this seems wrong... why not compose?
     })
   }]
 ]);
