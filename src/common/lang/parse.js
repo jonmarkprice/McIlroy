@@ -26,6 +26,7 @@ const S = require('sanctuary');
 const { Left, Right } = S;
 const { last, dropLast, takeLast, gets } = require('./lib/sanctuary-either');
 const { wrap, unwrap } = require('./type');
+const display = require('./display'); 
 
 import type { Type, TokenType } from './typecheck';
 // import type { Either } from './lib/either';
@@ -344,6 +345,9 @@ function expandAlias(alias : Token, acc : Accumulator) : Accumulator {
   return set(stackLens, Left('[DEV] expandAlias not implemented'), acc);
 }
 
+// used in runPrimitive, but loosely coupled
+const print = R.compose(display, unwrap);
+const stepLens = R.lensProp('steps');
 
 /**
  * Calls the function [definition] on a portion of the stack.
@@ -355,23 +359,26 @@ function expandAlias(alias : Token, acc : Accumulator) : Accumulator {
 
 // function runPrimitive(fn : Either<Token>,  stack: Either<Token[]>) : Either<Token> {
 function runPrimitive(fn : Either<Token>, acc : Accumulator) : Accumulator {
-  const def : Either<LibDef> = S.pluck('value', fn);
+  const def   : Either<LibDef> = S.pluck('value', fn);
   const arity : Either<number> = S.pluck('arity', def);
+  const args    = S.join(S.lift2(takeLast, arity, acc.stack));
+  const result  = applyDef(def, args);
 
-  // shouldn't acc itself be an Either?
-  // --> no, only stack is an either...
-  //const updated = //over(stackLens, x => S.chain(takeLast(arity))(x), acc);
+  // TODO combine
+  const updated      = over(stackLens, x => S.join(S.lift2(dropLast, arity)(x)), acc);
+  const updatedStack = over(stackLens, S.lift2(S.append, result), updated);
+  /////
 
-  // XXX: THIS IS STUPID...
-  // no reason to use over()... I just use prop!!!
-  const argsAcc = over(stackLens, x => S.join(S.lift2(takeLast, arity)(x)), acc); // no chain..
+  /// ADD STEPS /// // TODO: split into own function?
+  const snapshot = S.map(S.map(print), updatedStack.stack);
+  const consumed = S.map(S.add(acc.index), arity);
+  const step = S.pipe([
+    S.lift2(R.assoc('snapshot'), snapshot),
+    S.lift2(R.assoc('consumed'), consumed)
+  ], Right({}));
+  const steps = S.either(R.always([]), R.of, step);
 
-  const args = S.prop('stack', argsAcc);
-  const result = applyDef(def, args);
-  const updated = over(stackLens, x => S.join(S.lift2(dropLast, arity)(x)), acc);
-
-  // TODO: ADD STEPS HERE!!!!
-  return over(stackLens, S.lift2(S.append, result), updated);
+  return over(stepLens, rest => S.concat(rest, steps), updatedStack);
 }
 
 type LibDef = {

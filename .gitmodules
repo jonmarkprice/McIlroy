@@ -1,3 +1,0 @@
-[submodule "src/parser"]
-	path = src/parser
-	url = git@github.com:jonmarkprice/McIlroy-parser

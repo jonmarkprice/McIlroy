@@ -11,8 +11,9 @@ test('applyDef', (assert) => {
   assert.deepEqual(
     applyDef(
       Right({
+        arity: 2,
         types: {in: [{name: 'Number'}, {name: 'Number'}], out: {name: 'Number'}},
-        fn: x => y => x + y
+        fn: (x, y) => x + y
       }),
       Right([
         {value: 1, type: {name: 'Number'}},
@@ -21,6 +22,13 @@ test('applyDef', (assert) => {
     ),
     Right({value: 3, token: 'Value', type: {name: 'Number'}})
   );
+
+  // functional - try map, apply, etc.
+  /*
+  assert.deepEqual(
+    applyDef(Right({fn: R.})
+  );
+  */
 
   assert.end()
 });

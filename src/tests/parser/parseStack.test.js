@@ -34,13 +34,10 @@ test('parseStack', (assert) => {
         }
     );
 
-    // Try a (known) function
-    // XXX: getting error at: parseFunction
-    // --> falling through 
     assert.deepEqual(
         parseStack([0, 'id', ':'].map(tokenize_), Right([]), true, 0),
         {
-          steps: [],
+          steps: [{snapshot: ["0"], consumed: 3}],
           stack: Right([{token: 'Value', type: {name: 'Number'}, value: 0}]),
           index: 2,       // Don't care
           first: true     // Don't care
