@@ -72,7 +72,8 @@ function wrap(x) {
 // NOTE: This will not work with Sanctuary since it can return a heterogenous list
 function unwrap(x) {
   // should it take a maybe? // NO. can map if need be...
-  if (x.type.name === 'List') {
+  //if (x.type.name === 'List') {
+  if (Array.isArray(x.value)) {
     return x.value.map(unwrap); 
   }
   else return x.value;

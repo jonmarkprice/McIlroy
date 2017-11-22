@@ -1,11 +1,12 @@
 // @flow
 import type { TokenizerConfig, Literal, Token } from '../../common/lang/parse';
 
-
 const test = require('tape')
 const S = require('sanctuary');
 const library = require('../../common/lang/library');
-const { tokenize, parseStack } = require('../../common/lang/parse');
+const { parseStack } = require('../../common/lang/parse');
+const { tokenize_ } = require('../../common/lang/tokenize');
+
 const { Right, Left } = S; //require('../../common/lang/lib/either');
 
 const { interpretTypes } = require('../../common/lang/typecheck');
@@ -13,13 +14,6 @@ const { interpretTypes } = require('../../common/lang/typecheck');
 // TODO:
 // try moving this somewhere ... getting name already bound...
 // declare function test(name: string, cb: (...any) => any) : void;
-
-// Bake-in the config. for more convient testing.
-const config = {
-    syntax: new Set([':', '[', ']']),
-    primitives: new Set(['id', '+']) // expand as necessary
-}
-const tokenize_ = x => tokenize(x, config);
 
 test('parseStack', (assert) => {
     //const tokens : Token[] = ; // This was tested above.

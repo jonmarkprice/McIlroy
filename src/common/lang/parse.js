@@ -46,24 +46,7 @@ const old = require('../lib/parser');
 // exec      // parsePrimitive
 // };
 
-//type Alias   = {type: string, expansion: Array<Literal | Alias>}; // recursive types ok?
-export type AliasLiteral = {name: string, expansion: Token[]};
-export type Literal = string | number | boolean;
-export type Token = SyntaxToken | AliasToken | ValueToken;
-export type SyntaxToken = {token: 'Syntax', value: string};
-export type AliasToken = {token: 'Alias', value: AliasLiteral};
-export type ValueToken = {token: 'Value', type: {name: 'Boolean'}, value: boolean} 
-  | {token: 'Value', type: {name: 'Number'}, value: number}
-  | {token: 'Value', type: {name: 'Char'}, value: string}
-  | {token: 'Value', type: {name: 'List'}, value: Literal[]}
-  | {token: 'Value', type: {name: 'Function'}, value: string};
-
 // TODO: potentially make function / alias sub-types
-
-export type TokenizerConfig = {
-  syntax: Set<string>,
-  primitives: Set<string>
-};
 
 // TODO: Need steps
 type Accumulator = Either<{
@@ -71,76 +54,6 @@ type Accumulator = Either<{
   first : boolean,
   index : number
 }>;
-
-// NOTE: This funtion is intended to be mapped over.
-// Assume there can't be any lists, only cons or list literals '[', ']'
-// TODO: consider wrapping this Token in an Either
-function tokenize(value : Literal | AliasLiteral, config : TokenizerConfig) : Token
-{
-  if (value.name !== undefined && value.expansion !== undefined) {
-    // Any object that has 'name' and 'expansion' fields is considered to
-    // be an alias.
-    return {token: 'Alias', value};
-    //return {token: 'Value', type: {name: 'List'}, value: []}; // TEST
-  }
-  // Check strings
-  else if (typeof value == 'string') {
-    if (config.syntax.has(value)) {
-      // We could also use a Map or Set to define syntax and use .has()
-      return {token: 'Syntax', value};
-    }
-    else if (config.primitives.has(value)) {
-      return {
-        token: 'Value',
-        type: {name: 'Function'/* Eventually support from, to fields */},
-        value: library.get(value)
-      };
-    }
-    else if (value.length === 1) {
-      return {token: 'Value', type: {name: 'Char'}, value};
-    }
-    else {
-      throw Error('Abritrary strings not supported.');
-    }
-  }
-  else if (typeof value == 'boolean') {
-    return {token: 'Value', type: {name: 'Boolean'}, value};
-  }
-  else if (typeof value == 'number') {
-    return {token: 'Value', type: {name: 'Number'}, value};
-  }
-  else if (Array.isArray(value)) {
-    return {
-      token: 'Value',
-      type: {name: 'List'},
-      value: value.map(x => tokenize(x, config))
-    };
-  }
-  else {
-    // Throw an error if not. This should never ever happen.
-    throw Error('Invalid token!');
-  }
-}
-
-// Takes a token and (recursively) extracts the values from it.
-function extractValue(tok : Token) : any /*or literal*/ {
-  if (tok.token !== 'Value') {
-  throw Error('Not a value token'); // Either?
-  }
-  else {
-  switch (tok.type.name) { // potentially unsafe if type undef
-    case 'List':
-      return tok.value.map(extractValue);
-    case 'Number':
-    case 'Char':
-    case 'Boolean':
-    case 'Function':
-      return tok.value;
-    default:
-      throw Error('Unknown token type');
-  }
-  }
-}
 
 ///// Actual parser starts here
 // TODO: start at the buttom, and test your way up.
@@ -162,30 +75,31 @@ function extractValue(tok : Token) : any /*or literal*/ {
 
 */
 
+// Helper functions
+const print = R.compose(display, unwrap);
+
+// Lenses
+const stepLens = R.lensProp('steps');
+const stackLens = R.lensProp('stack');
+const indexLens = R.lensProp('index');
 
 function createSteps(tokens : Token[]) // <-- take here and tokenize
 { // previously parse
-  // TODO
-  
-  //throw Error('[INTERNAL] createSteps not implemented.');
-  /*
-  let steps = [];  
-
   // Call parseStack to do the actual work
-  const output : Accumulator = parseStack(tokens, [], true, 0);
-  
-  // XXX: need to map since ouput is an Either
-  // const leftover = output.stack.slice(-1) // saves last item of stack
+  const acc = parseStack(tokens, Right([]), true, 0);
+  const input  = S.map(print, tokens);
+  const steps  = acc.steps.map(({snapshot, consumed}) => {
+    // console.log(snapshot);
+    // console.log(consumed);
+    // console.log(input.length);
 
-  // Iterates through output.steps and appends to steps, at each "point"
-  // 1. a copy of the stack
-  // 2. the program up until the index
-  for (let {stack, index} of output.steps) {
-    // already have steps...
-    steps.push([...stack, ...program.slice(index)]);
-  }
-  return {stack: leftover, steps}; 
-  */
+    const leftover = input.length + 1 - consumed;    
+    return S.concat(snapshot, R.takeLast(leftover, input))
+  });
+  console.log(steps);
+  console.log(input);
+
+  return S.prepend(input, steps); // prepend input step
 }
 
 // previously parseProgram
@@ -214,9 +128,6 @@ function parseStack(
 }
 
 //////////////////
-const stackLens = R.lensProp('stack');
-const indexLens = R.lensProp('index');
-
 // previously execToken
 /** 
  * This should split on each token, making lists, executing functions,
@@ -325,10 +236,6 @@ function expandAlias(alias : Token, acc : Accumulator) : Accumulator {
   return set(stackLens, Left('[DEV] expandAlias not implemented'), acc);
 }
 
-// used in runPrimitive, but loosely coupled
-const print = R.compose(display, unwrap);
-const stepLens = R.lensProp('steps');
-
 /**
  * Calls the function [definition] on a portion of the stack.
  */
@@ -349,6 +256,9 @@ function runPrimitive(fn : Either<Token>, acc : Accumulator) : Accumulator {
     S.lift2(S.append, result)                 // append result
   ]);
   const updated = over(stackLens, updateStack, acc);
+
+  console.log("=== runPrim ===");
+  console.log(updated.stack);
   return addSteps(arity, updated);
 }
 
@@ -366,6 +276,10 @@ function addSteps(arity, acc) {
     S.lift2(R.assoc('consumed'), consumed)
   ], Right({}));
   const steps = S.either(R.always([]), R.of, step);
+
+  console.log("==== addSteps ===");
+  console.log(steps);
+  console.log(acc.steps);
 
   return over(stepLens, S.concat(__, steps), acc); 
 }
@@ -397,9 +311,8 @@ function applyDef(def : Either<LibDef>, tokenList : Either<Token[]>) : Either<To
 }
 
 module.exports = {
-  tokenize // TODO: move
-  , extractValue
-  , createSteps
+   //extractValue // XXX deprecated?
+    createSteps
   , parseStack
   , parseFunction
   , runPrimitive

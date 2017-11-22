@@ -10,18 +10,18 @@ const tokenize_ = x => tokenize(x, {primitives: functions, syntax});
 test('parseFunction', (assert) => {
   const acc = {
     stack: Right([1, 2, '+'].map(tokenize_)),
-    steps: [],  // don't care
-    index: 3,   // don't care
-    first: true // don't care
+    steps: [],
+    index: 3,
+    first: true
   };
 
   assert.deepEqual(
     parseFunction(acc),
     {
       stack: Right([tokenize_(3)]),
-      steps: [],  // don't care
-      index: 3,   // ''
-      first: true // '' 
+      steps: [{snapshot: ["3"], consumed: 5}], 
+      index: 3,
+      first: true
     }
   );
 
