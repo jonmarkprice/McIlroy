@@ -2,6 +2,7 @@
 // The new parser, called just "parse"
 const R = require('ramda');
 const {
+  __,
   append,     // a b
   assoc,
   curry,      // c
@@ -242,8 +243,6 @@ function parseToken(
   else return pushToStack(current, acc);
 }
 
-// TODO: consider creating a parseSyntax helper
-
 function pushToStack(token : Token, acc : Accumulator) : Accumulator {
   return S.pipe([
       over(stackLens, S.map(append(token))),
@@ -252,7 +251,6 @@ function pushToStack(token : Token, acc : Accumulator) : Accumulator {
 }
 
 function buildList(acc : Accumulator) : Accumulator {
-  // return Left.of('buildList not implemented.');
   return set(stackLens, Left('buildList not implemented.'), acc);
 }
 
@@ -275,37 +273,19 @@ function buildList(acc : Accumulator) : Accumulator {
  * @returns {Accumulator} the updated accumulator.
  */
 function parseFunction(acc : Accumulator) : Accumulator {
-  // XXX: it appears that acc.stack is [] rather than Right([...])
-
   // Pop the function (top/last of the stack).
   // const fn : Either<Token>  = acc.map(compose(last, prop('stack')));
   //const fn : Accumulator = over(stackLens, S.map(last), acc);
   // console.log('-- acc.stack -----');
   // console.log(acc.stack);
 
-  // XXX: TYPE IS WRONG!!!
-  // I am somehow getting [], when I should be getting a Left()
   const fn : Either<Token> = S.chain(last, acc.stack);
-  // if undefined, mb. return different error
-  // const updated : Accumulator = acc.map(over(lenses.stack, dropLast(1)));
-
-  // console.log('-- FN ------');
-  // console.log(fn);
-
   const fnTok  = S.pluck('token', fn);
-  //const fnType = S.pluck('type', fn); // may not have Type (if Alias, Syntax...)
   const fnType = S.chain(gets(S.is(String), ['type', 'name']), fn);
 
   // Update the acc. to drop the last item (e.g. fn) from stack.
   const updated = over(stackLens, S.chain(dropLast(1)), acc);
 
-  // console.log('-- UPDATED ---------');
-  // console.log(updated);
-  // console.log('-- ACC -------');
-  // console.log(acc);
-  // console.log('--------------');
-
-  //...
   if (S.equals(Right('Alias'), fnTok)) {
     return expandAlias(fn, updated); // was fn.right()
   }
@@ -321,7 +301,8 @@ function parseFunction(acc : Accumulator) : Accumulator {
     return set(stackLens, newStack, updated);
   }
   else {
-    // XXX Unreachable - by design
+    // Unreachable - by design
+    // DEBUGGING:
     console.log('-'.repeat(30));
     console.log(fn);
     console.log('FnType: ');
@@ -330,11 +311,10 @@ function parseFunction(acc : Accumulator) : Accumulator {
     console.log('FnTok: ');
     console.log(fnTok);
     // console.log(JSON.stringify(updated, null, 3));
-    console.log(JSON.stringify(acc, null, 3));
-    
+    console.log(JSON.stringify(acc, null, 3)); 
     console.log('-'.repeat(30));
-    // return Left.of('ERROR: Invalid function type.'); 
-      // XXX This would overwrite any previous errors
+
+    // XXX This would overwrite any previous errors
     return set(stackLens, Left('Invalid function type'), acc);
   }
 }
@@ -364,13 +344,22 @@ function runPrimitive(fn : Either<Token>, acc : Accumulator) : Accumulator {
   const args    = S.join(S.lift2(takeLast, arity, acc.stack));
   const result  = applyDef(def, args);
 
-  // TODO combine
-  const updated      = over(stackLens, x => S.join(S.lift2(dropLast, arity)(x)), acc);
-  const updatedStack = over(stackLens, S.lift2(S.append, result), updated);
-  /////
+  const updateStack = S.pipe([
+    x => S.join(S.lift2(dropLast, arity, x)), // drop the last N stack
+    S.lift2(S.append, result)                 // append result
+  ]);
+  const updated = over(stackLens, updateStack, acc);
+  return addSteps(arity, updated);
+}
 
-  /// ADD STEPS /// // TODO: split into own function?
-  const snapshot = S.map(S.map(print), updatedStack.stack);
+/**
+ * Add steps to the accumulator object.
+ * @param {Either<number>} arity
+ * @param {Accumulator} acc
+ * @return {Accumulator}
+ */
+function addSteps(arity, acc) {
+  const snapshot = S.map(S.map(print), acc.stack);
   const consumed = S.map(S.add(acc.index), arity);
   const step = S.pipe([
     S.lift2(R.assoc('snapshot'), snapshot),
@@ -378,7 +367,7 @@ function runPrimitive(fn : Either<Token>, acc : Accumulator) : Accumulator {
   ], Right({}));
   const steps = S.either(R.always([]), R.of, step);
 
-  return over(stepLens, rest => S.concat(rest, steps), updatedStack);
+  return over(stepLens, S.concat(__, steps), acc); 
 }
 
 type LibDef = {
@@ -391,12 +380,9 @@ type LibDef = {
   fn: (any) => any
 }
 
-// const U = S.create({checkTypes: false, env: S.env});
-
 function applyDef(def : Either<LibDef>, tokenList : Either<Token[]>) : Either<Token> { 
   const annotation  = S.pluck('types', def);
   const fn          = S.pluck('fn'   , def);
-//  const arity       = S.pluck('arity', def);
   
   // tokenList has the form Either([Token...])
   const raw = R.map(R.map(unwrap), tokenList);
@@ -407,14 +393,6 @@ function applyDef(def : Either<LibDef>, tokenList : Either<Token[]>) : Either<To
   // TODO: consider trying a functional function with in applyDef test.
 
   const wrapped = R.chain(wrap, result);
-
-  console.log('-------------');
-  //console.log(tokenList);
-  console.log(raw);
-  console.log(result);
-  // console.log(wrapped);
-  console.log('-------------');
-
   return wrapped;
 }
 
