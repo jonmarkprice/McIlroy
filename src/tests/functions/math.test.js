@@ -1,12 +1,11 @@
 const test    = require('tape');
 const { result } = require('../../common/lang/helpers');
-//const { Left, Right } = require('../../common/lang/lib/either');
-const { Left, Right } = require('sanctuary');
+const { wrap } = require('../../common/lang/type');
 
 test('Plus', (assert) => {
   assert.deepEqual(
     result(2, 1, '+', ':'),
-    Right(3),
+    wrap(3),
     'should add small integers'
   );
   
@@ -18,7 +17,7 @@ test('Plus', (assert) => {
 test('expression', (assert) => {
   assert.deepEqual(
     result(3, 2, 3, '^', ':', '*', ':'),
-    Right(24)
+    wrap(24)
   );
   assert.end()
 });
@@ -32,7 +31,7 @@ describe('subtract', () => {
 test('Subtraction', (assert) => {
   assert.deepEqual(
     result(3, 2, '-', ':'),
-    Right(1)
+    wrap(1)
   );
 
   assert.end();
@@ -42,7 +41,7 @@ test('Subtraction', (assert) => {
 test('Multiplication', (assert) => {
   assert.deepEqual(
     result(7, 3, '*', ':'),
-    Right(21),
+    wrap(21),
     'should mulitply two integers'
   );
 
@@ -53,13 +52,13 @@ test('Multiplication', (assert) => {
 test('Division', (assert) => {
   assert.deepEqual(
     result(42, 6, '/', ':'),
-    Right(7),
+    wrap(7),
     'should divide two integers'
   );
 
   assert.deepEqual(
     result(32, 0, '/', ':'),
-    Right(Infinity), // TODO: eventually make this a Left()
+    wrap(Infinity), // TODO: eventually make this a Left()
     'should return null or NaN for division-by-zero'
   );
 
@@ -69,13 +68,13 @@ test('Division', (assert) => {
 test('Exponentiation', (assert) => {
   assert.deepEqual(
     result(7, 2, '^', ':'),
-    Right(49),
+    wrap(49),
     'should take one integer to the power of another'
   );
 
   assert.deepEqual(
     result(3, 0, '^', ':'),
-    Right(1),
+    wrap(1),
     'should return 1 if the second argument is 0'
   );
 
@@ -85,7 +84,7 @@ test('Exponentiation', (assert) => {
 test('Successor', (assert) => {
   assert.deepEqual(
     result(23, 'succ', ':'),
-    Right(24),
+    wrap(24),
     'should increment an integer'
   );
 
@@ -97,7 +96,7 @@ test('Successor', (assert) => {
 test('Modulo', (assert) => {
   assert.deepEqual(
     result(29, 5, '%', ':'),
-    Right(4),
+    wrap(4),
     'should find the modulo of two integers'
   );
 

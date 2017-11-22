@@ -1,10 +1,9 @@
-const test    = require('tape');
-//const { result } = require('../helpers');
+const test = require('tape');
 const { result } = require('../../common/lang/helpers');
-const { Left, Right } = require('sanctuary');
+const { wrap } = require('../../common/lang/type');
 
-const True  = Right(true);
-const False = Right(false)
+const True  = wrap(true);
+const False = wrap(false)
 
 test('NOT', (assert) => {
   assert.deepEqual(result(true, 'not', ':'), False);

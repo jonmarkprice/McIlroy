@@ -23,9 +23,9 @@ const {
   view        // v w x y z
 } = R; // from ramda
 const S = require('sanctuary');
-const {Left, Right} = S;
-// TODO
+const { Left, Right } = S;
 const { last, dropLast, takeLast, gets } = require('./lib/sanctuary-either');
+const { wrap, unwrap } = require('./type');
 
 import type { Type, TokenType } from './typecheck';
 // import type { Either } from './lib/either';
@@ -279,8 +279,8 @@ function parseFunction(acc : Accumulator) : Accumulator {
   // Pop the function (top/last of the stack).
   // const fn : Either<Token>  = acc.map(compose(last, prop('stack')));
   //const fn : Accumulator = over(stackLens, S.map(last), acc);
-  console.log('-- acc.stack -----');
-  console.log(acc.stack);
+  // console.log('-- acc.stack -----');
+  // console.log(acc.stack);
 
   // XXX: TYPE IS WRONG!!!
   // I am somehow getting [], when I should be getting a Left()
@@ -288,8 +288,8 @@ function parseFunction(acc : Accumulator) : Accumulator {
   // if undefined, mb. return different error
   // const updated : Accumulator = acc.map(over(lenses.stack, dropLast(1)));
 
-  console.log('-- FN ------');
-  console.log(fn);
+  // console.log('-- FN ------');
+  // console.log(fn);
 
   const fnTok  = S.pluck('token', fn);
   //const fnType = S.pluck('type', fn); // may not have Type (if Alias, Syntax...)
@@ -298,9 +298,9 @@ function parseFunction(acc : Accumulator) : Accumulator {
   // Update the acc. to drop the last item (e.g. fn) from stack.
   const updated = over(stackLens, S.chain(dropLast(1)), acc);
 
-  console.log('-- UPDATED ---------');
-  console.log(updated);
-  //console.log('-- ACC -------');
+  // console.log('-- UPDATED ---------');
+  // console.log(updated);
+  // console.log('-- ACC -------');
   // console.log(acc);
   // console.log('--------------');
 
@@ -355,34 +355,6 @@ function expandAlias(alias : Token, acc : Accumulator) : Accumulator {
 
 // function runPrimitive(fn : Either<Token>,  stack: Either<Token[]>) : Either<Token> {
 function runPrimitive(fn : Either<Token>, acc : Accumulator) : Accumulator {
-  // TODO: run all of these checks in the tokenization step.
-
-  //if (library.has(fn.value)) {
-    //const libdef = library.get(fn.value)
-    //if (libdef === undefined) {
-    //  return Left.of(`Error: ${fn.value} is not a function.`);
-    //}
-    //else {
-      //if (has('fn', libdef)) {
-        // const result = Right
-        //.of(applyOverTokens)
-        //.of(curry(applyOverTokens)(libdef.fn))
-        //.ap(acc.map(prop('stack'))
-          //.map(R.takeLast(libdef.arity)));
-
-  // const libdef = fn.value; // XXX
-  /*
-  console.log("===========================");
-  console.log('arity: ');
-  console.log(libdef.arity);
-  console.log(libdef);
-  */
-  // const args = acc.map(R.prop('stack'))
-  //        .map(R.takeLast(libdef.arity));
-
-  //console.log('---------------');
-  //console.log(fn);
-  //console.log('---------------');
   const def : Either<LibDef> = S.pluck('value', fn);
   const arity : Either<number> = S.pluck('arity', def);
 
@@ -394,52 +366,12 @@ function runPrimitive(fn : Either<Token>, acc : Accumulator) : Accumulator {
   // no reason to use over()... I just use prop!!!
   const argsAcc = over(stackLens, x => S.join(S.lift2(takeLast, arity)(x)), acc); // no chain..
 
-  console.log('-- ARGS ACC ----');
-  console.log(argsAcc);
-
   const args = S.prop('stack', argsAcc);
-
-  console.log('-- ARGS -------------');
-  console.log(args);
-  console.log('-- DEF --------------');
-  console.log(def);
-  console.log('---------------------');
-
-  // TODO
   const result = applyDef(def, args);
-  
-  //const result = acc.map(prop('stack'))
-    //.map(R.takeLast(libdef.arity))
-    //.map(R.apply(libdef.fn));
-    //.map(curry(applyOverTokens)(libdef.fn));
-  // XXX const result = Right.of({type: 'Number', value: 0})
-  // Ok, I see the problem we need to apply with the tokens...
-  // Currently we are trying to do: 
-  //  {type: '', value: 3} + {type: '', value: 4}
-  // which of course is NaN!
-
-  //const rest = acc.map(R.over(lenses.stack, R.dropLast(libdef.arity)));
   const updated = over(stackLens, x => S.join(S.lift2(dropLast, arity)(x)), acc);
-  // or, instead of rest, call it  updated, as in parseFunction
-
-  // return Right.of(x => R.over(lenses.stack, R.append(x)))
-  //  .ap(result)
-  //  .ap(rest);
 
   // TODO: ADD STEPS HERE!!!!
   return over(stackLens, S.lift2(S.append, result), updated);
-
-      //}
-      //else {
-      //  return Left.of(`Error ${fn.value} has no implementation.`);
-      //}
-    //}
-  //}
-  //else {
-  //  return Left.of(`Function ${fn.value} not found.`);
-  //}
-  
-  // return Left.of('[INTERNAL] runPrimitive not implemented.');
 }
 
 type LibDef = {
@@ -452,37 +384,31 @@ type LibDef = {
   fn: (any) => any
 }
 
-// TODO: make global
-const partial = x => f => S.ap(f, S.pluck('value', x));
-const apply = (f, xs) => S.pipe(S.map(partial, xs), f);
+// const U = S.create({checkTypes: false, env: S.env});
 
-// sure... I just need to map over something that either returns
-// a Left() or echos the input
-// maybe just concat() instead of appending...
 function applyDef(def : Either<LibDef>, tokenList : Either<Token[]>) : Either<Token> { 
-  // Transform Right([t1, t2, ...]) to [Right(t1), Right(t2), ...]
-  const tokens  = S.traverse(Array, R.identity, tokenList);
+  const annotation  = S.pluck('types', def);
+  const fn          = S.pluck('fn'   , def);
+//  const arity       = S.pluck('arity', def);
+  
+  // tokenList has the form Either([Token...])
+  const raw = R.map(R.map(unwrap), tokenList);
+  const result = R.ap(R.map(R.apply, fn), raw);
 
-  console.log('=============')
-  console.log(def);
-  console.log(tokens);
-  console.log('==============')
+  // TODO: have a test of functions? for wrap -- no.
+  // TODO: will soon want fn to return a Maybe result, thus will need to chain/join.
+  // TODO: consider trying a functional function with in applyDef test.
 
-  const fn      = S.pluck('fn', def);
-  const result  = apply(fn, tokens); // or value
+  const wrapped = R.chain(wrap, result);
 
+  console.log('-------------');
+  //console.log(tokenList);
+  console.log(raw);
   console.log(result);
-  console.log('=====================');
- 
-  // clean up?
-  const valueToken = {token: 'Value'};
-  const token = S.map(x => R.assoc('value', x, valueToken), result);
-  //lift2(x => y => R.assoc('type', x, y), interpretTypes(...), token); 
+  // console.log(wrapped);
+  console.log('-------------');
 
-  const annotation = S.pluck('types', def);
-  const type = S.join(S.lift3(interpretTypes, tokenList, annotation, result));
-
-  return S.lift2(R.assoc('type'), type, token);
+  return wrapped;
 }
 
 module.exports = {
@@ -493,9 +419,4 @@ module.exports = {
   , parseFunction
   , runPrimitive
   , applyDef
-  // TODO test, eithers:
-  , dropLast
-  // , drop_
-  , takeLast
-};
-
+}

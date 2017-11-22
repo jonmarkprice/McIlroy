@@ -11,7 +11,7 @@ const library = new Map([
       in: [t.list, t.any],
       out: t.list
     },
-    fn: list => elem => R.append(elem, list)
+    fn: (list, elem) => R.append(elem, list)
   }],
   ['replicate', {
     display: 'replicate',
@@ -38,7 +38,7 @@ const library = new Map([
       in: [t.list, t.fn],
       out: t.any // fn.types.out
     },
-    fn: R.map
+    fn: (list, f) => list.map(f.fn)
   }],
   ['not', {
     display: 'not',
@@ -56,18 +56,18 @@ const library = new Map([
       in: [t.any, t.fn], // f.types.in[0]
       out: t.fn
     },
-    fn: x => f => {
+    fn: (x, f) => {
       // console.log(x);
       // console.log(f);
       // console.log('--------');
       return ({
         display: `(${display(x)} ${f.display}) curry`,
-        arity: 1,
+        arity: f.arity - 1,
         types: {
           in: [t.any],
           out: t.any
         },
-        fn: y => {
+        fn: (y) => {
           //console.log(f);
           //console.log(x);
           //console.log(y);
@@ -90,7 +90,7 @@ const library = new Map([
         in: [t.any, t.any], // will be dependent on f's in's
         out: t.any
       },
-      fn: x => y => f.fn.call(null, y, x),
+      fn: (x, y) => f.fn.call(null, y, x),
     })
   }],
   ['+', {
@@ -100,7 +100,8 @@ const library = new Map([
       in: [t.num, t.num],
       out: t.num
     },
-    fn: R.add
+    fn: (x, y) => y + x 
+    // R.add
   }],
   ['-', {
     display: '-',
@@ -109,7 +110,7 @@ const library = new Map([
       in: [t.num, t.num],
       out: t.num
     },
-    fn: R.subtract
+    fn: (x, y) => x - y
   }],
   ['*', {
     display: '*',
@@ -118,7 +119,7 @@ const library = new Map([
       in: [t.num, t.num],
       out: t.num
     },
-    fn: R.multiply
+    fn: (x, y) => x * y
   }],
   ['^', {
     display: '^',
@@ -127,7 +128,7 @@ const library = new Map([
       in: [t.num, t.num],
       out: t.num
     },
-    fn: x => y => Math.pow(x, y)
+    fn: (x, y) => Math.pow(x, y)
   }],
   ['/', {
     display: '/',
@@ -136,7 +137,7 @@ const library = new Map([
       in: [t.num, t.num],
       out: t.num
     },
-    fn: x => y => x / y
+    fn: (x, y) => x / y
   }],
   ['%', {
     display: '%',
@@ -145,7 +146,7 @@ const library = new Map([
       in: [t.num, t.nu],
       out: t.num
     },
-    fn: x => y => x % y
+    fn: (x, y) => x % y
   }],
   ['and', {
     display: 'and',
@@ -154,7 +155,7 @@ const library = new Map([
       in: [t.bool, t.bool],
       out: t.bool
     },
-    fn: R.and
+    fn: (x,y) => x && y //R.and
   }],
   ['or', {
     display: 'or',
@@ -163,7 +164,7 @@ const library = new Map([
       in: [t.bool, t.bool],
       out: t.bool
     },
-    fn: R.or
+    fn: (x,y) => x || y //R.or
   }],
   ['concat', {
     display: 'concat',
@@ -172,7 +173,7 @@ const library = new Map([
       in: [t.list, t.list],
       out: t.list
     },
-    fn: R.concat
+    fn: (x, y) => R.concat(x, y) // Don't curry
   }],
   ['reduce', {
     display: 'reduce',
@@ -181,8 +182,7 @@ const library = new Map([
       in: [t.list, t.fn, t.any], // f.types.in[0]
       out: t.any // f.types.out
     },
-    fn: list => f => base => list.reduce(f.fn, base)
-    // R.reduce
+    fn: (list, f, base) => list.reduce(f.fn, base)
   }],
   ['zip', {
     display: 'zip',
@@ -191,7 +191,7 @@ const library = new Map([
       in: [t.list, t.list],
       out: t.list
     },
-    fn: a => b => {
+    fn: (a, b) => {
       const len = Math.min(a.length, b.length);
       let result = [];
       for (let i = 0; i < len; i += 1) {
@@ -221,7 +221,7 @@ const library = new Map([
       in: [t.any, t.list], // of functions
       out: t.list
     },
-    fn: data => fns => fns.map(f => f.fn(data))
+    fn: (data, fns) => fns.map(f => f.fn(data))
   }],
   ['apply', {
     display: 'apply',
@@ -231,10 +231,10 @@ const library = new Map([
       out: t.any // TODO: later use the fn ret type
     },
     // XXX: This could easily break
-    fn: args => f => {
-      console.log(f);
-      console.log(typeof f);
-      console.log(args);
+    fn: (args, f) => {
+      //console.log(f);
+      //console.log(typeof f);
+      //console.log(args);
       return f.fn.apply(null, args);
     }
     //fn: (args, f) => R.apply(f.fn, args)
@@ -308,7 +308,6 @@ const library = new Map([
     },
     fn: R.equals
   }],
-  /*
   ['filter', {
     display: 'filter',
     arity: 2,
@@ -317,7 +316,7 @@ const library = new Map([
       out: t.list // of bool
     },
     fn: (list, cond) => list.filter(x => cond.fn.call(null, x))
-  }],*/
+  }],
   ['compose', {
     display: 'compose',
     arity: 2,
@@ -325,14 +324,14 @@ const library = new Map([
       in: [t.fn, t.fn],
       out: t.fn
     },
-    fn: f => g => ({
+    fn: (f, g) => ({
       display: `(${f.display}, ${g.display}) compose`,
       arity: f.arity,
       types: {
         in: f.types.in,
         out: g.types.out,
       },
-      fn: f => g => R.pipe(f.fn, g.fn) // this seems wrong... why not compose?
+      fn: R.pipe(f.fn, g.fn) // this seems wrong... why not compose?
     })
   }]
 ]);

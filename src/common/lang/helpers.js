@@ -13,9 +13,12 @@ function result(...program : Literal[]) : Either<?Token> {
   const tokens = program.map(x => tokenize(x, {syntax, primitives}));
   const acc = parseStack(tokens, Right([]), true, 0);
   if (S.equals(S.pluck('length', acc.stack), Right(1))) {
-    return S.pipe([S.map(R.head), S.pluck('value')], acc.stack);
+    //return S.pipe([S.map(R.head), S.pluck('value')], acc.stack);
+    return S.map(R.head, acc.stack);
   }
   else {
+    console.log(acc.stack);
+
     return Left('Too many items on stack.');
   }
 }

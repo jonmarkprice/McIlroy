@@ -1,6 +1,6 @@
 const test = require('tape');
-const { Left, Right } = require('../../common/lang/lib/either');
-const { result } = require('../../common/lang/helpers');
+const { result }  = require('../../common/lang/helpers');
+const { wrap }    = require('../../common/lang/type');
 
 // NOTE: By "applicative", I mean any function that applies a function it takes as an argument.
 
@@ -8,12 +8,14 @@ test('apply', (assert) => {
   // should apply a function in the second argument to the list of arguments
   assert.deepEqual(
     result([0], 'id', 'apply', ':'),
-    Right.of(0)
+    wrap(0)
   );
+
   assert.deepEqual(
     result([1, 5], '+', 'apply', ':'),
-    Right.of(6)
-  ); 
+    wrap(6)
+  );
+ 
   assert.end();
 });
 
@@ -21,47 +23,48 @@ test('eval', (assert) => {
   // should evaluate to a single argument 
   assert.deepEqual(
     result([0, 'id'], 'eval', ':'), // This tests whether tokenize is recursive.
-    Right.of(0)
+    wrap(0)
   );
 
   assert.end();
 });
+
 
 test('map', (assert) => {
   // Map should do nothing to an empty list
   assert.deepEqual(
     result([], 'id', 'map', ':'),
-    Right.of([])
+    wrap([])
   );
 
   assert.deepEqual(
     result(['h', 'i', '!'], 'uppercase', 'map', ':'),
-    Right.of(['H', 'I', '!'])
+    wrap(['H', 'I', '!'])
   );
 
   assert.end();
-});
+})
 
 test('reduce', (assert) => {
   // Reduce should return its third argument if given an empty list.'
   assert.deepEqual(
     result([], 'id', 0, 'reduce', ':'),
-    Right.of(0)
+    wrap(0)
   );
   
   assert.deepEqual(
     result([], 'id', true, 'reduce', ':'),
-    Right.of(true)
+    wrap(true)
   );
 
   assert.deepEqual(
     result([], 'id', 'a', 'reduce', ':'),
-    Right.of('a')
+    wrap('a')
   );
 
   assert.deepEqual(
     result([], 'id', [], 'reduce', ':'),
-    Right.of([])
+    wrap([])
   );
 
   assert.end();
