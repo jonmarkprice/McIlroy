@@ -1,6 +1,6 @@
 const test      = require('tape');
-const library   = require('../common/lib/library');
-const functions = require('../common/lib/functions');
+const library   = require('../common/lang/library');
+const functions = require('../common/lang/functions');
 
 // We need display for the function implementations (library)
 // but we also need the list of functions (functions) for the display

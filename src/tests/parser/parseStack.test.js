@@ -33,7 +33,7 @@ test('parseStack', (assert) => {
         {
           steps: [{snapshot: ["0"], consumed: 3}],
           stack: Right([{token: 'Value', type: {name: 'Number'}, value: 0}]),
-          index: 2,       // Don't care
+          index: 3,       // Don't care
           first: true     // Don't care
         }
     );
@@ -49,7 +49,7 @@ test('parseStack', (assert) => {
         {
           steps: [],
           stack: Left('[DEV] expandAlias not implemented'),
-          index: 3,
+          index: 4,
           first: true
         }
     );

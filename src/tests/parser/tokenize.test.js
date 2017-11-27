@@ -3,14 +3,7 @@ import type { TokenizerConfig, Literal, Token } from '../common/lang/parse';
 
 const test = require('tape')
 const library = require('../../common/lang/library');
-const { tokenize } = require('../../common/lang/parse');
-
-// Bake-in the config. for more convient testing.
-const config = {
-    syntax: new Set([':', '[', ']']),
-    primitives: new Set(['id', '+']) // expand as necessary
-}
-const tokenize_ = x => tokenize(x, config);
+const { tokenize_ } = require('../../common/lang/tokenize');
 
 test('tokenize', (assert) => {
     assert.deepEqual(

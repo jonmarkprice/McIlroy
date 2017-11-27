@@ -13,7 +13,7 @@ test('parseFunction', (assert) => {
   const acc = {
     stack: Right([1, 2].map(tokenize_)),
     steps: [],
-    index: 3,   // don't care
+    index: 2,   // don't care
     first: true // don't care
   };
 
@@ -21,8 +21,8 @@ test('parseFunction', (assert) => {
     runPrimitive(plus, acc),
     {
       stack: Right([tokenize_(3)]),
-      steps: [{snapshot: ["3"], consumed: 5}],
-      index: 3,   // ''
+      steps: [{snapshot: ["3"], consumed: 2}],
+      index: 2,   // ''
       first: true // '' 
     }
   );

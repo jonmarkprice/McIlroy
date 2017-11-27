@@ -17,7 +17,7 @@ const descriptions = new Map([
   ['replicate', {
     text: 'Creates a list of item repeated N times.',
     example: {
-      in: [3, 'z', 'replicate', ':'],
+      in: ['z', 3, 'replicate', ':'],
       expect: ['z', 'z', 'z']
     }
   }],

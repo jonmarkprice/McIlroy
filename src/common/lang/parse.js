@@ -312,7 +312,6 @@ function applyDef(def : Either<LibDef>, tokenList : Either<Token[]>) : Either<To
 }
 
 module.exports = {
-   //extractValue // XXX deprecated?
     createSteps
   , parseStack
   , parseFunction
