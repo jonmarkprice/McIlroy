@@ -69,7 +69,7 @@ function tokenize(value : Literal | AliasLiteral, config : TokenizerConfig) : To
       return {token: 'Value', type: {name: 'Char'}, value};
     }
     else {
-      throw Error('Abritrary strings not supported.');
+      throw Error(`Arbitrary strings not supported. Got "${value}".`);
     }
   }
   else if (typeof value == 'boolean') {

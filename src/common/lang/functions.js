@@ -27,9 +27,9 @@ const functions = new Set([
 	"length",
 	"succ",
 	"=",
-	// "filter",
-	"compose",
-	"cond"
+	"filter",
+	"compose"
+	//"cond"
 ]);
 
 module.exports = functions;
