@@ -1,7 +1,8 @@
 const React       = require('react');
 const { connect } = require('react-redux');
 const Token       = require('../components/Token');
-const { parse }   = require('../lib/parser');
+//const { parse }   = require('../lib/parser');
+const { parseProgram } = require('../lang/program');
 
 const mapStateToProps = state => ({
   program: state.program,
@@ -18,17 +19,29 @@ class ExecutionRows extends React.Component {
                   : this.props.program;
 
     // Populate rows
-    const rowData = applied.map((text, index) =>
-      <Token text={text} key={index} />);
+    //const rowData = applied.map((text, index) =>
+    //  <Token text={text} key={index} />);
     let rows = [];
-    rows.push(<div className="row" key="init">{rowData}</div>);
+    //rows.push(<div className="row" key="init">{rowData}</div>);
 
     // Populate steps
-    const result = parse(applied);
+    //const result = parse(applied);
     // TODO everything after this has to be updated
     //console.dir(result);
 
-    result.steps.forEach((step, stepIndex) => {
+    // TODO:
+    // [ ] include stack mabye in return
+    // [ ] wrap all in encaseEither()
+    // [ ] print error with bimap
+    // const {steps, result} = ..
+    //const steps = [["Hello", "world"]] //createSteps(applied);
+    const result = parseProgram(applied);
+    const steps = result.steps;
+    // TODO: if (result.stack) // isLeft -> display error
+    //console.log(applied);
+    //console.log(__computed);
+
+    steps.forEach((step, stepIndex) => {
 
       // Wrap tokens
       /*

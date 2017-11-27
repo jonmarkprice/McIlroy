@@ -5,6 +5,7 @@ const { wrap } = require('../common/lang/type');
 const { tokenize_ } = require('../common/lang/tokenize');
 const { parseStack } = require('../common/lang/parse');
 const { Right, Left } = require('sanctuary');
+const { parseProgram } = require('../common/lang/program');
 
 // This file is for larger tests that do not target a specific function but
 // rather implement somewhat more interesting programs.
@@ -17,7 +18,12 @@ test('count the number of even numbers in a list', (assert) => {
   assert.deepEqual(result(...program), wrap(2), 'Check final result');
 
   const tokens = program.map(tokenize_);
-  const acc = parseStack(tokens, Right([]), true, 0);
+  const init = {
+    stack: Right([]),
+    first: true,
+    index: 0
+  };
+  const acc = parseStack(tokens, init);
   assert.equal(acc.steps.length, 6);
 
   assert.deepEqual(acc.steps[0], {
@@ -57,7 +63,7 @@ test('count the number of even numbers in a list', (assert) => {
   );
 
   assert.deepEqual(
-    stepList(...program)[5],
+    parseProgram(program).steps[5],
     ['[0, 0]', 'length', ':'],
     'Check a sample of createSteps'
   );

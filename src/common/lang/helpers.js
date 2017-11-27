@@ -5,12 +5,18 @@ import type { Either } from './lib/either';
 const R = require('ramda');
 const S = require('sanctuary');
 const { Left, Right } = S;
-const { parseStack, createSteps } = require('./parse.js');
+const { parseStack } = require('./parse');
+const { parseProgram } = require('./program');
 const { tokenize_ } = require('./tokenize');
 
 function result(...program : Literal[]) : Either<?Token> {
   const tokens = program.map(tokenize_);
-  const acc = parseStack(tokens, Right([]), true, 0);
+  const init = {
+    stack: Right([]),
+    first: true,
+    index: 0
+  };
+  const acc = parseStack(tokens, init);
   if (S.equals(S.pluck('length', acc.stack), Right(1))) {
     return S.map(R.head, acc.stack);
   }
@@ -21,10 +27,5 @@ function result(...program : Literal[]) : Either<?Token> {
   }
 }
 
-function stepList(...program : Literal[]) : ___ {
-  const tokens = program.map(tokenize_);
-  return createSteps(tokens);
-}
-
-module.exports = { result, stepList };
+module.exports = { result };
 

@@ -1,10 +1,10 @@
 const test = require('tape');
-const { createSteps } = require('../common/lang/parse.js');
+const { parseProgram } = require('../common/lang/program.js');
 const { tokenize_ } = require('../common/lang/tokenize');
 
 test('one step', (assert) => {
   assert.deepEqual(
-    createSteps([1, 2, '+', ':'].map(tokenize_)),
+    parseProgram([1, 2, '+', ':']).steps,
     [
       ["1", "2", "+", ":"], // or similar
       ["3"]

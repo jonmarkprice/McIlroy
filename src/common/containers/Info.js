@@ -1,6 +1,6 @@
 const React         = require('react');
 const { connect }   = require('react-redux');
-const descriptions  = require('../lib/descriptions');
+const descriptions  = require('../lang/descriptions');
 const Example       = require('../components/Example');
 
 // NOTE: Consider encapsulating into larger component

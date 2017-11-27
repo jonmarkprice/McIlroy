@@ -83,48 +83,16 @@ const stepLens = R.lensProp('steps');
 const stackLens = R.lensProp('stack');
 const indexLens = R.lensProp('index');
 
-function createSteps(tokens : Token[]) { // <-- take here and tokenize
-  // previously parse
-  // Call parseStack to do the actual work
-  const acc = parseStack(tokens, Right([]), true, 0);
-  const input  = S.map(print, tokens);
-  const steps  = acc.steps.map(({snapshot, consumed}) => {
-    // console.log(snapshot);
-    // console.log(consumed);
-    // console.log(input.length);
-
-    const leftover = input.length - consumed;    
-    return S.concat(snapshot, R.takeLast(leftover, input))
-  });
-  console.log(steps);
-  console.log(input);
-
-  return S.prepend(input, steps); // prepend input step
-}
-
 // previously parseProgram
 // call with ([...Token], [], true, 0)
-function parseStack(
-  input : Token[],
-  stack : Either<Token[]>,
-  first : boolean,
-  index : number ) : Accumulator
-{
-  const init : Accumulator = {
-    stack, // S.Right([...tokens])
-    steps: [],
-    /* steps will be a list of:
-    {
-      snapshot: [], // of strings
-      consumed: 0   // number of input tokens consumed
-    }
-    */
-    first,
-    index
-  };
-
-  //Right.of({stack, first, index});
-  return input.reduce(parseToken, init);
+function parseStack(input, acc) {
+  /* Steps will be a list of: {
+  snapshot: [], // of strings
+  consumed: 0   // number of input tokens consumed
+} */
+  // NOTE: object/rest spread works in node v9, but not babel-cli
+  // {steps: [], ...acc}, once this is fixed use that.
+  return input.reduce(parseToken, Object.assign({}, acc, {steps: []}));
 }
 
 //////////////////
@@ -312,9 +280,9 @@ function applyDef(def : Either<LibDef>, tokenList : Either<Token[]>) : Either<To
 }
 
 module.exports = {
-    createSteps
-  , parseStack
+    parseStack
   , parseFunction
   , runPrimitive
   , applyDef
+  , print
 }

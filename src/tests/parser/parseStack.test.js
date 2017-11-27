@@ -15,50 +15,61 @@ const { interpretTypes } = require('../../common/lang/typecheck');
 // try moving this somewhere ... getting name already bound...
 // declare function test(name: string, cb: (...any) => any) : void;
 
+const init = {
+  stack: Right([]),
+  first: true,
+  index: 0
+};
+
 test('parseStack', (assert) => {
     //const tokens : Token[] = ; // This was tested above.
     // What happens if we do nothing, just let the tokens pass through.
+    console.log(init);
+
     assert.deepEqual(
-        parseStack([0, 'id'].map(tokenize_), Right([]), true, 0),
+        parseStack([0, 'id'].map(tokenize_), init),
         {
           steps: [],
           stack: Right([0, 'id'].map(tokenize_)), 
           first: true, 
           index: 2
-        }
+        },
+        'Push to stack without executing.'
     );
 
     assert.deepEqual(
-        parseStack([0, 'id', ':'].map(tokenize_), Right([]), true, 0),
+        parseStack([0, 'id', ':'].map(tokenize_), init),
         {
           steps: [{snapshot: ["0"], consumed: 3}],
           stack: Right([{token: 'Value', type: {name: 'Number'}, value: 0}]),
           index: 3,       // Don't care
           first: true     // Don't care
-        }
+        },
+        'Execute a basic function.'
     );
+
+    console.log("================== ALIAS ==================");
 
     // Try an alias
     assert.deepEqual(
         parseStack(
           [2, 2, {name: 'plus', expansion: '+'}, ':'].map(tokenize_),
-          Right([]),
-          true,
-          0
+         init
         ),
         {
           steps: [],
           stack: Left('[DEV] expandAlias not implemented'),
           index: 4,
           first: true
-        }
+        },
+        'Execute an alias.'
     );
     //*/
 
   /* TODO
     // Try a harder function.. id doesn't really tell us much!!!
     assert.deepEqual(
-        parseStack([3, 4, '+', ':'].map(tokenize_), [], true, 0),
+        parseStack([3, 4, '+', ':'].map(tokenize_), init),
         Right.of({
             stack: [{token: 'Value', type: {name: 'Number'}, value: 7}],
             index: 3,       // Don't care
@@ -67,7 +78,7 @@ test('parseStack', (assert) => {
     );
 
     assert.deepEqual(
-      parseStack([1, 2, 3, 4, 5, '+', ':'].map(tokenize_), [], true, 0),
+      parseStack([1, 2, 3, 4, 5, '+', ':'].map(tokenize_), init),
       Right.of({
         stack: [1, 2, 3, 9].map(tokenize), // 1, 2, 3 left alone
         index: 6,
