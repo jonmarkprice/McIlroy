@@ -5,7 +5,7 @@ import type { Either } from './lib/either';
 const R = require('ramda');
 const S = require('sanctuary');
 const { Left, Right } = S;
-const { parseStack } = require('./parse.js');
+const { parseStack, createSteps } = require('./parse.js');
 const { tokenize_ } = require('./tokenize');
 
 function result(...program : Literal[]) : Either<?Token> {
@@ -21,5 +21,10 @@ function result(...program : Literal[]) : Either<?Token> {
   }
 }
 
-module.exports = { result };
+function stepList(...program : Literal[]) : ___ {
+  const tokens = program.map(tokenize_);
+  return createSteps(tokens);
+}
+
+module.exports = { result, stepList };
 

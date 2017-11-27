@@ -83,8 +83,8 @@ const stepLens = R.lensProp('steps');
 const stackLens = R.lensProp('stack');
 const indexLens = R.lensProp('index');
 
-function createSteps(tokens : Token[]) // <-- take here and tokenize
-{ // previously parse
+function createSteps(tokens : Token[]) { // <-- take here and tokenize
+  // previously parse
   // Call parseStack to do the actual work
   const acc = parseStack(tokens, Right([]), true, 0);
   const input  = S.map(print, tokens);
@@ -93,7 +93,7 @@ function createSteps(tokens : Token[]) // <-- take here and tokenize
     // console.log(consumed);
     // console.log(input.length);
 
-    const leftover = input.length + 1 - consumed;    
+    const leftover = input.length - consumed;    
     return S.concat(snapshot, R.takeLast(leftover, input))
   });
   console.log(steps);
@@ -194,8 +194,12 @@ function parseFunction(acc : Accumulator) : Accumulator {
   const fnTok  = S.pluck('token', fn);
   const fnType = S.chain(gets(S.is(String), ['type', 'name']), fn);
 
-  // Update the acc. to drop the last item (e.g. fn) from stack.
-  const updated = over(stackLens, S.chain(dropLast(1)), acc);
+  // Update the acc. to drop the last item (e.g. fn) from stack,
+  // and update the index.
+  const updated = S.pipe([
+    over(stackLens, S.chain(dropLast(1))),
+    over(indexLens, inc)
+  ], acc);
 
   if (S.equals(Right('Alias'), fnTok)) {
     return expandAlias(fn, updated); // was fn.right()
@@ -257,7 +261,7 @@ function runPrimitive(fn : Either<Token>, acc : Accumulator) : Accumulator {
   ]);
   const updated = over(stackLens, updateStack, acc);
 
-  console.log("=== runPrim ===");
+  console.log("==== runPrim ====");
   console.log(updated.stack);
   return addSteps(arity, updated);
 }
@@ -269,15 +273,12 @@ function runPrimitive(fn : Either<Token>, acc : Accumulator) : Accumulator {
  * @return {Accumulator}
  */
 function addSteps(arity, acc) {
+  const consumed = Right({consumed: acc.index});
   const snapshot = S.map(S.map(print), acc.stack);
-  const consumed = S.map(S.add(acc.index), arity);
-  const step = S.pipe([
-    S.lift2(R.assoc('snapshot'), snapshot),
-    S.lift2(R.assoc('consumed'), consumed)
-  ], Right({}));
+  const step = S.lift2(R.assoc('snapshot'), snapshot, consumed);
   const steps = S.either(R.always([]), R.of, step);
 
-  console.log("==== addSteps ===");
+  console.log("==== addSteps ====");
   console.log(steps);
   console.log(acc.steps);
 
