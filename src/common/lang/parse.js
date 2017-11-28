@@ -93,6 +93,8 @@ function parseStack(input, acc) {
 } */
   // NOTE: object/rest spread works in node v9, but not babel-cli
   // {steps: [], ...acc}, once this is fixed use that.
+  console.log('===== parsing stack =====');
+  
   return input.reduce(parseToken, Object.assign({}, acc, {steps: []}));
 }
 
@@ -212,56 +214,87 @@ function expandAlias(alias : Either<Token>, acc : Accumulator) : Accumulator {
   // [ ] May need to tokenize each item in the expansion
   // [ ] Return accumulator with expansion step in progr
 
-  //*
   // TODO: may need to tokenize this
   console.log(alias);
   const expList = S.map(S.props(['value', 'expansion']), alias);
-  console.log(expList);
-  const expansion = S.map(S.map(tokenize_), expList);
-  console.log(expansion);
+  const withApp = S.map(S.append(':'), expList);
+  const expansion = S.map(R.map(tokenize_), withApp);
 
-  // mb S.concat
-
-  console.log("=============================");
-
-  // (left, right) => R.concat(left, right))
-  
-  // TODO here's where we have to deal with INDEX / FIRST. Only update consumed
-  // if FIRST.
-  // Add a step 
-  //snapshot = stack ++ expansion
   const consumed = Right({consumed: acc.index});
 
+  console.log('======= EXPANSION =============');
   console.log(expansion)
   console.log(acc.stack)
   console.log('===============================');
 
+
   const withExpansion = S.lift2(S.concat, acc.stack, expansion);
   const snapshot = S.map(S.map(print), withExpansion);
+
   const step = S.lift2(R.assoc('snapshot'), snapshot, consumed);
   const steps = S.either(R.always([]), R.of, step);
 
+  // Add expansion step
   const up1 = over(stepLens, S.concat(__, steps), acc);
-/*
-function addSteps(arity, acc) {
-  const consumed = Right({consumed: acc.index});
-  const snapshot = S.map(S.map(print), acc.stack);
-  const step = S.lift2(R.assoc('snapshot'), snapshot, consumed);
-  const steps = S.either(R.always([]), R.of, step);
-
-  console.log("==== addSteps ====");
-  console.log(steps);
-  console.log(acc.steps);
-
-  return over(stepLens, S.concat(__, steps), acc); 
-}
-*/
-
+  
   // FIXME currently this should expand, but not execute
+  // Try to execute
+  const state = {
+    stack: acc.stack,
+    index: 0,
+    first: true // useless
+  }
 
-  //*/
-  return up1;
+  // XXX: parseStack wants a 'normal' list of un-tokenized literals
+  // TODO: consider rewriting so that a different function does the
+  // tokenization...
+
+  // const withApp = R.map(R.append(':'), expList);
+  // console.log(withApp);
+  // const eitherInput = R.map(R.map(tokenize_), withApp);
+
+  const newInput = S.either(R.always([]), S.I, expansion); //eitherInput);
+
+  console.log('========= new input =========');
+  console.log(newInput);
+  console.log(state);
+  console.log(acc);
+
+  const resultAcc = parseStack(newInput, state);
+
+  console.log('====== DONE ==============');
+
+  // TODO call createSteps on resultAcc steps
+  //const untokenizedInput = S.either(R.always([]), S.I, withApp);
+
+  //console.log(untokenizedInput);
+
+  const newSteps = createSteps(newInput, resultAcc.steps);
+
+  console.log('========= NEW STEPS =====');
+  console.log(newSteps);
+
+  const resultSteps = newSteps.map(x => ({
+    consumed: acc.index,
+    snapshot: x
+  }));
+
+  return {
+    steps: R.concat(up1.steps, resultSteps),
+    stack: resultAcc.stack,
+    index: acc.index,
+    first: true // useless
+  }
 }
+
+function createSteps(tokens, steps) {
+  const input = S.map(print, tokens);
+  return steps.map(({snapshot, consumed}) => {
+    const leftover = input.length - consumed;        
+    return S.concat(snapshot, R.takeLast(leftover, input))
+  }); 
+}
+
 
 /**
  * Calls the function [definition] on a portion of the stack.

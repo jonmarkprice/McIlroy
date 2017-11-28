@@ -1,8 +1,8 @@
 const S = require('sanctuary');
 const { Right, Left} = S;
 const R = require('ramda');
-const { parseStack, print } = require('./parse');
-const { tokenize_ } = require('./tokenize');
+const { parseStack, print, createSteps } = require('./parse');
+// const { tokenize_ } = require('./tokenize');
 
 function parseProgram(program) {
   const tokens = program.map(tokenize_);
@@ -29,12 +29,4 @@ function parseProgram(program) {
   return {stack: acc.stack, steps};
 }
 
-function createSteps(tokens, steps) {
-  const input = S.map(print, tokens);
-  return steps.map(({snapshot, consumed}) => {
-    const leftover = input.length - consumed;    
-    return S.concat(snapshot, R.takeLast(leftover, input))
-  });
-}
-
-module.exports = { parseProgram, createSteps };
+module.exports = { parseProgram  };
