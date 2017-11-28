@@ -30,9 +30,7 @@ const { wrap, unwrap } = require('./type');
 const display = require('./display'); 
 
 import type { Type, TokenType } from './typecheck';
-// import type { Either } from './lib/either';
 
-// const { Left, Right } = require('./lib/either');
 const { interpretTypes } = require('./typecheck');
 const library = require('./library');
 const { tokenize_ } = require('./tokenize');
@@ -87,18 +85,17 @@ const indexLens = R.lensProp('index');
 // previously parseProgram
 // call with ([...Token], [], true, 0)
 function parseStack(input, acc) {
-  /* Steps will be a list of: {
-  snapshot: [], // of strings
-  consumed: 0   // number of input tokens consumed
-} */
+  // Steps will be a list of: { snapshot, consumed }
+  // where
+  //  - snapshot is a list of strings token display strings
+  //  - consumed is the of input tokens consumed
+  //
   // NOTE: object/rest spread works in node v9, but not babel-cli
   // {steps: [], ...acc}, once this is fixed use that.
-  console.log('===== parsing stack =====');
   
   return input.reduce(parseToken, Object.assign({}, acc, {steps: []}));
 }
 
-//////////////////
 // previously execToken
 /** 
  * This should split on each token, making lists, executing functions,
@@ -176,30 +173,9 @@ function parseFunction(acc : Accumulator) : Accumulator {
     return expandAlias(fn, updated); // was fn.right()
   }
   else if (equals(Right('Value'), fnTok) && equals(Right('Function'), fnType)) {
-    // return runPrimitive(fn, updated); // was fn.right()
-    // NOTE: we know that runPrimitive will return either a Left, or a Right(Token)
-    // it will not recur/expand. Thus, we need only pass the stack, and not the rest
-    // of the accumulator.
-    // return over(stackLens, S.chain(S.append(result)), updated);
-    // XXX: runPrimitive will need to add its own steps
     return runPrimitive(fn, updated);
-
-    return set(stackLens, newStack, updated);
   }
   else {
-    // Unreachable - by design
-    // DEBUGGING:
-    console.log('-'.repeat(30));
-    console.log(fn);
-    console.log('FnType: ');
-    console.log(fnType);
-
-    console.log('FnTok: ');
-    console.log(fnTok);
-    // console.log(JSON.stringify(updated, null, 3));
-    console.log(JSON.stringify(acc, null, 3)); 
-    console.log('-'.repeat(30));
-
     // XXX This would overwrite any previous errors
     return set(stackLens, Left('Invalid function type'), acc);
   }
@@ -207,81 +183,42 @@ function parseFunction(acc : Accumulator) : Accumulator {
 
 // use in expandAlias and runPrimitive
 function expandAlias(alias : Either<Token>, acc : Accumulator) : Accumulator {
-  // return set(stackLens, Left('[DEV] expandAlias not implemented'), acc);
-  
-  // TODO
-  // [ ] Create new step for expansion
-  // [ ] May need to tokenize each item in the expansion
-  // [ ] Return accumulator with expansion step in progr
 
-  // TODO: may need to tokenize this
-  console.log(alias);
-  const expList = S.map(S.props(['value', 'expansion']), alias);
-  const withApp = S.map(S.append(':'), expList);
-  const expansion = S.map(R.map(tokenize_), withApp);
+  // Extract the expansion from the alias, and append :
+  const expansion = S.pipe([
+    S.map(S.props(['value', 'expansion'])), // extract expansion
+    S.map(S.append(':')),                   // add :
+    S.map(R.map(tokenize_))                 // tokenize
+  ])(alias);
 
+  // Create the expansion step
   const consumed = Right({consumed: acc.index});
-
-  console.log('======= EXPANSION =============');
-  console.log(expansion)
-  console.log(acc.stack)
-  console.log('===============================');
-
-
-  const withExpansion = S.lift2(S.concat, acc.stack, expansion);
-  const snapshot = S.map(S.map(print), withExpansion);
-
-  const step = S.lift2(R.assoc('snapshot'), snapshot, consumed);
-  const steps = S.either(R.always([]), R.of, step);
-
-  // Add expansion step
-  const up1 = over(stepLens, S.concat(__, steps), acc);
+  const expansionStep = S.pipe([
+    S.lift2(S.concat, acc.stack),
+    S.map(S.map(print)),
+    S.lift2(R.assoc('snapshot'), __, consumed),
+    S.either(R.always([]), R.of) // Convert Either to list
+  ])(expansion);
   
-  // FIXME currently this should expand, but not execute
-  // Try to execute
-  const state = {
-    stack: acc.stack,
-    index: 0,
-    first: true // useless
-  }
-
+  // Execute the alias
   // XXX: parseStack wants a 'normal' list of un-tokenized literals
   // TODO: consider rewriting so that a different function does the
   // tokenization...
+  const newInput = S.either(R.always([]), S.I, expansion);
+  const result = parseStack(newInput, {
+    stack: acc.stack,
+    index: 0,
+    first: true // useless
+  });
 
-  // const withApp = R.map(R.append(':'), expList);
-  // console.log(withApp);
-  // const eitherInput = R.map(R.map(tokenize_), withApp);
-
-  const newInput = S.either(R.always([]), S.I, expansion); //eitherInput);
-
-  console.log('========= new input =========');
-  console.log(newInput);
-  console.log(state);
-  console.log(acc);
-
-  const resultAcc = parseStack(newInput, state);
-
-  console.log('====== DONE ==============');
-
-  // TODO call createSteps on resultAcc steps
-  //const untokenizedInput = S.either(R.always([]), S.I, withApp);
-
-  //console.log(untokenizedInput);
-
-  const newSteps = createSteps(newInput, resultAcc.steps);
-
-  console.log('========= NEW STEPS =====');
-  console.log(newSteps);
-
-  const resultSteps = newSteps.map(x => ({
-    consumed: acc.index,
-    snapshot: x
-  }));
+  const resultSteps = S.pipe([
+    s => createSteps(newInput, s),
+    R.map(x => ({consumed: acc.index, snapshot: x}))
+  ])(result.steps);
 
   return {
-    steps: R.concat(up1.steps, resultSteps),
-    stack: resultAcc.stack,
+    steps: R.flatten([acc.steps, expansionStep, resultSteps]),
+    stack: result.stack,
     index: acc.index,
     first: true // useless
   }
@@ -294,7 +231,6 @@ function createSteps(tokens, steps) {
     return S.concat(snapshot, R.takeLast(leftover, input))
   }); 
 }
-
 
 /**
  * Calls the function [definition] on a portion of the stack.
@@ -373,4 +309,5 @@ module.exports = {
   , runPrimitive
   , applyDef
   , print
+  , createSteps
 }

@@ -2,7 +2,7 @@ const S = require('sanctuary');
 const { Right, Left} = S;
 const R = require('ramda');
 const { parseStack, print, createSteps } = require('./parse');
-// const { tokenize_ } = require('./tokenize');
+const { tokenize_ } = require('./tokenize');
 
 function parseProgram(program) {
   const tokens = program.map(tokenize_);
