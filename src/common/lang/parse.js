@@ -35,6 +35,7 @@ import type { Type, TokenType } from './typecheck';
 // const { Left, Right } = require('./lib/either');
 const { interpretTypes } = require('./typecheck');
 const library = require('./library');
+const { tokenize_ } = require('./tokenize');
 
 const old = require('../lib/parser');
 // parse,      // createSteps
@@ -203,9 +204,63 @@ function parseFunction(acc : Accumulator) : Accumulator {
 }
 
 // use in expandAlias and runPrimitive
-function expandAlias(alias : Token, acc : Accumulator) : Accumulator {
-  // return Left.of('[INTERNAL] expandAlias not implemented.');
-  return set(stackLens, Left('[DEV] expandAlias not implemented'), acc);
+function expandAlias(alias : Either<Token>, acc : Accumulator) : Accumulator {
+  // return set(stackLens, Left('[DEV] expandAlias not implemented'), acc);
+  
+  // TODO
+  // [ ] Create new step for expansion
+  // [ ] May need to tokenize each item in the expansion
+  // [ ] Return accumulator with expansion step in progr
+
+  //*
+  // TODO: may need to tokenize this
+  console.log(alias);
+  const expList = S.map(S.props(['value', 'expansion']), alias);
+  console.log(expList);
+  const expansion = S.map(S.map(tokenize_), expList);
+  console.log(expansion);
+
+  // mb S.concat
+
+  console.log("=============================");
+
+  // (left, right) => R.concat(left, right))
+  
+  // TODO here's where we have to deal with INDEX / FIRST. Only update consumed
+  // if FIRST.
+  // Add a step 
+  //snapshot = stack ++ expansion
+  const consumed = Right({consumed: acc.index});
+
+  console.log(expansion)
+  console.log(acc.stack)
+  console.log('===============================');
+
+  const withExpansion = S.lift2(S.concat, acc.stack, expansion);
+  const snapshot = S.map(S.map(print), withExpansion);
+  const step = S.lift2(R.assoc('snapshot'), snapshot, consumed);
+  const steps = S.either(R.always([]), R.of, step);
+
+  const up1 = over(stepLens, S.concat(__, steps), acc);
+/*
+function addSteps(arity, acc) {
+  const consumed = Right({consumed: acc.index});
+  const snapshot = S.map(S.map(print), acc.stack);
+  const step = S.lift2(R.assoc('snapshot'), snapshot, consumed);
+  const steps = S.either(R.always([]), R.of, step);
+
+  console.log("==== addSteps ====");
+  console.log(steps);
+  console.log(acc.steps);
+
+  return over(stepLens, S.concat(__, steps), acc); 
+}
+*/
+
+  // FIXME currently this should expand, but not execute
+
+  //*/
+  return up1;
 }
 
 /**
@@ -231,7 +286,7 @@ function runPrimitive(fn : Either<Token>, acc : Accumulator) : Accumulator {
 
   console.log("==== runPrim ====");
   console.log(updated.stack);
-  return addSteps(arity, updated);
+  return addSteps(updated);
 }
 
 /**
@@ -240,7 +295,7 @@ function runPrimitive(fn : Either<Token>, acc : Accumulator) : Accumulator {
  * @param {Accumulator} acc
  * @return {Accumulator}
  */
-function addSteps(arity, acc) {
+function addSteps(acc) {
   const consumed = Right({consumed: acc.index});
   const snapshot = S.map(S.map(print), acc.stack);
   const step = S.lift2(R.assoc('snapshot'), snapshot, consumed);
@@ -254,8 +309,8 @@ function addSteps(arity, acc) {
 }
 
 type LibDef = {
-  display: string,
-  arity: number,
+display: string,
+         arity: number,
   types: {
     in: Type[],
     out: Type

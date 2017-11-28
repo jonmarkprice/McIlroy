@@ -53,7 +53,7 @@ test('parseStack', (assert) => {
     // Try an alias
     assert.deepEqual(
         parseStack(
-          [2, 2, {name: 'plus', expansion: '+'}, ':'].map(tokenize_),
+          [1, 3, {name: 'plus', expansion: ['+']}, ':'].map(tokenize_),
          init
         ),
         {

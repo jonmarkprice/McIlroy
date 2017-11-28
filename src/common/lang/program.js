@@ -11,7 +11,7 @@ function parseProgram(program) {
     first: true,
     index: 0
   };
-  //let steps = [];
+  let firstStep = S.map(print, tokens);
   let acc   = {};
   try {
     acc = parseStack(tokens, init);
@@ -21,20 +21,20 @@ function parseProgram(program) {
     // error, but don't worry about that for now.
     let steps = [];
     if (!R.isNil(acc) && R.has('steps', acc)) {
-      steps = createSteps(tokens, acc.steps);
+      steps = S.prepend(firstStep, createSteps(tokens, acc.steps));
     }
     return {stack: Left(err), steps};
   }
-  return {stack: acc.stack, steps: createSteps(tokens, acc.steps)};
+  const steps = S.prepend(firstStep, createSteps(tokens, acc.steps));
+  return {stack: acc.stack, steps};
 }
 
 function createSteps(tokens, steps) {
   const input = S.map(print, tokens);
-  const fullSteps = steps.map(({snapshot, consumed}) => {
+  return steps.map(({snapshot, consumed}) => {
     const leftover = input.length - consumed;    
     return S.concat(snapshot, R.takeLast(leftover, input))
   });
-  return S.prepend(input, fullSteps); // prepend input step
 }
 
 module.exports = { parseProgram, createSteps };
