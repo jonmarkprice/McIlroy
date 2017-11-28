@@ -3,6 +3,8 @@ const { connect } = require('react-redux');
 const Token       = require('../components/Token');
 //const { parse }   = require('../lib/parser');
 const { parseProgram } = require('../lang/program');
+const S = require('sanctuary');
+const R = require('ramda');
 
 const mapStateToProps = state => ({
   program: state.program,
@@ -39,7 +41,9 @@ class ExecutionRows extends React.Component {
     const steps = result.steps;
     // TODO: if (result.stack) // isLeft -> display error
     //console.log(applied);
-    //console.log(__computed);
+    console.log("--- RESULT ---");
+    console.log(result.stack);
+
 
     steps.forEach((step, stepIndex) => {
 
@@ -56,13 +60,20 @@ class ExecutionRows extends React.Component {
       ));
       const joined = consumedTokens.concat(newToken, remainingTokens);
      */
-     const tokens = step.map((text, index) => (
-       <Token text={text} key={index} />
-     ));
-
+      const tokens = step.map((text, index) => (
+        <Token text={text} key={index} />
+      ));
+      
       // Fill row with step
       rows.push(<div className="row" key={stepIndex}>{tokens}</div>);
     });
+
+    if (S.isLeft(result.stack)) {
+      const message = S.either(S.toString, R.always('No Error'), result.stack);
+      rows.push(<div className="row error" key="error">
+        <h3>Error:</h3>{message}
+      </div>);
+    }
 
     return (
       <div id="execution" className="box">
