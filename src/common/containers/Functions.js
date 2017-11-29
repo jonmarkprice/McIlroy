@@ -1,7 +1,7 @@
 const React       = require('react');
-const library     = require('../lib/library');
-const syntax      = require('../lib/syntax');
-const literals    = require('../lib/literals');
+const library     = require('../lang/library');
+const syntax      = require('../lang/syntax');
+const literals    = require('../lang/literals');
 const { connect } = require('react-redux');
 const { pushFunction, displayFunction } = require('../actions');
 

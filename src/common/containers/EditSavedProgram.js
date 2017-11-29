@@ -64,10 +64,15 @@ class Container extends React.Component {
         <ProgramRow program={this.props.obj.program} />
         <button onClick={() => {
           //this.props.onClear();
+          //const alias = {
+            //type    : 'alias',
+            //display : this.props.obj.name,
+            //value   : [...this.props.obj.program, ':']
+            
+          //};
           const alias = {
-            type    : 'alias',
-            display : this.props.obj.name,
-            value   : [...this.props.obj.program, ':']
+            name: this.props.obj.name,
+            expansion: this.props.obj.program
           };
           this.props.addTokenToCanvas(alias);
         }}>

@@ -1,5 +1,5 @@
 const React   = require('react');
-const display = require('../lib/display.js');
+const display = require('../lang/display.js');
 
 const Token = ({text, classList=[]}) => (
   <div className={`item ${classList.join(' ')}`}>

@@ -35,7 +35,6 @@ const { interpretTypes } = require('./typecheck');
 const library = require('./library');
 const { tokenize_ } = require('./tokenize');
 
-const old = require('../lib/parser');
 // parse,      // createSteps
 // parseProgram,   // parseStack
 // execToken,    // parseToken
@@ -184,12 +183,21 @@ function parseFunction(acc : Accumulator) : Accumulator {
 // use in expandAlias and runPrimitive
 function expandAlias(alias : Either<Token>, acc : Accumulator) : Accumulator {
 
+  console.log("--- BEGIN EXPANDSION ---");
+
+  console.log('ALIAS')
+  console.log(alias);
+
   // Extract the expansion from the alias, and append :
-  const expansion = S.pipe([
-    S.map(S.props(['value', 'expansion'])), // extract expansion
-    S.map(S.append(':')),                   // add :
-    S.map(R.map(tokenize_))                 // tokenize
-  ])(alias);
+  // NOTE: Not typesafe, use R instead of S
+  const expansionLens = R.lensPath(['value', 'expansion']);
+  const expansion = R.pipe(
+    R.map(view(expansionLens)), // extract expansion
+    R.map(R.append(':')),       // add
+    R.map(R.map(tokenize_))
+  )(alias);
+  
+//  console.log('---------- END ------');
 
   // Create the expansion step
   const consumed = Right({consumed: acc.index});

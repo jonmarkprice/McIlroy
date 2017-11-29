@@ -1,0 +1,40 @@
+// TODO: maybe get the list of functions from daily notes.
+
+for now, let's describe each function (Can type-out from scanned notes).
+
+parse
+: Creates steps
+Calls parseProgarm
+
+
+parseProgram
+: reduces list (of unparsed tokens) over execToken
+Calls execToken
+
+execToken
+: Splits by cases of a single token
+Calls {
+  calls parseFunction, if tok ':'
+  creates list (no call), if tok ']'
+  calls parseToken, otherwise
+}
+
+parseToken
+: label / check token
+- No calls
+
+parseFunction
+: Chooses between calling exec / expandAlias based on token type
+Calls {
+  calls expandAlias if tok.type 'alias'
+  calls exec, otherwise
+}
+
+expandAlias
+: expands alias into definition
+Calls parseProgram (recursive)
+NOTE: Pushes multiple things to the stack
+
+exec
+: executes a built-in function by calling its library implementation
+ 

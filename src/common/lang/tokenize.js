@@ -87,7 +87,8 @@ function tokenize(value : Literal | AliasLiteral, config : TokenizerConfig) : To
   }
   else {
     // Throw an error if not. This should never ever happen.
-    throw Error('Invalid token!');
+    console.log(value);
+    throw Error(`Invalid token: ${value}.`);
   }
 }
 

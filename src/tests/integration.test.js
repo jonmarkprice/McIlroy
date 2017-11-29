@@ -1,5 +1,4 @@
 const test = require('tape');
-const { run } = require('./helpers');
 const { result, stepList } = require('../common/lang/helpers');
 const { wrap } = require('../common/lang/type');
 const { tokenize_ } = require('../common/lang/tokenize');
@@ -80,7 +79,7 @@ test('capitalizes a word', (assert) => {
   );
   assert.end();
 });
-
+/*
 // NOTE: This relies on, to-be-reimplemented list literals
 test('capitalizes a word using list constructor', (assert) => {
   assert.deepEqual(run(['h', 'i'], 'split', ':', '[', 'uppercase', [], 'cons',
@@ -88,5 +87,5 @@ test('capitalizes a word using list constructor', (assert) => {
     'concat', 'apply', ':'), ['H', 'i']);
   assert.end();
 });
-
+*/
 // TODO: try all examples from src/parser.js

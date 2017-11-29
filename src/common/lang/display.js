@@ -40,7 +40,19 @@ function display(obj : any) : string {
     }
   }
   else if (typeof obj === 'object') {
-    return obj.display;
+    console.log("==== DISPLAYING OBJECT ====");
+    console.log(obj);
+  
+    if (obj.display !== undefined) {
+      console.log('HAS DISPLAY')
+      return obj.display;
+    }
+    else {
+      // for aliases (TODO: rename 'name' -> 'display')
+      console.log('DOES NOT HAVE DISPLAY');
+      console.log(`displaying: ${obj.name}`);
+      return obj.name;
+    }
   }
   else if (typeof obj === 'string' && obj.length === 1) {
     return `'${obj}'`; // Quote characters
