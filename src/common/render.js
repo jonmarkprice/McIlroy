@@ -4,14 +4,11 @@ const ReactDOMServer = require('react-dom/server');
 const { createStore } = require('redux');
 const { Provider } = require('react-redux');
 
-//const App = require('./app');
-const Interpretter = require('./components/components');
-//const reducer = require('./reducers');
-const reducer = require('./reducers');
-const { pushInput, displayFunction } = require('./actions');
+const Interpretter = require('../../common/src/components/components');
+const reducer = require('../../common/src/reducers');
+const { pushInput, displayFunction } = require('../../common/src/actions');
 
-//const preloadedState = message;
-const store = createStore(reducer); //, preloadedState);
+const store = createStore(reducer);
 
 // dispatch some actions
 store.dispatch(pushInput({

@@ -12,7 +12,8 @@ const config = {
         // TODO: this needs to include common *and* client but not server
         include: [
           path.resolve(__dirname, './src/common'),
-          path.resolve(__dirname, './src/client')
+          path.resolve(__dirname, './src/client'),
+          path.resolve(__dirname, './common')
         ],
         loader: 'babel-loader',
         test: /\.js$/

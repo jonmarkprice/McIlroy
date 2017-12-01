@@ -5,7 +5,7 @@ const app = express();
 const port = 3000;
 
 app.use('/static', express.static('dist'));
-app.use('/public', express.static('public'));
+app.use('/public', express.static('common/public'));
 app.get('/', (req, res) => {
   res.send(renderPage());
 });

@@ -1,18 +1,15 @@
 {
   "name": "McIlroy",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "",
   "scripts": {
     "start": "babel-node src/server/index.js",
-    "build": "webpack -d",
-    "test": "babel-tape-runner 'src/tests/**/*.test.js'"
+    "build": "webpack -d"
   },
   "author": "Jonathan Price",
   "dependencies": {
     "babel-cli": "^6.26.0",
-    "babel-preset-flow": "^6.23.0",
     "express": "^4.16.2",
-    "flow-bin": "^0.58.0",
     "glob": "^7.1.2",
     "mongodb": "^2.2.33",
     "ramda": "^0.25.0",
@@ -20,15 +17,13 @@
     "react-dom": "^16.0.0",
     "react-redux": "^5.0.6",
     "redux": "^3.7.2",
-    "sanctuary": "^0.13.2",
-    "sanctuary-def": "^0.13.1"
+    "sanctuary": "^0.13.2"
   },
   "devDependencies": {
     "babel-loader": "^7.1.2",
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
     "babel-tape-runner": "^2.0.1",
-    "jest": "^21.2.1",
     "tape": "^4.8.0",
     "webpack": "^3.8.1"
   }
