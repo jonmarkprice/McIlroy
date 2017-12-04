@@ -6,36 +6,61 @@ const { Provider } = require('react-redux');
 
 const Interpretter = require('../../common/src/components/components');
 const reducer = require('../../common/src/reducers');
-const { pushInput, displayFunction } = require('../../common/src/actions');
+const { pushInput, displayFunction, saveAlias } = require('../../common/src/actions');
 
-const store = createStore(reducer);
+function setup() {
+  const store = createStore(reducer);
 
-// dispatch some actions
-store.dispatch(pushInput({
-  label : '1',
-  data  : 1
-}));
-store.dispatch(pushInput({
-  label : '[1, 2, 3]',
-  data  : [1, 2, 3]
-}));
-store.dispatch(pushInput({
-  label : '[true, false]',
-  data  : [true, false]
-}));
-store.dispatch(pushInput({
-  label : '"hello"',
-  data  : ['h', 'e', 'l', 'l', 'o']
-}));
-store.dispatch(pushInput({
-  label : "'A'",
-  data  : 'A'
-}));
+  // dispatch some actions
+  store.dispatch(pushInput({
+    label : '1',
+    data  : 1
+  }));
+  store.dispatch(pushInput({
+    label : '[1, 2, 3]',
+    data  : [1, 2, 3]
+  }));
+  store.dispatch(pushInput({
+    label : '[true, false]',
+    data  : [true, false]
+  }));
+  store.dispatch(pushInput({
+    label : '"hello"',
+    data  : ['h', 'e', 'l', 'l', 'o']
+  }));
+  store.dispatch(pushInput({
+    label : "'A'",
+    data  : 'A'
+  }));
 
-store.dispatch(displayFunction('Nothing selected.'));
+  // TODO: consider using obj instead, like pushInput
+  // store.dispatch(saveAlias('test', [1, 2, '+']));
 
-function renderPage() {
+  store.dispatch(displayFunction('Nothing selected.'));
+  return store;
+}
+
+function addAliases(programs, store) {
+  console.log('-- STORE --');
+  console.log(store);
+
+  console.log('-- Got programs: --');
+  console.log(programs);
+
+  programs.map(({name, expansion}) => store.dispatch(saveAlias(name, expansion)));
+  return store;
+}
+
+function renderPage(programs) {
+  let store = setup();  // This is not as performant as if we had used a
+                          // closure, but it is safer.
+  store = addAliases(programs, store);
+
   const finalState = store.getState();
+
+  console.log('STATE');
+  console.log(finalState);
+
   const stateString = JSON.stringify(finalState).replace(/</g, '\\u003c');
   const html = ReactDOMServer.renderToString(
     <Provider store={store}>
