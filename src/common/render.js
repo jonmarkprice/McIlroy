@@ -1,16 +1,31 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
 const ReactDOMServer = require('react-dom/server');
-const { createStore } = require('redux');
+// const { createStore } = require('redux');
+const configureStore = require('./configureStore');
 const { Provider } = require('react-redux');
 
 const Interpretter = require('../../common/src/components/components');
-const reducer = require('../../common/src/reducers');
+// const reducer = require('../../common/src/reducers');
 const { pushInput, displayFunction, saveAlias } = require('../../common/src/actions');
 
-function setup() {
-  const store = createStore(reducer);
+const initialState = {
+  input     : [{label: '[No Input]', data: null}],
+  selected  : 0,
+  program   : [], 
+  displayed : '', 
+  saved     : {}, 
+  next_id   : 0,
+  save_ok   : 'NONE_ATTEMPTED'
+};
 
+function setup() {
+  // const store = createStore(reducer);
+  // const store = configureStore(initialState);
+  const store = configureStore(initialState);
+
+  // XXX No real reason to do this... just include in initial state
+  // -- I think this was just for debugging
   // dispatch some actions
   store.dispatch(pushInput({
     label : '1',

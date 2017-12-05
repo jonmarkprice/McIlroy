@@ -1,6 +1,9 @@
 const express = require('express');
 const renderPage = require('../common/render');
 const { User } = require('./schema');
+const bodyParser = require('body-parser');
+const jsonParser = bodyParser.json();
+const saveProgram = require('./save-program');
 
 const app = express();
 const port = 3000;
@@ -42,5 +45,16 @@ app.get('/', (req, res) => {
   // }
 });
 
+
+app.post('/user/test/save-program', jsonParser, (req, res) => {
+  if (!req.body) res.sendStatus(400);
+  console.log("-- GOT DATA --");
+  console.log(req.body);
+  saveProgram('test', req.body);
+
+  res.sendStatus(200);
+});
+
 console.log(`Listening on port ${port}...`);
 app.listen(port);
+
