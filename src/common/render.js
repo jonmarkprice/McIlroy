@@ -1,12 +1,10 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
 const ReactDOMServer = require('react-dom/server');
-// const { createStore } = require('redux');
 const configureStore = require('./configureStore');
 const { Provider } = require('react-redux');
 
 const Interpretter = require('../../common/src/components/components');
-// const reducer = require('../../common/src/reducers');
 const { pushInput, displayFunction, saveAlias } = require('../../common/src/actions');
 
 const initialState = {
@@ -20,8 +18,6 @@ const initialState = {
 };
 
 function setup() {
-  // const store = createStore(reducer);
-  // const store = configureStore(initialState);
   const store = configureStore(initialState);
 
   // XXX No real reason to do this... just include in initial state
