@@ -27,7 +27,7 @@ const query = User.find({name: 'test'}, (err, docs) =>
 );
 
 app.use('/static', express.static('dist'));
-app.use('/public', express.static('common/public'));
+app.use('/public', express.static('public'));
 
 // Not sure if I need/want this
 // app.use(bodyParser.urlencoded({ extended: false });

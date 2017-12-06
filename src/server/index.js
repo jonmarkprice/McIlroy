@@ -1,42 +1,37 @@
-const express = require('express');
-const renderPage = require('../common/render');
-const { User } = require('./schema');
-const bodyParser = require('body-parser');
-const jsonParser = bodyParser.json();
+const express     = require('express');
+const renderPage  = require('../common/render');
+const { User }    = require('./schema');
+const bodyParser  = require('body-parser');
 const saveProgram = require('./save-program');
 
+const jsonParser = bodyParser.json();
 const app = express();
 const port = 3000;
 
 app.use('/static', express.static('dist'));
-app.use('/public', express.static('common/public'));
+app.use('/public', express.static('public'));
 
-// Don't re-query the database if the data is already in the store.
-app.get('/', (req, res) => {
-  User.find({name: 'test'})
-  .exec() // returns a promise
+app.get('/', (req, res, next) => {
+  // findOne instead
+  User.find({name: 'test'}).exec() // returns a promise
   .then(docs => {
     if (Array.isArray(docs) && docs.length >= 0) {
       res.send(renderPage(docs[0].programs));
     } else {
       res.sendStatus(400);
     }
-  // Pass up data to server
-  // e.g. using res.sendStatus()
-  }).catch(err => console.error(err))
-  // } else {
-    // We've already retrieved the data, so it's already in the store.
-    // renderPage([]);
-  // }
+  }).catch(err => {
+    // The promise was rejected
+    res.sendStatus(500);  // send internal server error
+    // res.send(err);     // Consider sending up detailed diagnostics
+  })
 });
 
-
-app.post('/user/test/save-program', jsonParser, (req, res) => {
+app.post('/user/test/save-program', jsonParser, (req, res, next) => {
   if (!req.body) res.sendStatus(400);
-  console.log("-- GOT DATA --");
-  console.log(req.body);
+  // console.log("-- GOT DATA --");
+  // console.log(req.body);
   saveProgram('test', req.body);
-
   res.sendStatus(200);
 });
 

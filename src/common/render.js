@@ -4,8 +4,8 @@ const ReactDOMServer = require('react-dom/server');
 const configureStore = require('./configureStore');
 const { Provider } = require('react-redux');
 
-const Interpretter = require('../../common/src/components/components');
-const { pushInput, displayFunction, saveAlias } = require('../../common/src/actions');
+const Interpretter = require('../../build/components/components');
+const { pushInput, displayFunction, saveAlias } = require('../../build/actions');
 
 const initialState = {
   input     : [{label: '[No Input]', data: null}],
@@ -73,11 +73,16 @@ function renderPage(programs) {
   console.log(finalState);
 
   const stateString = JSON.stringify(finalState).replace(/</g, '\\u003c');
+
+  const html = ReactDOMServer.renderToString(
+    React.createElement(Provider, {store}, 
+      React.createElement(Interpretter, null, null)));
+  /*
   const html = ReactDOMServer.renderToString(
     <Provider store={store}>
       <Interpretter />
     </Provider>
-  );
+  );*/
 
   // See http://redux.js.org/docs/recipes/ServerRendering.html#security-considerations
   return `

@@ -1,0 +1,167 @@
+/*
+Document structure:
+
+div.interpretter
+
+  div.input
+    div.input-item
+
+  div.program
+    div.canvas
+    div.execution
+
+  div.palette
+    div.functions
+      button.function
+    div.values
+      button.value
+
+    div.info
+*/
+p.important-notice {
+  color: firebrick;
+}
+
+#example h4, #example h5   {
+  margin-bottom: 0.2em;
+}
+
+.container {
+  margin-left: 1mm;
+  margin-right: 1mm;
+}
+
+.box {
+  padding: 1mm;
+  margin: 1mm;
+}
+
+.dbg {
+  border: thin dotted red;
+}
+
+.saved-function-name {
+  background-color: lightgrey;
+  height: 1.8em;
+}
+
+.saved-function-name > h3 {
+  display: inline;
+}
+.saved-function-name > button {
+  float: right;
+}
+
+.update-name {
+  float: right;
+}
+
+#palette {
+  float: left;
+  width: 25%;
+  min-width: 3cm;
+  max-width: 10cm;
+}
+
+/* TODO: rename data -> input */
+/*
+#data {
+  float: left;
+  width: 4cm;
+}*/
+
+#program {
+  /*margin-left: 5.2cm;*/
+  width: calc(75% - 4cm - 8mm);
+  min-width: 5cm;
+  float: left;
+  /* 6.8cm = 6mm width + 1mm + 2 elments * 2 sides * (1mm margin + 1mm padding) */
+}
+
+/** FONT AND TEXT **/
+h1, h2, h3 {
+  margin: 0;
+  margin-bottom: 0.2em;
+  font-family: "Calibri", sans-serif;
+}
+body { font: 10pt "Century Gothic", Futura, sans-serif; }
+h2 { font-size: 14pt; }
+h3 { font-size: 11pt; }
+h3#function-name {
+  font-family: "Courier New", monospace;
+}
+
+/** BORDER **/
+.container, .box, .item, .input-item, .function, .value {
+  border: thin solid grey;
+  border-radius: 1mm;
+}
+
+.item, .value, .input-item, .function {
+  font-family: monospace;
+}
+/** BEHAVIOR **/
+/* Pseudo-buttons */
+.input-item, .function, .value {
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/** COLOR **/
+body { background-color: #222; }
+#program-input { background-color: pink; }
+#execution { background-color: lightblue; }
+#information { background-color: #FCFCFC; }
+
+.em.input-item {
+  background-color: yellow;
+}
+.em, .em.item {
+  background-color: lightsalmon;
+}
+.data { background-color: lightgreen; }
+.skip { background-color: #AAA; }
+.input-item, .value, .function, .item
+{ background-color: #DDD; }
+.box { background-color: #EEE; }
+.container { background-color: gainsboro; }
+/* TODO change from id -> class */
+.highlighted { background-color: salmon; }
+
+.function:hover, .value:hover, .input-item:hover {
+  background-color: #ACF;
+}
+.function:active, .value:active, .input-item:active {
+  background-color: orange;
+}
+
+/* XXX: NOT USED */
+#no-input { color: grey; }
+
+/** PADDING & MARGINS **/
+p { margin-top: 0.3em; margin-bottom: 0.3em; }
+.input-item {
+  margin: 0.5mm;
+}
+
+/** LAYOUT **/
+
+/* #functions > div */
+.item, .function, .value {
+  display: inline-block;
+  padding: 0.2em;
+  margin: 0.4mm;
+}
+.item:first-child { margin-left: 0; }
+.item:last-child { margin-right: 0; }
+
+.row {
+  border: thin dashed dodgerblue;
+  width: calc(100% - 2mm);
+  padding: 0.1em;
+  margin-left: 1mm;
+  margin-right: 1mm;
+  /*margin-top: 0.25em;
+  margin-bottom: 0.25em;*/
+}

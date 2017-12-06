@@ -1,4 +1,10 @@
-const { renderUser } = require('../common/user');
+const React = require('react');
+const { renderToString } = require('react-dom/server');
+const Dashboard = require('../../build/components/Dashboard');
+
+// Render top level component without JSX
+const renderUser = ({name, programs}) =>
+  renderToString(React.createElement(Dashboard, {name, programs}, null));
 
 const render___ = (results) => `
 <!doctype html>
