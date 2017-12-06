@@ -9,7 +9,7 @@ const config = {
   module: {
     loaders: [
       {
-        // TODO: this needs to include common *and* client but not server
+        // Include common *and* client but not server
         include: [
           path.resolve(__dirname, './src/common'),
           path.resolve(__dirname, './src/client'),

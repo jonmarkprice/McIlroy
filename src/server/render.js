@@ -1,7 +1,7 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
 const ReactDOMServer = require('react-dom/server');
-const configureStore = require('./configureStore');
+const configureStore = require('../common/configureStore');
 const { Provider } = require('react-redux');
 
 const Interpretter = require('../../build/components/components');
@@ -77,12 +77,6 @@ function renderPage(programs) {
   const html = ReactDOMServer.renderToString(
     React.createElement(Provider, {store}, 
       React.createElement(Interpretter, null, null)));
-  /*
-  const html = ReactDOMServer.renderToString(
-    <Provider store={store}>
-      <Interpretter />
-    </Provider>
-  );*/
 
   // See http://redux.js.org/docs/recipes/ServerRendering.html#security-considerations
   return `

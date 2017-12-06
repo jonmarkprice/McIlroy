@@ -1,7 +1,7 @@
 const express     = require('express');
-const renderPage  = require('../common/render');
-const { User }    = require('./schema');
 const bodyParser  = require('body-parser');
+const renderPage  = require('./render');
+const { User }    = require('./schema');
 const saveProgram = require('./save-program');
 
 const jsonParser = bodyParser.json();

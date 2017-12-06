@@ -1,5 +1,4 @@
 const { createStore, applyMiddleware } = require('redux');
-// const { Provider } = require('react-redux');
 const thunkMiddleware = require('redux-thunk').default;
 const rootReducer = require('../../build/reducers');
 
