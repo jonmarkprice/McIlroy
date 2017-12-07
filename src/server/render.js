@@ -17,8 +17,8 @@ const initialState = {
   saved     : {
     programs: {},
     next_id : 0
-  },
-  save_ok   : 'NONE_ATTEMPTED'
+  }
+  // save_ok   : 'NONE_ATTEMPTED'
 };
 
 function setup() {
