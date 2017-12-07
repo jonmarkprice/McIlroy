@@ -24,8 +24,11 @@ const updateProgramNameBuffer = (id, text) =>
   ({type: 'UPDATE_NAME_BUFFER', id, text});
 const editName = id =>
   ({type: 'EDIT_NAME', id});
-const expandSavedProgram = id =>
-  ({type: 'EXPAND_SAVED_PROGRAM', id});
+const expandSavedProgram = id => 
+  {
+    console.log(`Action: expandn saved program, id ${id}`);
+    return ({type: 'EXPAND_SAVED_PROGRAM', id});
+  }
 const collapseProgram = id =>
   ({type: 'COLLAPSE_SAVED_PROGRAM', id})
 

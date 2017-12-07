@@ -1,6 +1,6 @@
 // import { combineReducers } from 'redux' // Not using currently
 const R = require('ramda');
-const { append, set, over } = R;
+const { append, set, over, lensProp, lensPath, compose } = R;
 const {
   ADD_PROGRAM
 , NEW_PROGRAM
@@ -17,11 +17,20 @@ function reducer(state, action) {
   // Lenses:
   const inputList = R.lensPath(['input', 'list']);
   const selected  = R.lensPath(['input', 'selected']);
+  const nextSaveSlot = R.lensPath(['saved', 'programs', state.saved.next_id]);
+  const uiIndex = R.lensPath(['saved', 'next_id']);
+
+
+  const program = id => R.lensPath(['saved', 'programs', id]);
+  let lens;
+
+  console.log(`Reducer: got action: ${action.type}`)
 
   switch (action.type) {
      // Input (subreducer)
     case 'PUSH_INPUT':
       return over(inputList, append(action.input), state);
+
     case 'SELECT_INPUT':
       return set(selected, action.index, state);
 
@@ -30,10 +39,12 @@ function reducer(state, action) {
       return Object.assign({}, state, {
         program: append(action.name, state.program)
       });
+
     case 'CLEAR_CANVAS':
       return Object.assign({}, state, {
         program: []
       });
+    
     case 'BACKSPACE':
       return Object.assign({}, state, {
         program: state.program.slice(0, -1)
@@ -45,7 +56,7 @@ function reducer(state, action) {
         displayed: action.name
       });
 
-    // case 'SAVE_ALIAS':
+    // Saved (subreducer)
     case ADD_PROGRAM: 
       // XXX: I don't like that we are using IDs here over maps...
       // what was the reasoning behind that?
@@ -56,83 +67,65 @@ function reducer(state, action) {
 
       // Actually, why not just use a simple list and append to it?
       // const nextId = R.lensPath(['saved', );
-      const nextSaveSlot = R.lensPath(['saved', state.next_id]);
       return R.pipe(
         R.set(nextSaveSlot, {
           name: action.name,
           program : action.expansion,
           editing : false,
           buffer  : action.name,
-          id      : state.next_id,
+          id      : state.saved.next_id,
           editing_name: false
         }),
-        R.over(R.lensProp('next_id'), R.inc)
+        R.over(uiIndex, R.inc)
       )(state);
 
     case NEW_PROGRAM:
-    //case 'SAVE_PROGRAM': // Saves a new program.
-      return Object.assign({}, state, {
-        saved: Object.assign({}, state.saved, {
-          [state.next_id]: Object.assign({}, state.saved[state.next_id], {
-            name    : 'Untitled',
-            program : action.program,
-            editing : true,
-            buffer  : 'Untitled',
-            id      : state.next_id,
-            editing_name: true
-          })
+      return R.pipe(
+        R.set(nextSaveSlot, {
+          name    : 'Untitled',
+          program : action.program,
+          editing : true,
+          buffer  : 'Untitled',
+          id      : state.saved.next_id,
+          editing_name: true
         }),
-        next_id: state.next_id + 1,
-      });
+        R.over(uiIndex, R.inc)
+      )(state);
 
     case 'NAME_PROGRAM':
-      return Object.assign({}, state, {
-        saved: Object.assign({}, state.saved, {
-          [action.id]: Object.assign({}, state.saved[action.id], {
-            name          : state.saved[action.id].buffer,
-            editing_name  : false
-          })
-        })
-      });
+      // Update both editing state and buffer itself
+      lens = program(action.id);
+      return R.pipe(
+        set(compose(lens, lensProp('editing_name')), false),
+        set(compose(lens, lensProp('name')), state.saved.programs[action.id].buffer)
+      )(state);
+  
     case 'UPDATE_NAME_BUFFER':
-      return Object.assign({}, state, {
-        saved: Object.assign({}, state.saved, {
-          [action.id]: Object.assign({}, state.saved[action.id], {
-            buffer: action.text
-          })
-        })
-      });
+      lens = compose(program(action.id), lensProp('buffer'));
+      return set(lens, action.text, state);
+
     case 'EDIT_NAME':
-      return Object.assign({}, state, {
-        saved: Object.assign({}, state.saved, {
-          [action.id]: Object.assign({}, state.saved[action.id], {
-            editing_name: true
-          })
-        })
-      });
-    case 'EXPAND_SAVED_PROGRAM':
-      return Object.assign({}, state, {
-        saved: Object.assign({}, state.saved, {
-          [action.id]: Object.assign({}, state.saved[action.id], {
-            editing: true
-          })
-        })
-      });
+      lens = compose(program(action.id), lensProp('editing_name'));
+      return set(lens, true, state);
+
+    // Editing / Collapse state - using buffer[id].editing
     case 'COLLAPSE_SAVED_PROGRAM':
-      return Object.assign({}, state, {
-        saved: Object.assign({}, state.saved, {
-          [action.id]: Object.assign({}, state.saved[action.id], {
-            editing: false
-          })
-        })
-      });
-    case 'POST_ALIAS':
-      return state; // XXX Not sure if I need to do anything here.
+      lens = compose(program(action.id), lensProp('editing'));  
+      return set(lens, false, state);
+
+    case 'EXPAND_SAVED_PROGRAM':
+      lens = compose(program(action.id), lensProp('editing'));
+      return set(lens, true, state);
+
+    // case 'POST_ALIAS':
+    // return state; // XXX Not sure if I need to do anything here.
     case 'SAVED_ALIAS':
       return Object.assign({}, state, {
         save_ok: 'YES' // DEPRECATED
       });
+
     default:
+      console.log(`Reached default state on ${action.type}`)
       return state
   }
 }

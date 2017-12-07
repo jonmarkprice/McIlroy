@@ -13,9 +13,11 @@ const initialState = {
     selected  : 0
   },
   program   : [], 
-  displayed : '', 
-  saved     : {}, 
-  next_id   : 0,
+  displayed : '',
+  saved     : {
+    programs: {},
+    next_id : 0
+  },
   save_ok   : 'NONE_ATTEMPTED'
 };
 

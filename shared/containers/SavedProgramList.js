@@ -6,7 +6,7 @@ const { connect } = require('react-redux');
 const SavedProgram = require('./SavedProgram');
 
 const mapStateToProps = state => ({
-  programs: state.saved
+  programs: state.saved.programs
 })
 // [...programs.values()].map([_, p] => (<Aliases obj={p} key={p.id}/>))
 // { Array.from(programs.values()).map((p, index) => (<Aliases obj={p} key={index}/>)) }
