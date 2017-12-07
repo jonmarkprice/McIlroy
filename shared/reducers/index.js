@@ -1,20 +1,15 @@
-// import { combineReducers } from 'redux'
-
-// Import reducers
+const { combineReducers } = require('redux');
 const inputReducer    = require('./input');
 const programReducer  = require('./canvas');
 const displayReducer  = require('./display');
 const savedReducer    = require('./saved');
 // TDB: requestReducer
 
-function reducer(state, action) {
-  console.log(`Reducer: got action: ${action.type}`)
-  return {
-    input     : inputReducer(state.input, action),
-    program   : programReducer(state.program, action),
-    displayed : displayReducer(state.displayed, action),
-    saved     : savedReducer(state.saved, action)
-  };
-}
+const reducer = combineReducers({
+  input     : inputReducer,
+  program   : programReducer,
+  displayed : displayReducer,
+  saved     : savedReducer
+})
 
-module.exports = reducer; // rootReducer
+module.exports = reducer;
