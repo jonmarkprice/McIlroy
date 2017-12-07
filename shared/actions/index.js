@@ -11,8 +11,13 @@ const selectInput = index =>
   ({type: 'SELECT_INPUT', index});
 const displayFunction = name =>
   ({type: 'DISPLAY_FUNCTION', name});
-const addProgram = () =>
-  ({type: 'SAVE_PROGRAM'});
+
+const NEW_PROGRAM = 'NEW_PROGRAM';
+// Copies a program from the state.program (canvas) and adds it into
+// the saved programs, opening it for editing.
+// TODO: Refactor so that it takes a parameter (if possible)
+const newProgram = program => ({type: NEW_PROGRAM, program});
+
 const updateProgramName = id =>
   ({type: 'NAME_PROGRAM', id});
 const updateProgramNameBuffer = (id, text) =>
@@ -23,8 +28,13 @@ const expandSavedProgram = id =>
   ({type: 'EXPAND_SAVED_PROGRAM', id});
 const collapseProgram = id =>
   ({type: 'COLLAPSE_SAVED_PROGRAM', id})
-const saveAlias = (name, expansion) =>
-  ({type: 'SAVE_ALIAS', name, expansion});
+
+// const saveAlias = (name, expansion) =>
+//  ({type: 'SAVE_ALIAS', name, expansion});
+const ADD_PROGRAM = 'ADD_PROGRAM';
+const addProgram = (name, expansion) =>
+  ({type: ADD_PROGRAM, name, expansion});
+
 const savedAlias = () =>
   ({type: 'SAVED_ALIAS'});
 
@@ -58,25 +68,25 @@ function postAlias(name, expansion) {
     return fetch('http://localhost:3000/user/test/save-program', config)
       .then(
         value => { console.log('-- REQUEST COMPLETED --'); },
-        error => { console.error(err); }
+        error => { console.error(error); }
       )
       .then(() => dispatch(savedAlias()));
   }
 }
 
 module.exports = {
-    pushFunction
+    ADD_PROGRAM, addProgram // saveAlias
   , clearCanvas
-  , popFromCanvas
-  , pushInput
-  , selectInput
+  , collapseProgram
   , displayFunction
-  , addProgram
-  , updateProgramName
-  , updateProgramNameBuffer
   , editName
   , expandSavedProgram
-  , collapseProgram
-  , saveAlias
+  , NEW_PROGRAM, newProgram // was addProgram
+  , popFromCanvas
   , postAlias
+  , pushFunction
+  , pushInput
+  , selectInput
+  , updateProgramName
+  , updateProgramNameBuffer
 }

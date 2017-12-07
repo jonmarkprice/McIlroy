@@ -5,7 +5,7 @@ const configureStore = require('../common/configureStore');
 const { Provider } = require('react-redux');
 
 const Interpretter = require('../../build/components/components');
-const { pushInput, displayFunction, saveAlias } = require('../../build/actions');
+const { pushInput, displayFunction, addProgram } = require('../../build/actions');
 
 const initialState = {
   input : {
@@ -60,7 +60,8 @@ function addAliases(programs, store) {
   console.log('-- Got programs: --');
   console.log(programs);
 
-  programs.map(({name, expansion}) => store.dispatch(saveAlias(name, expansion)));
+  programs.map(({name, expansion}) => 
+    store.dispatch(addProgram(name, expansion)));
   return store;
 }
 

@@ -1,6 +1,10 @@
 // import { combineReducers } from 'redux' // Not using currently
 const R = require('ramda');
-const { append, set, over } = R; 
+const { append, set, over } = R;
+const {
+  ADD_PROGRAM
+, NEW_PROGRAM
+} = require('../actions');
 
 // In order to do SSR, we need pass our state as JSON. JSON doesn't have a
 // Map, so I need to either transform my Map into a list of pairs, or use a
@@ -15,17 +19,17 @@ function reducer(state, action) {
   const selected  = R.lensPath(['input', 'selected']);
 
   switch (action.type) {
+     // Input (subreducer)
+    case 'PUSH_INPUT':
+      return over(inputList, append(action.input), state);
+    case 'SELECT_INPUT':
+      return set(selected, action.index, state);
+
+    // Program canvas (subreducer)
     case 'PUSH_FUNCTION':
       return Object.assign({}, state, {
         program: append(action.name, state.program)
       });
-
-    case 'PUSH_INPUT':
-      return over(inputList, append(action.input), state);
- 
-    case 'SELECT_INPUT':
-      return set(selected, action.index, state);
-
     case 'CLEAR_CANVAS':
       return Object.assign({}, state, {
         program: []
@@ -35,11 +39,14 @@ function reducer(state, action) {
         program: state.program.slice(0, -1)
       });
 
+    // Display (subreducer)
     case 'DISPLAY_FUNCTION':
       return Object.assign({}, state, {
         displayed: action.name
       });
-    case 'SAVE_ALIAS': 
+
+    // case 'SAVE_ALIAS':
+    case ADD_PROGRAM: 
       // XXX: I don't like that we are using IDs here over maps...
       // what was the reasoning behind that?
       // I wanted to be able to delete... but not use an object as a map -- oh!
@@ -61,12 +68,14 @@ function reducer(state, action) {
         }),
         R.over(R.lensProp('next_id'), R.inc)
       )(state);
-    case 'SAVE_PROGRAM': // Saves a new program.
+
+    case NEW_PROGRAM:
+    //case 'SAVE_PROGRAM': // Saves a new program.
       return Object.assign({}, state, {
         saved: Object.assign({}, state.saved, {
           [state.next_id]: Object.assign({}, state.saved[state.next_id], {
             name    : 'Untitled',
-            program : state.program,
+            program : action.program,
             editing : true,
             buffer  : 'Untitled',
             id      : state.next_id,
@@ -75,6 +84,7 @@ function reducer(state, action) {
         }),
         next_id: state.next_id + 1,
       });
+
     case 'NAME_PROGRAM':
       return Object.assign({}, state, {
         saved: Object.assign({}, state.saved, {
