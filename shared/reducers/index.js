@@ -1,6 +1,6 @@
 // import { combineReducers } from 'redux' // Not using currently
 const R = require('ramda');
-const { append } = R; 
+const { append, set, over } = R; 
 
 // In order to do SSR, we need pass our state as JSON. JSON doesn't have a
 // Map, so I need to either transform my Map into a list of pairs, or use a
@@ -10,15 +10,22 @@ const { append } = R;
 // However, I would need to know which (properties) to transform, so this may
 // XXX Many of these are ugly!! Consider just making one copy, mutating, then returning.
 function reducer(state, action) {
+  // Lenses:
+  const inputList = R.lensPath(['input', 'list']);
+  const selected  = R.lensPath(['input', 'selected']);
+
   switch (action.type) {
     case 'PUSH_FUNCTION':
       return Object.assign({}, state, {
         program: append(action.name, state.program)
       });
+
     case 'PUSH_INPUT':
-      return Object.assign({}, state, {
-        input: state.input.concat(action.input)
-      });
+      return over(inputList, append(action.input), state);
+ 
+    case 'SELECT_INPUT':
+      return set(selected, action.index, state);
+
     case 'CLEAR_CANVAS':
       return Object.assign({}, state, {
         program: []
@@ -27,10 +34,7 @@ function reducer(state, action) {
       return Object.assign({}, state, {
         program: state.program.slice(0, -1)
       });
-    case 'SELECT_INPUT':
-      return Object.assign({}, state, {
-        selected: action.index
-      });
+
     case 'DISPLAY_FUNCTION':
       return Object.assign({}, state, {
         displayed: action.name

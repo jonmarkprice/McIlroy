@@ -8,8 +8,10 @@ const Interpretter = require('../../build/components/components');
 const { pushInput, displayFunction, saveAlias } = require('../../build/actions');
 
 const initialState = {
-  input     : [{label: '[No Input]', data: null}],
-  selected  : 0,
+  input : {
+    list     : [{label: '[No Input]', data: null}],
+    selected  : 0
+  },
   program   : [], 
   displayed : '', 
   saved     : {}, 

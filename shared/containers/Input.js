@@ -23,8 +23,8 @@ class InputList extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  input: state.input,
-  selected: state.selected
+  input:    state.input.list,
+  selected: state.input.selected
 })
 
 const mapDispatchToProps = dispatch => ({

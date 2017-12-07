@@ -7,7 +7,7 @@ const R = require('ramda');
 
 const mapStateToProps = state => ({
   program: state.program,
-  inputData: state.input[state.selected].data
+  inputData: state.input.list[state.input.selected].data
 });
 
 class ExecutionRows extends React.Component {
@@ -20,49 +20,18 @@ class ExecutionRows extends React.Component {
                   : this.props.program;
 
     // Populate rows
-    //const rowData = applied.map((text, index) =>
-    //  <Token text={text} key={index} />);
     let rows = [];
-    //rows.push(<div className="row" key="init">{rowData}</div>);
-
-    // Populate steps
-    //const result = parse(applied);
-    // TODO everything after this has to be updated
-    //console.dir(result);
-
-    // TODO:
     // [ ] include stack mabye in return
     // [ ] wrap all in encaseEither()
     // [ ] print error with bimap
-    // const {steps, result} = ..
-    //const steps = [["Hello", "world"]] //createSteps(applied);
     const result = parseProgram(applied);
     const steps = result.steps;
     // TODO: if (result.stack) // isLeft -> display error
-    //console.log(applied);
-    console.log("--- RESULT ---");
-    console.log(result.stack);
-
 
     steps.forEach((step, stepIndex) => {
-
-      // Wrap tokens
-      /*
-      const offset = step.left.length;
-      const newToken = <Token text={step.value}
-                              classList={['em']} key='new' />;
-      const consumedTokens = step.left.map((text, index) => (
-        <Token text={text} classList={['skip']} key={index} />
-      ));
-      const remainingTokens = step.right.map((text, index) => (
-        <Token text={text} key={index + offset} />
-      ));
-      const joined = consumedTokens.concat(newToken, remainingTokens);
-     */
       const tokens = step.map((text, index) => (
         <Token text={text} key={index} />
-      ));
-      
+      )); 
       // Fill row with step
       rows.push(<div className="row" key={stepIndex}>{tokens}</div>);
     });

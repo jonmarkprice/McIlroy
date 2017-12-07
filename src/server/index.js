@@ -22,6 +22,8 @@ app.get('/', (req, res, next) => {
     }
   }).catch(err => {
     // The promise was rejected
+    console.log("Cannot find user test");
+    console.error(err);
     res.sendStatus(500);  // send internal server error
     // res.send(err);     // Consider sending up detailed diagnostics
   })
