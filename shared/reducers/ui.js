@@ -10,7 +10,7 @@ const initialState = {
 const programLens = R.lensProp('program');
 const bufferLens  = R.lensProp('buffer');
 
-function reducer(state = intialState, action) {
+function uiReducer(state = intialState, action) {
   switch (action.type) {
     case 'PUSH_FUNCTION':
       return R.over(programLens, R.append(action.name), state);
@@ -18,8 +18,7 @@ function reducer(state = intialState, action) {
       return R.set(programLens, [], state);
     case 'BACKSPACE':
       return R.over(programLens, R.dropLast(1), state);
-    // Open alias for editing
-    case 'EDIT_ALIAS':
+    case 'EDIT_ALIAS': // Open alias for editing
       const aliasUI = {
         editing: true,
         name: { editing: true, buffer: '' },
@@ -31,3 +30,18 @@ function reducer(state = intialState, action) {
   }
 }
 
+module.exports = uiReducer;
+// const
+
+function inputReducer(action = [], state) {
+  switch (action.type) {
+    case 'PUSH_INPUT':
+      //
+    case 'SELECT_INPUT':
+      selected
+    default:
+      return state;
+  }
+}
+
+module.exports = inputReducer;

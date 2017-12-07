@@ -11,8 +11,8 @@ const savedReducer    = require('./saved');
     // ALTERNATIVELY could be a list with a "hidden"/"open" boolean property
     <id> : { // PROBABLY DIFFERNET FROM saved's id
       editing : boolean,
-      editing_name : boolean
-      buffer : string
+      program: [...],
+      name: {buffer: '', editing: boolean}
     } // see current state
   },
   requests: [{
@@ -43,6 +43,8 @@ const rootReducer = combineReducers({
   requests: requestsReducer,
   // program: programReducer,
   saved: savedReducer
+  input: _,
+  display: _,
 });
 
 module.exports = rootReducer;
