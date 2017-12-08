@@ -64,4 +64,25 @@ function saveProgram(id, name, expansion) {
   }
 }
 
-module.exports = { saveProgram, deleteSavedProgram };
+function updateNameOnServer(id, oldName, newName) {
+  console.log('-- UPDATING NAME --');
+  return function (dispatch) {
+    dispatch(disableEditing(id));
+    const payload = loadPost({user, oldName, newName});
+    return fetch(`${base}/program/rename`, payload).then(
+      value => {
+        console.log('-- RENAME COMPLETE --');
+        dispatch(enableEditing(id));
+      },
+      error => {
+        console.log(error);
+      }
+    );
+  }
+}
+
+module.exports = {
+  saveProgram
+  , deleteSavedProgram
+  , updateNameOnServer
+};

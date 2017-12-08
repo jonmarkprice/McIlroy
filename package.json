@@ -5,9 +5,8 @@
   "scripts": {
     "local": "node local-mongodb/start_db.js& node src/server/index.js",
     "start": "node src/server/index.js",
-    "build": "babel -d build shared -s && webpack -d",
-    "dashboard": "node src/server/app.js",
-    "clean": "rm -r build"
+    "build": "rm -r build && babel -d build shared -s && webpack -d",
+    "dashboard": "node src/server/app.js"
   },
   "author": "Jonathan Price",
   "dependencies": {

@@ -5,7 +5,10 @@ const configureStore = require('../common/configureStore');
 const { Provider } = require('react-redux');
 
 const Interpretter = require('../../build/components/components');
-const { pushInput, displayFunction, addProgram } = require('../../build/actions');
+// const { pushInput, displayFunction, addProgram } = require('../../build/actions');
+const { pushInput } = require('../../build/actions/input');
+const { displayFunction } = require('../../build/actions/display'); 
+const { addProgram } = require('../../build/actions/saved');
 
 const initialState = {
   input : {
@@ -32,8 +35,8 @@ function setup() {
     data  : 1
   }));
   store.dispatch(pushInput({
-    label : '[1, 2, 3]',
-    data  : [1, 2, 3]
+    label : '[1, 2, 3, 4]',
+    data  : [1, 2, 3, 4]
   }));
   store.dispatch(pushInput({
     label : '[true, false]',

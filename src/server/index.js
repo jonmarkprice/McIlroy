@@ -43,10 +43,24 @@ app.post('/program/delete', jsonParser, (req, res, next) => {
 });
 
 app.post('/program/save', jsonParser, (req, res, next) => {
+  console.log("-- GOT SAVE REQUEST --");
   if (!req.body) res.sendStatus(400);
-  // console.log("-- GOT DATA --");
-  // console.log(req.body);
+
+  // const {user, program} = req.body;
   saveProgram('test', req.body); // "test" = req.body.user
+  res.sendStatus(200);
+});
+
+app.post('/program/rename', jsonParser, (req, res, next) => {
+  if (!req.body) res.sendStatus(400);
+  
+  // TO BE IMPL.
+  // const {oldName, newName} = _;
+  // renameProgram('test', name, new_name);
+
+  console.log(" -- GOT RENAME REQUEST --");
+  console.log(req.body);
+
   res.sendStatus(200);
 });
 

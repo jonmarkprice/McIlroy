@@ -2,13 +2,16 @@ const React       = require('react');
 const { connect } = require('react-redux');
 const ProgramRow  = require('../components/ProgramRow');
 const { updateProgramName
-       , updateProgramNameBuffer
-       , editName
-       , collapseProgram
-       , enableEditing
-       , disableEditing
+      , editName
+      , doneEditingName
+      , collapseProgram
+      , enableEditing
+      , disableEditing
       } = require('../actions/saved');
-const { saveProgram, deleteSavedProgram } = require('../actions/saved-async');
+const { saveProgram
+      , deleteSavedProgram
+      , updateNameOnServer
+      } = require('../actions/saved-async');
 const { clearCanvas, pushFunction } = require('../actions/program-canvas');
 const ProgramName     = require('../components/ProgramName');
 const EditProgramName = require('../components/EditProgramName');
@@ -16,8 +19,13 @@ const EditProgramName = require('../components/EditProgramName');
 // Is there any point in these?
 // Why not use dispatch in the functions directly?
 const mapDispatchToProps = dispatch => ({
-  onNameUpdate: id => {
-    dispatch(updateProgramName(id));
+  onNameUpdate: (id, oldName, newName) => {
+    console.log('-- DISPATCHING actions --');
+    dispatch(updateProgramName(id, newName)); // UI
+    dispatch(doneEditingName(id));
+    
+    // dispatch async action to server // id optional
+    dispatch(updateNameOnServer(id, oldName, newName));
   },
   onNameChange: (id, text) => {
     dispatch(updateProgramNameBuffer(id, text));
@@ -70,7 +78,7 @@ class Container extends React.Component {
           program_id={this.props.obj.id}
           name={this.props.obj.name}
           onNameUpdate={this.props.onNameUpdate}
-          onNameChange={this.props.onNameChange}
+          // onNameChange={this.props.onNameChange}
         />);
     } else {
       toDisplay = (
@@ -114,7 +122,6 @@ class Container extends React.Component {
           Close
         </button>
         <button onClick={() => {
-            console.log(`onclkc name: ${this.props.obj.name}`);
             this.props.onProgramDelete(
               this.props.obj.id, 
               this.props.obj.name);

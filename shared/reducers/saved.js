@@ -1,13 +1,6 @@
 const R = require('ramda');
 const { dissoc, compose, set, over, lensProp } = R;
-const {
-  ADD_PROGRAM
-  , DISABLE_EDITING
-  , ENABLE_EDITING
-  , NEW_PROGRAM
-  , REMOVE_PROGRAM
-  , UPDATE_PROGRAM_NAME
-} = require('../actions/saved');
+const { PROGRAM } = require('../actions/saved');
 
 const initialState = {
   next_id: 0,
@@ -23,10 +16,10 @@ function savedReducer(state = initialState, action) {
   const nextSaveSlot = R.lensPath(['programs', state.next_id]);
   const uiIndex = R.lensProp('next_id');
 
-  console.log(`In savedReducer...`);
+  console.log(`In savedReducer...with ${action.type}`);
   switch (action.type) {
     // Saved (subreducer)
-    case ADD_PROGRAM: 
+    case PROGRAM.ADD:
       // XXX: I don't like that we are using IDs here over maps...
       // what was the reasoning behind that?
       // I wanted to be able to delete... but not use an object as a map -- oh!
@@ -48,12 +41,13 @@ function savedReducer(state = initialState, action) {
         R.over(uiIndex, R.inc)
       )(state);
 
-    case REMOVE_PROGRAM:
+    case PROGRAM.REMOVE:
       // remove a program from the GUI (after server complete)
       lens = lensProp('programs');
       return over(lens, dissoc(R.toString(action.id)), state);
     
-    case NEW_PROGRAM:
+    case PROGRAM.CREATE:
+      console.log('Creating new program.');
       return R.pipe(
         R.set(nextSaveSlot, {
           name    : 'Untitled',
@@ -66,28 +60,28 @@ function savedReducer(state = initialState, action) {
         R.over(uiIndex, R.inc)
       )(state);
 
-    case UPDATE_PROGRAM_NAME:
-      // Update both editing state and buffer itself
-      lens = program(action.id);
-      return R.pipe(
-        set(compose(lens, lensProp('editing_name')), false),
-        set(compose(lens, lensProp('name')), state.programs[action.id].buffer)
-      )(state);
-  
-    case 'UPDATE_NAME_BUFFER':
-      lens = compose(program(action.id), lensProp('buffer'));
+    case PROGRAM.NAME.UPDATE:
+      lens = compose(program(action.id), lensProp('name'));
       return set(lens, action.text, state);
+  
+    //case 'UPDATE_NAME_BUFFER':
+    //  lens = compose(program(action.id), lensProp('buffer'));
+    //  return set(lens, action.text, state);
 
-    case 'EDIT_NAME':
+    case PROGRAM.NAME.EDITING.SET:
       lens = compose(program(action.id), lensProp('editing_name'));
       return set(lens, true, state);
 
+    case PROGRAM.NAME.EDITING.UNSET:
+      lens = compose(program(action.id), lensProp('editing_name'));
+      return set(lens, false, state);
+
     // Editing / Collapse state - using buffer[id].editing
-    case 'COLLAPSE_SAVED_PROGRAM':
+    case PROGRAM.COLLAPSE:
       lens = compose(program(action.id), lensProp('editing'));  
       return set(lens, false, state);
 
-    case 'EXPAND_SAVED_PROGRAM':
+    case PROGRAM.EXPAND:
       console.log(`In EXPAND...`);
       console.log(state)
       lens = compose(program(action.id), lensProp('editing'));
@@ -96,10 +90,10 @@ function savedReducer(state = initialState, action) {
       console.log(result)
       return result;
 
-    case DISABLE_EDITING:
+    case PROGRAM.UI.DISABLE:
       console.log("Editing disabled.")
       return state;
-    case ENABLE_EDITING:
+    case PROGRAM.UI.ENABLE:
       console.log("Editing enabled.")
       return state;
 
