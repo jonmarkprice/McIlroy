@@ -1,8 +1,12 @@
 const { User } = require('./schema');
 
-function saveProgram(user, program) {
+function deleteProgram(user, name) {
   return User
-    .findOne({name: user}).exec() // return a promise
+    .where({name: "test"})
+    .update({"$pull": {"programs": {"name": name}}})
+    .exec() // returns a promise
+    // .find({name: user}).exec() // return a promise
+    /*
     .then(data => {
       if (data !== null) {
         data.programs.push(program);
@@ -10,9 +14,10 @@ function saveProgram(user, program) {
       } else {
         return Promise.reject('User not found');
       }
-    })
-    .then(x => {
-      console.log('Saved program');
+    }) */
+    .then(data => {
+      console.log(data)
+      // console.log('Saved program');
       // process.exit(0); 
     })
     .catch(err => {
@@ -21,4 +26,4 @@ function saveProgram(user, program) {
     });
 }
 
-module.exports = saveProgram;
+module.exports = deleteProgram;

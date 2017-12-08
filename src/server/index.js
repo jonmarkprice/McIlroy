@@ -3,6 +3,7 @@ const bodyParser  = require('body-parser');
 const renderPage  = require('./render');
 const { User }    = require('./schema');
 const saveProgram = require('./save-program');
+const deleteProgram = require('./delete-program');
 
 const jsonParser = bodyParser.json();
 const app = express();
@@ -34,8 +35,10 @@ app.post('/program/delete', jsonParser, (req, res, next) => {
   console.log("-- GOT DELETE REQUEST --");
   console.log(req.body);
 
-  // Do nothing
-  // saveProgram('test', req.body);
+  const {user, name} = req.body;
+  deleteProgram(user, name); // XXX user is ignored
+
+  // XXX Don't unconditionally send success!!!
   res.sendStatus(200);
 });
 
