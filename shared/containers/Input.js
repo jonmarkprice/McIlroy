@@ -1,6 +1,6 @@
 const React           = require('react');
 const { connect }     = require('react-redux');
-const { selectInput } = require('../actions');
+const { selectInput } = require('../actions/input');
 
 class InputList extends React.Component {
   render() {

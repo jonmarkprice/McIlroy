@@ -1,7 +1,8 @@
 const React       = require('react');
 const ProgramRow  = require('../components/ProgramRow');
 const { connect } = require( 'react-redux');
-const { clearCanvas, popFromCanvas, newProgram } = require('../actions');
+const { clearCanvas, popFromCanvas } = require('../actions/program-canvas');
+const { newProgram } = require('../actions/saved');
 
 const mapStateToProps = state => ({
   program: state.program,

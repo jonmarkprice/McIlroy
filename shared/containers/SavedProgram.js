@@ -1,7 +1,7 @@
 const React = require('react');
 const EditSavedProgram = require('../containers/EditSavedProgram');
 const { connect } = require('react-redux');
-const { expandSavedProgram } = require('../actions/index');
+const { expandSavedProgram } = require('../actions/saved');
 
 const mapDispatchToProps = dispatch => ({
   onExpand: id => {

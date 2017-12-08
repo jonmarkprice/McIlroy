@@ -29,11 +29,21 @@ app.get('/', (req, res, next) => {
   })
 });
 
-app.post('/user/test/save-program', jsonParser, (req, res, next) => {
+app.post('/program/delete', jsonParser, (req, res, next) => {
+  if (!req.body) res.sendStatus(400);
+  console.log("-- GOT DELETE REQUEST --");
+  console.log(req.body);
+
+  // Do nothing
+  // saveProgram('test', req.body);
+  res.sendStatus(200);
+});
+
+app.post('/program/save', jsonParser, (req, res, next) => {
   if (!req.body) res.sendStatus(400);
   // console.log("-- GOT DATA --");
   // console.log(req.body);
-  saveProgram('test', req.body);
+  saveProgram('test', req.body); // "test" = req.body.user
   res.sendStatus(200);
 });
 

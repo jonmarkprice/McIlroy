@@ -4,10 +4,12 @@ const ProgramRow  = require('../components/ProgramRow');
 const { updateProgramName
        , updateProgramNameBuffer
        , editName
-       , clearCanvas
-       , pushFunction
        , collapseProgram
-       , postAlias } = require('../actions');
+       , enableEditing
+       , disableEditing
+      } = require('../actions/saved');
+const { saveProgram, deleteSavedProgram } = require('../actions/saved-async');
+const { clearCanvas, pushFunction } = require('../actions/program-canvas');
 const ProgramName     = require('../components/ProgramName');
 const EditProgramName = require('../components/EditProgramName');
 
@@ -32,12 +34,28 @@ const mapDispatchToProps = dispatch => ({
   addTokenToCanvas: text => {
     dispatch(pushFunction(text));
   },
-  onPostAlias: (name, program) => {
+  onPostAlias: (id, name, program) => {
     console.log('-- SENT --');
-    dispatch(postAlias(name, program)).then(
+    dispatch(saveProgram(id, name, program)).then(
       v => { console.log('-- RECIEVED --'); },
       e => { console.error(e); }
     );
+  },
+  onProgramDelete: (id, name) => {
+    // console.log("TODO: dispatch delete");
+    // dispatch(disableEditing(id)); // dispatch a disable... mabye here, maybe from within...
+    // dispatch() // request
+    console.log(`onProgramDelete name: ${name}`)
+    dispatch(deleteSavedProgram(id, name))
+    /*.then(
+      value => {
+        // Need requests to retrieve errors, right?
+        // disptach(); // update request --> would this be a better metric that 'disabled' directly?
+        enableEditing(id); },
+      error => {
+        // disptach(); // update request
+        console.error(error); }
+    );*/
   }
 });
 
@@ -82,11 +100,27 @@ class Container extends React.Component {
           Load
         </button>
         <button onClick={() => {
-          this.props.onProgramCollapse(this.props.obj.id);
-          this.props.onPostAlias(this.props.obj.name,
-                                 this.props.obj.program); }}
+          // I can't decide if I still want to collapse on save, or not...
+          // this.props.onProgramCollapse(this.props.obj.id);
+          this.props.onPostAlias(
+            this.props.obj.id,
+            this.props.obj.name,
+            this.props.obj.program); 
+          }}
           className="done-editing-saved-function">
           Save to server {/* or "Done editing" */}
+        </button>
+        <button onClick={() => this.props.onProgramCollapse(this.props.obj.id)}>
+          Close
+        </button>
+        <button onClick={() => {
+            console.log(`onclkc name: ${this.props.obj.name}`);
+            this.props.onProgramDelete(
+              this.props.obj.id, 
+              this.props.obj.name);
+          }
+        }>
+          Delete
         </button>
       </div>
     );

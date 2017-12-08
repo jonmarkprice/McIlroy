@@ -2,8 +2,12 @@ const R = require('ramda');
 const { dissoc, compose, set, over, lensProp } = R;
 const {
   ADD_PROGRAM
-, NEW_PROGRAM
-} = require('../actions');
+  , DISABLE_EDITING
+  , ENABLE_EDITING
+  , NEW_PROGRAM
+  , REMOVE_PROGRAM
+  , UPDATE_PROGRAM_NAME
+} = require('../actions/saved');
 
 const initialState = {
   next_id: 0,
@@ -44,6 +48,11 @@ function savedReducer(state = initialState, action) {
         R.over(uiIndex, R.inc)
       )(state);
 
+    case REMOVE_PROGRAM:
+      // remove a program from the GUI (after server complete)
+      lens = lensProp('programs');
+      return over(lens, dissoc(R.toString(action.id)), state);
+    
     case NEW_PROGRAM:
       return R.pipe(
         R.set(nextSaveSlot, {
@@ -57,7 +66,7 @@ function savedReducer(state = initialState, action) {
         R.over(uiIndex, R.inc)
       )(state);
 
-    case 'NAME_PROGRAM':
+    case UPDATE_PROGRAM_NAME:
       // Update both editing state and buffer itself
       lens = program(action.id);
       return R.pipe(
@@ -86,6 +95,13 @@ function savedReducer(state = initialState, action) {
       const result = set(lens, true, state);
       console.log(result)
       return result;
+
+    case DISABLE_EDITING:
+      console.log("Editing disabled.")
+      return state;
+    case ENABLE_EDITING:
+      console.log("Editing enabled.")
+      return state;
 
     default:
       console.log(`In savedReducer. Reached default state on ${action.type}.`);
