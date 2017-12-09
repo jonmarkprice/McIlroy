@@ -1,30 +1,27 @@
 const React = require('react');
 const EditSavedProgram = require('../containers/EditSavedProgram');
 const { connect } = require('react-redux');
-// const { expandSavedProgram } = require('../actions/saved');
 const { pushFunction } = require('../actions/program-canvas');
+const { displayDerived } = require('../actions/display');
 
-const mapDispatchToProps = dispatch => ({
-  // 
-  // onExpand: id => {
-  //  dispatch(expandSavedProgram(id));
-  //},
-  addTokenToCanvas: token => {
+const mapDispatchToProps = dispatch => ({ 
+  display: (id, name) => {
+    dispatch(displayDerived(id, name));
+  },
+  add: token => {
     dispatch(pushFunction(token));
   }
 });
 
 class Container extends React.Component {
   render() {
-    const alias = {
-      name: this.props.obj.name,
-      expansion: this.props.obj.program
-    };
+    const {program, id, name} = this.props.obj;
+    const alias = {name, expansion: program};
     return (
-      <div  className="function" 
-        // onClick={() => this.props.} // pass id?
-        onDoubleClick={() => this.props.addTokenToCanvas(alias)}>
-        {this.props.obj.name}
+      <div className="function"
+        onClick={() => this.props.display(id, name)}
+        onDoubleClick={() => this.props.add(alias)}>
+        {name}
       </div>
     );
   }

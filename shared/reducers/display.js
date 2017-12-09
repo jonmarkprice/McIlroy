@@ -1,15 +1,21 @@
-// types are: "derived", "primitive", "none" (or null(?))
-
-// or, built-in: true, false, null
-// const initialState = {name: '', built_in: true};
+const { DISPLAY } = require('../actions/display');
 
 function displayReducer(state = null, action) {
   switch (action.type) {
-    case 'DISPLAY_FUNCTION': // (or display PRIMITIVE / BUILT-IN)
-      return {name: action.name, built_in: true};
-    case 'DISPLAY_DERIVED':
-      return {name: action.name, built_in: false};
-    // case 'CLEAR_DISPLAY' (optional)
+    case DISPLAY.PRIMITIVE:
+      console.log("-- DISPLAYING PRIMITIVE --")
+      return {
+        name: action.name,
+        built_in: true,
+        id: null
+      };
+    case DISPLAY.DERIVED:
+      console.log("-- DISPLAYING derived --") 
+      return {
+        name: action.name,
+        built_in: false,
+        id: action.id
+      };
     default:
       return state;
   }

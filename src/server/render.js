@@ -5,9 +5,7 @@ const configureStore = require('../common/configureStore');
 const { Provider } = require('react-redux');
 
 const Interpretter = require('../../build/components/components');
-// const { pushInput, displayFunction, addProgram } = require('../../build/actions');
 const { pushInput } = require('../../build/actions/input');
-const { displayFunction } = require('../../build/actions/display'); 
 const { addProgram } = require('../../build/actions/saved');
 
 const initialState = {
@@ -16,7 +14,7 @@ const initialState = {
     selected  : 0
   },
   program   : [], 
-  displayed : '',
+  displayed : null,
   saved     : {
     programs: {},
     next_id : 0
@@ -54,7 +52,7 @@ function setup() {
   // TODO: consider using obj instead, like pushInput
   // store.dispatch(saveAlias('test', [1, 2, '+']));
 
-  store.dispatch(displayFunction('Nothing selected.'));
+  // store.dispatch(displayFunction('Nothing selected.'));
   return store;
 }
 

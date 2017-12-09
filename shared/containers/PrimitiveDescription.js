@@ -27,7 +27,7 @@ class Container extends React.Component {
       return (
         <div id="information" className="box">
           <h2>Info</h2>
-          <h3 id="function-name">{this.props.displayed}</h3>
+          <h3 id="function-name">{this.props.displayed.name}</h3>
           <p><em>No description added.</em></p>
         </div>
       );

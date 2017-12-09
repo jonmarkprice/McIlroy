@@ -2,12 +2,14 @@ const React         = require('react');
 const { connect }   = require('react-redux');
 const descriptions  = require('../parser/descriptions');
 const PrimitiveDescription = require('./PrimitiveDescription');
-// const DerivedDescription = require('./DerivedDescription');
+const DerivedDescription   = require('./DerivedDescription');
 
 // TODO: Consider encapsulating into larger component
 // since we will always need at least "Info" header.
 class InfoPane extends React.Component {
   render() {
+    console.log("-- INFO PANE --");
+    console.log(JSON.stringify(this.props.displayed));;
     if (this.props.displayed === null) {
       return (
         <div id="information" className="box">
@@ -15,10 +17,9 @@ class InfoPane extends React.Component {
         </div>
       );
     } else if (this.props.displayed.built_in) { // or primitive?
-      return (<PrimitiveDescription name={this.props.displayed.name} />);
+      return (<PrimitiveDescription />);
     } else {
-      // return <DerivedDescription name={this.props.displayed.name} />;
-      return (<div>this.props.displayed.name</div>);
+      return <DerivedDescription />;
     }
   }
 }
