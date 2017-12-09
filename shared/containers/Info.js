@@ -1,39 +1,24 @@
 const React         = require('react');
 const { connect }   = require('react-redux');
 const descriptions  = require('../parser/descriptions');
-const Example       = require('../components/Example');
+const PrimitiveDescription = require('./PrimitiveDescription');
+// const DerivedDescription = require('./DerivedDescription');
 
-// NOTE: Consider encapsulating into larger component
+// TODO: Consider encapsulating into larger component
 // since we will always need at least "Info" header.
-// TODO: Move example to own component.
 class InfoPane extends React.Component {
   render() {
-    if (descriptions.has(this.props.displayed)) {
-      const desc  = descriptions.get(this.props.displayed);
-      const title = (desc.hasOwnProperty('name'))
-                  ? desc.name
-                  : this.props.displayed;
-      const example = (desc.hasOwnProperty('example'))
-                    ? <Example program={desc.example.in}
-                               result={desc.example.expect} />
-                    : "";
+    if (this.props.displayed === null) {
       return (
         <div id="information" className="box">
           <h2>Info</h2>
-          <h3 id="function-name">{title}</h3>
-          <p>{desc.text}</p>
-          {example}
         </div>
       );
-    }
-    else {
-      return (
-        <div id="information" className="box">
-          <h2>Info</h2>
-          <h3 id="function-name">{this.props.displayed}</h3>
-          <p><em>No description added.</em></p>
-        </div>
-      );
+    } else if (this.props.displayed.built_in) { // or primitive?
+      return (<PrimitiveDescription name={this.props.displayed.name} />);
+    } else {
+      // return <DerivedDescription name={this.props.displayed.name} />;
+      return (<div>this.props.displayed.name</div>);
     }
   }
 }

@@ -1,8 +1,5 @@
 // TODO: see ./bin/www from express generator
-
-// const bodyParser  = require('body-parser');
 const express     = require('express');
-// const jsonParser = bodyParser.json();
 // TODO serve-favicon
 
 // Routes
