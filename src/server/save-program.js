@@ -1,7 +1,8 @@
-const { User } = require('./schema');
+const dbg = require('debug')('save-program');
+const db = require('./db');
 
 function saveProgram(user, program) {
-  return User
+  return db.connection.User
     .findOne({name: user}).exec() // return a promise
     .then(data => {
       if (data !== null) {
@@ -11,14 +12,9 @@ function saveProgram(user, program) {
         return Promise.reject('User not found');
       }
     })
-    .then(x => {
-      console.log('Saved program');
-      // process.exit(0); 
+    .then(data => {
+      dbg('Saved program. Response after save(): %O', data);
     })
-    .catch(err => {
-      console.log("An error occured!");
-      console.error(err);
-    });
 }
 
 module.exports = saveProgram;

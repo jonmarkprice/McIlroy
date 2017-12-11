@@ -1,9 +1,9 @@
 // TODO: see ./bin/www from express generator
-
-// const bodyParser  = require('body-parser');
-const express     = require('express');
-// const jsonParser = bodyParser.json();
+require('dotenv').config(); // add environmental variables
+const express = require('express');
+const dbg     = require('debug')('server-root');
 // TODO serve-favicon
+const db = require('./db');
 
 // Routes
 const index = require('./routes/index');
@@ -17,6 +17,16 @@ app.use('/public', express.static('public'));
 app.use('/program', programs);
 app.use('/', index);
 
+// Connect to database
+try {
+  dbg("Connecting to database...");
+  db.connect();
+  dbg("Connection: ", db.connection);
+  dbg("Is connected: %s", db.isConnected);
+} catch (err) {
+  dbg("Cannot connect to database. Error: %O", err);
+}
+
 // Catch 404
 app.use(function (req, res, next) {
   const err = new Error('Not found');
@@ -26,6 +36,13 @@ app.use(function (req, res, next) {
  
 // Error handler
 app.use(function(err, req, res, next) {
+  dbg('Reached top-level error handler.');
+  if (err.message !== undefined) {
+    dbg(err.message); // We just want the message if Error()
+  } else {
+    dbg(err.message);
+  }
+
   // set error iff in dev environment
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -34,7 +51,7 @@ app.use(function(err, req, res, next) {
   // Not using res.render('error'); since we don't have a view engine.
 });
 
-console.log(`Running in: ${app.get('env')}`);
+dbg(`Running in: ${app.get('env')}`);
 console.log(`Listening on port ${port}...`);
 app.listen(port);
 

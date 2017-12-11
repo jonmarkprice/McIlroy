@@ -1,11 +1,10 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
 const ReactDOMServer = require('react-dom/server');
+const dbg = require('debug')('render');
 const configureStore = require('../common/configureStore');
 const { Provider } = require('react-redux');
-
 const Interpretter = require('../../build/components/components');
-// const { pushInput, displayFunction, addProgram } = require('../../build/actions');
 const { pushInput } = require('../../build/actions/input');
 const { displayFunction } = require('../../build/actions/display'); 
 const { addProgram } = require('../../build/actions/saved');
@@ -21,15 +20,11 @@ const initialState = {
     programs: {},
     next_id : 0
   }
-  // save_ok   : 'NONE_ATTEMPTED'
 };
 
 function setup() {
   const store = configureStore(initialState);
 
-  // XXX No real reason to do this... just include in initial state
-  // -- I think this was just for debugging
-  // dispatch some actions
   store.dispatch(pushInput({
     label : '1',
     data  : 1
@@ -51,19 +46,13 @@ function setup() {
     data  : 'A'
   }));
 
-  // TODO: consider using obj instead, like pushInput
-  // store.dispatch(saveAlias('test', [1, 2, '+']));
-
   store.dispatch(displayFunction('Nothing selected.'));
   return store;
 }
 
 function addAliases(programs, store) {
-  console.log('-- STORE --');
-  console.log(store);
-
-  console.log('-- Got programs: --');
-  console.log(programs);
+  dbg('Store: %O', store);
+  dbg('Got programs: %O', programs);
 
   programs.map(({name, expansion}) => 
     store.dispatch(addProgram(name, expansion)));
@@ -72,16 +61,13 @@ function addAliases(programs, store) {
 
 function renderPage(programs) {
   let store = setup();  // This is not as performant as if we had used a
-                          // closure, but it is safer.
+                        // closure, but it is safer.
   store = addAliases(programs, store);
-
   const finalState = store.getState();
 
-  console.log('STATE');
-  console.log(finalState);
+  dbg('State: %O', finalState);
 
   const stateString = JSON.stringify(finalState).replace(/</g, '\\u003c');
-
   const html = ReactDOMServer.renderToString(
     React.createElement(Provider, {store}, 
       React.createElement(Interpretter, null, null)));

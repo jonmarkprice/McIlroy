@@ -1,18 +1,19 @@
 {
   "name": "McIlroy",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "",
   "scripts": {
     "start": "node local-mongodb/start_db.js& node src/server/index.js",
     "build": "babel -d build shared -s && webpack -d",
     "clean": "rimraf build/*",
-    "prebuild": "npm run clean -s",
-    "dashboard": "node src/server/app.js"
+    "prebuild": "npm run clean -s"
   },
   "author": "Jonathan Price",
   "dependencies": {
     "babel-cli": "^6.26.0",
     "body-parser": "^1.18.2",
+    "debug": "^3.1.0",
+    "dotenv": "^4.0.0",
     "express": "^4.16.2",
     "glob": "^7.1.2",
     "mongodb": "^2.2.33",
