@@ -3,9 +3,10 @@
   "version": "0.5.0",
   "description": "",
   "scripts": {
-    "local": "node local-mongodb/start_db.js& node src/server/index.js",
-    "start": "node src/server/index.js",
-    "build": "rm -r build && babel -d build shared -s && webpack -d",
+    "start": "node local-mongodb/start_db.js& node src/server/index.js",
+    "build": "babel -d build shared -s && webpack -d",
+    "clean": "rimraf build/*",
+    "prebuild": "npm run clean -s",
     "dashboard": "node src/server/app.js"
   },
   "author": "Jonathan Price",
@@ -22,6 +23,7 @@
     "react-redux": "^5.0.6",
     "redux": "^3.7.2",
     "redux-thunk": "^2.2.0",
+    "rimraf": "^2.6.2",
     "sanctuary": "^0.13.2"
   },
   "devDependencies": {
