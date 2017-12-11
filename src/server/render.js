@@ -13,13 +13,13 @@ const initialState = {
     list     : [{label: '[No Input]', data: null}],
     selected  : 0
   },
-  program   : [], 
-  displayed : null,
+  program   : [],     // aka canvas
+  displayed : null,   // aka info
   saved     : {
     programs: {},
     next_id : 0
-  }
-  // save_ok   : 'NONE_ATTEMPTED'
+  },
+  edit: { editing: false }
 };
 
 function setup() {

@@ -5,6 +5,7 @@ const Functions = require('../containers/Functions');
 const Execution = require('../containers/Execution');
 const Input = require('../containers/Input');
 const Info = require('../containers/Info');
+const Overlay = require('../containers/Overlay');
 const SavedProgramList = require('../containers/SavedProgramList');
 // import PropTypes from 'prop-types'; // TODO need?
 
@@ -28,6 +29,7 @@ const Interpretter = () => (
   <div className="interpretter">
     <Palette />
     <Program />
+    <Overlay />
   </div>
 );
 

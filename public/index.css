@@ -181,3 +181,15 @@ p { margin-top: 0.3em; margin-bottom: 0.3em; }
 #function-name {
   clear: both;
 }
+
+#overlay {
+  width: 50%;
+  height: 60%;
+  background-color: white;
+  position: absolute;
+  margin-left: 5cm;
+  border-radius: 1mm;
+  border: thin lightgrey solid;
+  /* drop shadow? */
+  padding: 3mm;
+}
