@@ -8,26 +8,11 @@ const Interpretter = require('../../build/components/components');
 const { pushInput } = require('../../build/actions/input');
 const { addProgram } = require('../../build/actions/saved');
 
-const initialState = {
-  input : {
-    list     : [{label: '[No Input]', data: null}],
-    selected  : 0
-  },
-  program   : [],     // aka canvas
-  displayed : null,   // aka info
-  saved     : {
-    programs: {},
-    next_id : 0
-  },
-  edit: { editing: false }
-};
-
 function setup() {
-  const store = configureStore(initialState);
+  const store = configureStore(undefined); // Start with undefined, so we get
+                                           // from individual reducers.
 
-  // XXX No real reason to do this... just include in initial state
-  // -- I think this was just for debugging
-  // dispatch some actions
+  // Dispatch some actions
   store.dispatch(pushInput({
     label : '1',
     data  : 1
