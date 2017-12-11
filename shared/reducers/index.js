@@ -12,6 +12,6 @@ const reducer = combineReducers({
   displayed : displayReducer,
   saved     : savedReducer,
   edit      : editReducer,
-})
+});
 
 module.exports = reducer;

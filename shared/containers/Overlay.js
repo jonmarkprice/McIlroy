@@ -1,9 +1,12 @@
 const React = require('react');
+const ProgramRow = require('../components/ProgramRow');
 const { connect } = require('react-redux');
 const { unsetEditing } = require('../actions/edit');
 
 const mapStateToProps = state => ({
-  editing: state.edit.editing
+  editing: state.edit.editing,
+  id: state.edit.id,
+  saved: state.saved.programs[state.edit.id]
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -15,9 +18,14 @@ class OverlayComponent extends React.Component {
     if (this.props.editing) {
       return (
         <div id="overlay">
-          <button id="done-editing" onClick={this.props.done}>
-            Done
+          <h2>{this.props.saved.name}</h2>
+          <button id="save-edits" onClick={this.props.done}>
+            Save
           </button>
+          <button id="cancel-edits" onClick={this.props.done}>
+            Cancel
+          </button>
+          <ProgramRow program={this.props.saved.program} />
         </div>
       );
     } else {

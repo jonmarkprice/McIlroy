@@ -5,8 +5,8 @@ const EDIT = {
   }
 }
 
-const setEditing = () =>
-  ({type: EDIT.EDITNG.SET});
+const setEditing = id =>
+  ({type: EDIT.EDITING.SET, id});
 
 const unsetEditing = () =>
   ({type: EDIT.EDITING.UNSET});
