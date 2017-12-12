@@ -14,9 +14,9 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  edit: id => {
+  edit: (id, name, program) => {
     dbg(`mapping setEding with id ${id}`);
-    dispatch(setEditing(id));
+    dispatch(setEditing(id, name, program));
   },
   del: (id, name) => {
     dbg(`mapping delete with id, name (${id}, ${name}).`);
@@ -26,20 +26,19 @@ const mapDispatchToProps = dispatch => ({
 
 class Container extends React.Component {
   render() {
+    const {id, name, program, edit, del} = this.props;
     return (
       <div id="information" className="box">
         <h2>Info</h2>
-        <button id="edit-named-function"
-          onClick={() => this.props.edit(this.props.id)}>
+        <button id="edit-program" onClick={() => edit(id, name, program)}>
           Edit
         </button>
-        <button id="delete-derived"
-          onClick={() => this.props.del(this.props.id, this.props.name)}>
+        <button id="delete-program" onClick={() => del(id, name)}>
           Delete
         </button>
-        <h3 id="function-name">{this.props.name}</h3>
+        <h3 id="function-name">{name}</h3>
         <p>Definition</p>
-        <ProgramRow program={this.props.program} />
+        <ProgramRow program={program} />
     </div>     
     );
   }
