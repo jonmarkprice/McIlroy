@@ -42,12 +42,13 @@ router.post('/save', jsonParser, (req, res, next) => {
 });
 
 router.post('/edit', jsonParser, (req, res, next) => {
-  editDbg('Got rename request: %O', req.body);
+  editDbg('Got rename request: %j', req.body);
   if (empty(req.body)) {
     next(new Error('No data with /program/rename'));
   }
   else {
     const {user, oldName, newName, newProgram} = req.body;
+    editDbg(newProgram);
     editProgram(user, oldName, newName, newProgram)
     .then(data => {
       editDbg('Updated program on server.');

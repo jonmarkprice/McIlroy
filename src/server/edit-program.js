@@ -9,9 +9,16 @@ function editProgram(user, oldName, newName, newProgram) {
         found = false;
         for (p of data.programs) {
           if (p.name === oldName) {
+            dbg('Found program %s', p.name);
             p.name    = newName;
-            p.program = newProgram;
+
+            dbg('Replacing %j with %j', p.expansion, newProgram);
+
+            p.expansion = newProgram;
             found     = true;
+
+
+
             break;
           }
         }
@@ -25,7 +32,7 @@ function editProgram(user, oldName, newName, newProgram) {
       }
     })
     .then(data => {
-      dbg('Saved program. Response after save(): %O', data);
+      dbg('Saved program. Response after save(): %j', data);
     })
 }
 

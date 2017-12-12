@@ -9,6 +9,9 @@ const {
   , removeProgram
 } = require('./saved');
 
+// const dbg = require('debug')('actions:saved-async');
+const dbg = console.log;
+
 const base = "http://localhost:3000";
 const user = "test";
 
@@ -68,6 +71,7 @@ function updateProgramOnServer(id, oldName, newName, newProgram) {
   console.log('-- UPDATING NAME --');
   return function (dispatch) {
     dispatch(disableEditing(id));
+    dbg('Saving with new program: %o', newProgram);
     const payload = loadPost({user, oldName, newName, newProgram});
     return fetch(`${base}/program/edit`, payload).then(
       value => {

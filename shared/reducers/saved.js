@@ -1,6 +1,8 @@
 const R = require('ramda');
-const { dissoc, compose, set, over, lensProp } = R;
+const { dissoc, compose, set, over, lensProp, pipe } = R;
 const { PROGRAM } = require('../actions/saved');
+
+const dbg = console.log;
 
 const initialState = {
   next_id: 0,
@@ -60,9 +62,20 @@ function savedReducer(state = initialState, action) {
         R.over(uiIndex, R.inc)
       )(state);
 
-    case PROGRAM.NAME.UPDATE:
-      lens = compose(program(action.id), lensProp('name'));
-      return set(lens, action.text, state);
+    case PROGRAM.UPDATE:
+      dbg('PROGRAM.UPDATE: action %o', action);
+      lens = program(action.id);
+      const updated = pipe(
+        set(compose(lens, lensProp('name')), action.name),
+        set(compose(lens, lensProp('program')), action.expansion)
+      )(state);
+      
+      dbg("CURRENT: %o",   state.programs[action.id].program);
+      dbg("UPDATED: %o", updated.programs[action.id].program);
+      dbg("full state:");
+      dbg(updated);
+
+      return updated;
   
     //case 'UPDATE_NAME_BUFFER':
     //  lens = compose(program(action.id), lensProp('buffer'));

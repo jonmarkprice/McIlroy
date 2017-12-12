@@ -1,22 +1,21 @@
 const React = require('react');
-const ProgramRow = require('../components/ProgramRow');
+const EditProgram = require('./EditProgram');
 const { connect } = require('react-redux');
+
+// const dbg = require('debug')('containers:edit-saved');
 const dbg = console.log;
 
 const {
-  // , clearProgram     // TODO
-  // , backspaceProgram // TODO
   // enableEditng
   // disableEditing
   unsetEditing
 } = require('../actions/edit');
 
 // update UI only (no server)
-const { updateProgramName } = require('../actions/saved');
+// TODO: rewrite to also update expansion
+const { updateProgram } = require('../actions/saved');
 
-const { 
-  updateProgramOnServer
-} = require('../actions/saved-async');
+const { updateProgramOnServer } = require('../actions/saved-async');
 
 const mapStateToProps = state => ({
   id      : state.edit.id,
@@ -31,18 +30,22 @@ const mapDispatchToProps = dispatch => ({
   edit: (id, oldName, newName, newProgram) => {
     console.log('-- DISPATCHING actions --');
     dbg(`Renaming id: ${id}`);
+    dbg('Dispatching save with new program: %o', newProgram);
+
     // TODO: Move to be called *AFTER* dispatch successful, maybe by enable
     // editing. // TODO: get those as well...
-    dispatch(updateProgramName(id, newName)); // UI
+    dispatch(updateProgram(id, newName, newProgram)); // UI
     dispatch(unsetEditing());
     
     // dispatch async action to server // id optional
     dispatch(updateProgramOnServer(id, oldName, newName, newProgram));
+  },
+  clear: () => {
+    dispatch(clearOverlayProgram());
+  },
+  backspace: () => {
+    dispatch(backspaceOverlayProgram());
   }
-  // TODO: Implement after save, delete, rename.
-  // clear: () => {
-  //   dispatch(clearCanvas());
-  // },
   // addToken: text => {
   //   dispatch(pushFunction(text));
   // },
@@ -78,11 +81,11 @@ class SavedComponent extends React.Component {
           <input type="text" id="overlay-name-field"
             defaultValue={this.props.name}
             ref={x => { this.nameField = x; }} />
-          <label id="overlay-definition-label">Definition</label>
-          <ProgramRow program={this.props.program} />
+
+          <EditProgram />
 
           <input type="submit" value="Save" />
-          <button id="cancel-edits" onClick={this.props.done}>
+          <button type="button" id="cancel-edits" onClick={this.props.done}>
             Cancel
           </button>
         </form>

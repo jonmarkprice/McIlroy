@@ -1,5 +1,5 @@
 const { EDIT } = require('../actions/edit');
-const { set, lensProp, pipe } = require('ramda');
+const { set, over, lensProp, pipe, dropLast } = require('ramda');
 
 const dbg = console.log;
 
@@ -43,6 +43,10 @@ function displayReducer(state = initialState, action) {
         program: action.program,
         saved: false
       };
+    case EDIT.PROGRAM.CLEAR:
+      return set(lens.program, [], state);
+    case EDIT.PROGRAM.BACKSPACE:
+      return over(lens.program, dropLast(1), state);
     default:
       console.log(`Reached default state on ${action.type}`);
       return state;

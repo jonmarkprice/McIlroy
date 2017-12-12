@@ -9,7 +9,8 @@ const { prop } = require('ramda');
 const mapStateToProps = state => ({
   program: prop('program',
             state.saved.programs[state.displayed.id]) || [],
-  name: state.displayed.name,
+  name: prop('name', 
+          state.saved.programs[state.displayed.id]) || '<deleted>',
   id: state.displayed.id
 });
 

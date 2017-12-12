@@ -2,12 +2,12 @@ const PROGRAM = {
   CREATE: 'PROGRAM::CREATE',
   ADD: 'PROGRAM::ADD',
   REMOVE: 'PROGRAM::REMOVE',
+  UPDATE: 'PROGRAME::UPDATE',
   NAME: {
     EDITING: { 
       SET: 'PROGRAM::NAME::EDITING::SET',
       UNSET: 'PROGRAM::NAME::EDITING::UNSET', // or clear
     },
-    UPDATE: 'PROGRAME::NAME::UPDATE' // or rename
   },
   EXPAND: 'PROGRAM::EXPAND',
   COLLAPSE: 'PROGRAM::COLLAPSE',
@@ -22,8 +22,8 @@ const newProgram = program =>
   ({type: PROGRAM.CREATE, program});
 
 // const UPDATE_PROGRAM_NAME = 'UPDATE_PROGRAM_NAME';
-const updateProgramName = (id, text) =>
-  ({type: PROGRAM.NAME.UPDATE, id, text});
+const updateProgram = (id, name, expansion) =>
+  ({type: PROGRAM.UPDATE, id, name, expansion});
 
 const doneEditingName = id =>
   ({type: PROGRAM.NAME.EDITING.UNSET, id});
@@ -75,5 +75,5 @@ module.exports = {
   , expandSavedProgram
   , newProgram
   , removeProgram
-  , updateProgramName
+  , updateProgram
 };
