@@ -34,7 +34,6 @@ function setup() {
     data  : 'A'
   }));
 
-  store.dispatch(displayFunction('Nothing selected.'));
   return store;
 }
 
