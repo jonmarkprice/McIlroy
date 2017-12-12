@@ -15,23 +15,20 @@ const {
 const { updateProgramName } = require('../actions/saved');
 
 const { 
-  // saveProgram 
-  updateNameOnServer
+  updateProgramOnServer
 } = require('../actions/saved-async');
 
 const mapStateToProps = state => ({
-  // editing : state.edit.editing,
   id      : state.edit.id,
   name    : state.edit.name,
   program : state.edit.program,
-  // saved   : state.edit.saved
 });
 
 const mapDispatchToProps = dispatch => ({
   done: () => {
     dispatch(unsetEditing());
   },
-  rename: (id, oldName, newName) => {
+  edit: (id, oldName, newName, newProgram) => {
     console.log('-- DISPATCHING actions --');
     dbg(`Renaming id: ${id}`);
     // TODO: Move to be called *AFTER* dispatch successful, maybe by enable
@@ -40,7 +37,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(unsetEditing());
     
     // dispatch async action to server // id optional
-    dispatch(updateNameOnServer(id, oldName, newName));
+    dispatch(updateProgramOnServer(id, oldName, newName, newProgram));
   }
   // TODO: Implement after save, delete, rename.
   // clear: () => {
@@ -49,14 +46,6 @@ const mapDispatchToProps = dispatch => ({
   // addToken: text => {
   //   dispatch(pushFunction(text));
   // },
-  /*
-  save: (id, name, program) => {
-    console.log('-- SENT --');
-    dispatch(saveProgram(id, name, program)).then(
-      v => { console.log('-- RECIEVED --'); },
-      e => { console.error(e); }
-    );
-  }*/
 });
 
 class SavedComponent extends React.Component {
@@ -66,10 +55,13 @@ class SavedComponent extends React.Component {
   }
 
   nameUpdate() {
+    // XXX: If I update this.props.program, will it the name?
+    // May have to go back to onChange and using buffers/actions
+    const {edit, id, name, program} = this.props;
     console.log("-- FORM SUMBITTED --");
     const newName = this.nameField.value;
     console.log(`new name: ${newName}`);
-    this.props.rename(this.props.id, this.props.name, newName); 
+    edit(id, name, newName, program); 
   }
  
   render() {

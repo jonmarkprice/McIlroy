@@ -1,10 +1,11 @@
 const saveDbg   = require('debug')('program-route:save'),
       deleteDbg = require('debug')('program-route:delete'),
-      renameDbg = require('debug')('program-route:rename');
+      editDbg = require('debug')('program-route:edit');
 const express = require('express');
 const bodyParser = require('body-parser');
 const saveProgram = require('../save-program');
 const deleteProgram = require('../delete-program');
+const editProgram = require('../edit-program');
 const R = require('ramda');
 
 const jsonParser = bodyParser.json();
@@ -40,18 +41,18 @@ router.post('/save', jsonParser, (req, res, next) => {
   }
 });
 
-router.post('/rename', jsonParser, (req, res, next) => {
-  renameDbg('Got rename request: %O', req.body);
+router.post('/edit', jsonParser, (req, res, next) => {
+  editDbg('Got rename request: %O', req.body);
   if (empty(req.body)) {
     next(new Error('No data with /program/rename'));
   }
   else {
-    // TO BE IMPL.
-    // const {oldName, newName} = _;
-    // renameProgram('test', name, new_name);
-
-    // XXX: unconditionally send request (until implemented).
-    res.sendStatus(200);
+    const {user, oldName, newName, newProgram} = req.body;
+    editProgram(user, oldName, newName, newProgram)
+    .then(data => {
+      editDbg('Updated program on server.');
+      res.sendStatus(200);
+    });
   }
 });
 

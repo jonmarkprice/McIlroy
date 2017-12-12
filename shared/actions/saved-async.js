@@ -64,12 +64,12 @@ function saveProgram(name, expansion) {
   }
 }
 
-function updateNameOnServer(id, oldName, newName) {
+function updateProgramOnServer(id, oldName, newName, newProgram) {
   console.log('-- UPDATING NAME --');
   return function (dispatch) {
     dispatch(disableEditing(id));
-    const payload = loadPost({user, oldName, newName});
-    return fetch(`${base}/program/rename`, payload).then(
+    const payload = loadPost({user, oldName, newName, newProgram});
+    return fetch(`${base}/program/edit`, payload).then(
       value => {
         console.log('-- RENAME COMPLETE --');
         dispatch(enableEditing(id));
@@ -84,5 +84,5 @@ function updateNameOnServer(id, oldName, newName) {
 module.exports = {
   saveProgram
   , deleteSavedProgram
-  , updateNameOnServer
+  , updateProgramOnServer
 };
