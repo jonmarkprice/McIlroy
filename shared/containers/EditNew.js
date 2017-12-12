@@ -11,17 +11,12 @@ const {
   // disableEditing
   unsetEditing
 } = require('../actions/edit');
-
-//const { 
-  // saveProgram 
-//} = require('../actions/saved-async');
+const { addProgram } = require('../actions/saved');
+const { saveProgram } = require('../actions/saved-async');
 
 const mapStateToProps = state => ({
-  // editing : state.edit.editing,
-  id      : state.edit.id,
-  name    : state.edit.name,
+  // id      : state.edit.id,
   program : state.edit.program,
-  // saved   : state.edit.saved
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -35,44 +30,46 @@ const mapDispatchToProps = dispatch => ({
   // addToken: text => {
   //   dispatch(pushFunction(text));
   // },
-  /*
-  save: (id, name, program) => {
+  save: (name, program) => {
     console.log('-- SENT --');
-    dispatch(saveProgram(id, name, program)).then(
+    dispatch(saveProgram(name, program)).then(
       v => { console.log('-- RECIEVED --'); },
       e => { console.error(e); }
     );
-  }*/
+  },
+  addToUI: (name, program) => {
+    dispatch(addProgram(name, program));
+  }
 });
 
 class NewComponent extends React.Component {
   constructor(props) {
     super(props);
-    // this.nameUpdate = this.nameUpdate.bind(this);
+    this.nameUpdate = this.nameUpdate.bind(this);
   }
 
-  /*
   nameUpdate() {
     console.log("-- FORM SUMBITTED --");
-    const newName = this.nameField.value;
-    console.log(`new name: ${newName}`);
-    this.props.rename(this.props.id, this.props.name, newName); 
+    const name = this.nameField.value;
+    console.log(`new name: ${name}`);
+    this.props.save(name, this.props.program);
+    // TODO update store
+    this.props.addToUI(name, this.props.program);
+    this.props.done();
   }
-  */
  
   render() {
+    //const 
     return (
       <div id="overlay">
         <form className="overlay-form" id="new-form"
           onSubmit={event => {
             event.preventDefault();
-            //onNameUpdate(program_id, name, 'TODO');
-            // this.nameUpdate(); // call ref. function
+            this.nameUpdate(); // call ref. function
           }}> 
           <h2>New Program</h2>
           <label id="overlay-name-label">Name</label>
           <input type="text" id="overlay-name-field"
-            defaultValue={this.props.name}
             ref={x => { this.nameField = x; }} />
           <label id="overlay-definition-label">Definition</label>
           <ProgramRow program={this.props.program} />

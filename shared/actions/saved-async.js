@@ -47,15 +47,15 @@ function deleteSavedProgram(id, name) {
   }
 }
 
-function saveProgram(id, name, expansion) {
+function saveProgram(name, expansion) {
   console.log('-- SAVING PROGRAM --');
   return function(dispatch) {
-    dispatch(disableEditing(id));
+    // dispatch(disableEditing(id));
     const payload = loadPost({user, name, expansion});
     return fetch(`${base}/program/save`, payload).then(
         value => {
           console.log('-- POST COMPLETE --');
-          dispatch(enableEditing(id));
+         //  dispatch(enableEditing(id));
         },
         error => {
           console.error(error);

@@ -213,3 +213,7 @@ p { margin-top: 0.3em; margin-bottom: 0.3em; }
 .overlay-form .row {
   margin-bottom: 1em;
 }
+
+#new-program {
+  float: right;
+}
