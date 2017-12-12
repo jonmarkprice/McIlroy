@@ -2,15 +2,17 @@ const React       = require('react');
 const { syntax, literals, functions } = require('../parser/syntax');
 const { connect } = require('react-redux');
 const { pushFunction }    = require('../actions/program-canvas');
+const { pushToOverlayProgram } = require('../actions/edit');
 const { displayPrimitive } = require('../actions/display');
 
-const FunctionPalette = ({addTokenToCanvas, displayInfo}) => {
+const FunctionPalette = ({pushToCanvas, pushToOverlay, displayInfo, editing}) => {
+  const push = editing ? pushToOverlay : pushToCanvas;
   let fns     = [],
       values  = [];
   for (let op of syntax.values()) {
     fns.push(
       <div className="function" key={op}
-        onDoubleClick={() => addTokenToCanvas(op)}
+        onDoubleClick={() => push(op)}
         onClick={() => displayInfo(op)}>
         {op}
       </div>);
@@ -18,7 +20,7 @@ const FunctionPalette = ({addTokenToCanvas, displayInfo}) => {
   for (let fn of functions.values()) {
     fns.push(
       <div className="function" key={fn}
-           onDoubleClick={() => addTokenToCanvas(fn)}
+           onDoubleClick={() => push(fn)}
            onClick={() => displayInfo(fn)}>
         {fn}
       </div>);
@@ -27,7 +29,7 @@ const FunctionPalette = ({addTokenToCanvas, displayInfo}) => {
     values.push(
       // XXX warning: Don't make functions within a loop
       <div className="value" key={name}
-              onDoubleClick={() => addTokenToCanvas(literals.get(name))}>
+           onDoubleClick={() => push(literals.get(name))}>
         {name}
       </div>);
   }
@@ -51,8 +53,11 @@ const FunctionPalette = ({addTokenToCanvas, displayInfo}) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    addTokenToCanvas: text => {
-      dispatch(pushFunction(text))
+    pushToCanvas: token => {
+      dispatch(pushFunction(token))
+    },
+    pushToOverlay: token => {
+      dispatch(pushToOverlayProgram(token));
     },
     displayInfo: text => {
       dispatch(displayPrimitive(text))
@@ -60,8 +65,12 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
+const mapStateToProps = state => ({
+  editing: state.edit.editing
+})
+
 const Functions = connect(
-  state => ({}),
+  mapStateToProps,
   mapDispatchToProps
 )(FunctionPalette);
 

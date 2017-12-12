@@ -6,7 +6,8 @@ const EDIT = {
   },
   PROGRAM: {
     CLEAR: 'EDIT::PROGRAM::CLEAR',
-    BACKSPACE: 'EDIT::PROGRAM::BACKSPACE'
+    BACKSPACE: 'EDIT::PROGRAM::BACKSPACE',
+    PUSH: 'EDIT::PROGRAM::PUSH'
   }
 }
 
@@ -25,6 +26,9 @@ const clearOverlayProgram = () =>
 const backspaceOverlayProgram = () => 
   ({type: EDIT.PROGRAM.BACKSPACE}); 
 
+const pushToOverlayProgram = token => 
+  ({type: EDIT.PROGRAM.PUSH, token});
+
 module.exports = {
   EDIT
 , setEditing
@@ -32,4 +36,5 @@ module.exports = {
 , openNew
 , clearOverlayProgram
 , backspaceOverlayProgram
+, pushToOverlayProgram
 };

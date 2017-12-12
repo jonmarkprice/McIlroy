@@ -187,7 +187,8 @@ p { margin-top: 0.3em; margin-bottom: 0.3em; }
   height: 60%;
   background-color: white;
   position: absolute;
-  margin-left: 5cm;
+  margin-top: 1.5cm;
+  margin-left: 10.5cm;
   border-radius: 1mm;
   border: thin lightgrey solid;
   /* drop shadow? */
