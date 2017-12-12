@@ -13,12 +13,9 @@ const program = id => R.lensPath(['programs', id]);
 
 function savedReducer(state = initialState, action) {
   let lens;
-
-  // Needed?
   const nextSaveSlot = R.lensPath(['programs', state.next_id]);
   const uiIndex = R.lensProp('next_id');
 
-  console.log(`In savedReducer...with ${action.type}`);
   switch (action.type) {
     // Saved (subreducer)
     case PROGRAM.ADD:
@@ -35,10 +32,7 @@ function savedReducer(state = initialState, action) {
         R.set(nextSaveSlot, {
           name: action.name,
           program : action.expansion,
-          editing : false,
-          buffer  : action.name,
           id      : state.next_id,
-          editing_name: false
         }),
         R.over(uiIndex, R.inc)
       )(state);
@@ -48,20 +42,6 @@ function savedReducer(state = initialState, action) {
       lens = lensProp('programs');
       return over(lens, dissoc(R.toString(action.id)), state);
     
-    case PROGRAM.CREATE:
-      console.log('Creating new program.');
-      return R.pipe(
-        R.set(nextSaveSlot, {
-          name    : 'Untitled',
-          program : action.program,
-          editing : true,
-          buffer  : 'Untitled',
-          id      : state.next_id,
-          editing_name: true
-        }),
-        R.over(uiIndex, R.inc)
-      )(state);
-
     case PROGRAM.UPDATE:
       dbg('PROGRAM.UPDATE: action %o', action);
       lens = program(action.id);
@@ -77,32 +57,6 @@ function savedReducer(state = initialState, action) {
 
       return updated;
   
-    //case 'UPDATE_NAME_BUFFER':
-    //  lens = compose(program(action.id), lensProp('buffer'));
-    //  return set(lens, action.text, state);
-
-    case PROGRAM.NAME.EDITING.SET:
-      lens = compose(program(action.id), lensProp('editing_name'));
-      return set(lens, true, state);
-
-    case PROGRAM.NAME.EDITING.UNSET:
-      lens = compose(program(action.id), lensProp('editing_name'));
-      return set(lens, false, state);
-
-    // Editing / Collapse state - using buffer[id].editing
-    case PROGRAM.COLLAPSE:
-      lens = compose(program(action.id), lensProp('editing'));  
-      return set(lens, false, state);
-
-    case PROGRAM.EXPAND:
-      console.log(`In EXPAND...`);
-      console.log(state)
-      lens = compose(program(action.id), lensProp('editing'));
-
-      const result = set(lens, true, state);
-      console.log(result)
-      return result;
-
     case PROGRAM.UI.DISABLE:
       console.log("Editing disabled.")
       return state;
@@ -115,31 +69,5 @@ function savedReducer(state = initialState, action) {
       return state;
   }
 }
-
-// This function handles the storing information that is synced with server.
-// The shape is: {
-//  <id>: {name: "...", program: [...]},
-//  ...
-// }
-/* 
-function savedReducer(state = {}, action) {
-  switch (action.type) {
-    // which actions
-    case 'SET_SAVED_PROGRAM':
-      // This should be the same for both adding and updating
-      // action params: (id, name, program)
-      return Object.assign({}, state, {
-        [id]: {
-          name: action.name,
-          program: action.program
-        }
-      });
-    case 'DELETE_SAVED_PROGRAM':
-      // action params: (id)
-      return dissoc(id, state);
-    default:
-      return state;
-  }
-} */
 
 module.exports = savedReducer;

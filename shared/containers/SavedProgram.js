@@ -1,5 +1,4 @@
 const React = require('react');
-const EditSavedProgram = require('../containers/EditSavedProgram');
 const { connect } = require('react-redux');
 const { pushFunction } = require('../actions/program-canvas');
 const { pushToOverlayProgram } = require('../actions/edit');

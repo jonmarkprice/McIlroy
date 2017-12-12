@@ -9,7 +9,6 @@ const {
   , removeProgram
 } = require('./saved');
 
-// const dbg = require('debug')('actions:saved-async');
 const dbg = console.log;
 
 const base = "http://localhost:3000";
