@@ -2,7 +2,7 @@ const {set, over, lensProp, append} = require('ramda');
 
 const initialState = {
   selected: 0,
-  inputs: [{label: '[No Input]', data: null}]
+  list: [{label: '[No Input]', data: null}]
 };
 
 function inputReducer(state = initialState, action) {

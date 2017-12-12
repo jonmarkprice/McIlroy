@@ -6,25 +6,13 @@ const configureStore = require('../common/configureStore');
 const { Provider } = require('react-redux');
 const Interpretter = require('../../build/components/components');
 const { pushInput } = require('../../build/actions/input');
-const { displayFunction } = require('../../build/actions/display'); 
 const { addProgram } = require('../../build/actions/saved');
 
-const initialState = {
-  input : {
-    list     : [{label: '[No Input]', data: null}],
-    selected  : 0
-  },
-  program   : [], 
-  displayed : '',
-  saved     : {
-    programs: {},
-    next_id : 0
-  }
-};
-
 function setup() {
-  const store = configureStore(initialState);
+  const store = configureStore(undefined); // Start with undefined, so we get
+                                           // from individual reducers.
 
+  // Dispatch some actions
   store.dispatch(pushInput({
     label : '1',
     data  : 1

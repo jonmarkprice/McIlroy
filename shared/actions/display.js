@@ -1,6 +1,16 @@
-const DISPLAY_FUNCTION = 'DISPLAY_FUNCTION'
-const displayFunction = name => ({type: DISPLAY_FUNCTION, name});
+const DISPLAY = {
+  DERIVED: 'DISPLAY::DERIVED',
+  PRIMITIVE: 'DISPLAY::PRIMITIVE'
+};
+
+const displayPrimitive = name => 
+  ({type: DISPLAY.PRIMITIVE, name});
+
+const displayDerived = (id, name) =>
+  ({type: DISPLAY.DERIVED, id, name});
 
 module.exports = {
-    DISPLAY_FUNCTION, displayFunction
+  DISPLAY
+  , displayPrimitive
+  , displayDerived
 };

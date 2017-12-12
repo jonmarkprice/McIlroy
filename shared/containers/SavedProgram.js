@@ -1,34 +1,29 @@
 const React = require('react');
 const EditSavedProgram = require('../containers/EditSavedProgram');
 const { connect } = require('react-redux');
-const { expandSavedProgram } = require('../actions/saved');
+const { pushFunction } = require('../actions/program-canvas');
+const { displayDerived } = require('../actions/display');
 
-const mapDispatchToProps = dispatch => ({
-  onExpand: id => {
-    dispatch(expandSavedProgram(id));
+const mapDispatchToProps = dispatch => ({ 
+  display: (id, name) => {
+    dispatch(displayDerived(id, name));
+  },
+  add: token => {
+    dispatch(pushFunction(token));
   }
 });
 
 class Container extends React.Component {
-  // TODO: consider making name a sub-object: {text, buffer, editing}
   render() {
-    if (this.props.obj === undefined)
-    {
-      return (<div>Error</div>);
-    }
-
-    let program;
-    const id = this.props.obj.id || 0;
-    if (this.props.obj.editing) {
-      program = (<EditSavedProgram obj={this.props.obj} />);
-    } else {
-      program = (
-        <div onClick={() => this.props.onExpand(id)} className="function">
-          {this.props.obj.name}
-        </div>
-      );
-    }
-    return program;
+    const {program, id, name} = this.props.obj;
+    const alias = {name, expansion: program};
+    return (
+      <div className="function"
+        onClick={() => this.props.display(id, name)}
+        onDoubleClick={() => this.props.add(alias)}>
+        {name}
+      </div>
+    );
   }
 }
 

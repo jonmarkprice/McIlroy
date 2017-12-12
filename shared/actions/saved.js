@@ -28,16 +28,9 @@ const updateProgramName = (id, text) =>
 const doneEditingName = id =>
   ({type: PROGRAM.NAME.EDITING.UNSET, id});
 
-// deprecated
-// const UPDATE_PROGRAM_NAME_BUFFER = 'UPDATE_NAME_BUFFER'
-// const updateProgramNameBuffer = (id, text) =>
-//  ({type: UPDATE_PROGRAM_NAME_BUFFER, id, text});
-
 // const EDIT_NAME = 'EDIT_NAME';
 const editName = id =>
   ({type: PROGRAM.NAME.EDITING.SET, id});
-
-// TODO: PROGRAM.NAME.EDITING.UNSET
 
 // const EXPAND_PROGRAM = 'EXPAND_SAVED_PROGRAM';
 const expandSavedProgram = id => 
@@ -83,5 +76,4 @@ module.exports = {
   , newProgram
   , removeProgram
   , updateProgramName
-  //, UPDATE_PROGRAM_NAME_BUFFER, updateProgramNameBuffer
 };

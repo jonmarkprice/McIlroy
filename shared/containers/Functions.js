@@ -2,7 +2,7 @@ const React       = require('react');
 const { syntax, literals, functions } = require('../parser/syntax');
 const { connect } = require('react-redux');
 const { pushFunction }    = require('../actions/program-canvas');
-const { displayFunction } = require('../actions/display');
+const { displayPrimitive } = require('../actions/display');
 
 const FunctionPalette = ({addTokenToCanvas, displayInfo}) => {
   let fns     = [],
@@ -55,7 +55,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(pushFunction(text))
     },
     displayInfo: text => {
-      dispatch(displayFunction(text))
+      dispatch(displayPrimitive(text))
     }
   };
 };

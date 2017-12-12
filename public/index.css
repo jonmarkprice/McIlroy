@@ -165,3 +165,55 @@ p { margin-top: 0.3em; margin-bottom: 0.3em; }
   /*margin-top: 0.25em;
   margin-bottom: 0.25em;*/
 }
+
+#edit-program, #delete-program {
+  float: right;
+}
+
+#information > h2 {
+  float: left;
+}
+
+#information {
+  overflow: hidden;
+}
+
+#function-name {
+  clear: both;
+}
+
+#overlay {
+  width: 50%;
+  height: 60%;
+  background-color: white;
+  position: absolute;
+  margin-left: 5cm;
+  border-radius: 1mm;
+  border: thin lightgrey solid;
+  /* drop shadow? */
+  padding: 3mm;
+}
+
+.overlay-form > h2 {
+  margin-bottom: 0.5em;
+}
+
+#overlay-name-label {
+  padding-right: 0.5em;
+}
+
+#overlay-name-field {
+  margin-bottom: 1em;
+}
+
+#overlay-definition-label {
+  display: block;
+}
+
+.overlay-form .row {
+  margin-bottom: 1em;
+}
+
+#new-program {
+  float: right;
+}
