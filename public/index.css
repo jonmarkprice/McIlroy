@@ -166,7 +166,7 @@ p { margin-top: 0.3em; margin-bottom: 0.3em; }
   margin-bottom: 0.25em;*/
 }
 
-#edit-named-function {
+#edit-named-function, #delete-derived {
   float: right;
 }
 
