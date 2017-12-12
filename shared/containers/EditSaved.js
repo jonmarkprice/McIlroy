@@ -75,28 +75,25 @@ class SavedComponent extends React.Component {
   render() {
     return (
       <div id="overlay">
-        <h2>Editing {this.props.name}</h2>
-        <form className="dbg"
+        <form className="overlay-form" id="edit-form"
           onSubmit={event => {
             event.preventDefault();
             //onNameUpdate(program_id, name, 'TODO');
             this.nameUpdate(); // call ref. function
           }}>
-
-          <ProgramRow program={this.props.program} />
-
-          <input type="text" id="rename"
+          <h2>Editing {this.props.name}</h2>
+          <label id="overlay-name-label">Name</label>
+          <input type="text" id="overlay-name-field"
             defaultValue={this.props.name}
             ref={x => { this.nameField = x; }} />
+          <label id="overlay-definition-label">Definition</label>
+          <ProgramRow program={this.props.program} />
+
           <input type="submit" value="Save" />
+          <button id="cancel-edits" onClick={this.props.done}>
+            Cancel
+          </button>
         </form>
-        {/*
-        TODO: Eventually, want this -> cancel.
-        and make save close automatically (after disableUI)
-        */}
-        <button id="cancel-edits" onClick={this.props.done}>
-          Cancel
-        </button>
       </div>
     );
   }

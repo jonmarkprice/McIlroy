@@ -193,3 +193,23 @@ p { margin-top: 0.3em; margin-bottom: 0.3em; }
   /* drop shadow? */
   padding: 3mm;
 }
+
+.overlay-form > h2 {
+  margin-bottom: 0.5em;
+}
+
+#overlay-name-label {
+  padding-right: 0.5em;
+}
+
+#overlay-name-field {
+  margin-bottom: 1em;
+}
+
+#overlay-definition-label {
+  display: block;
+}
+
+.overlay-form .row {
+  margin-bottom: 1em;
+}
