@@ -1,8 +1,7 @@
 const React = require('react');
 const EditProgram = require('./EditProgram');
 const { connect } = require('react-redux');
-
-const dbg = console.log;
+const dbg = require('../../src/common/dbgconf')('containers:edit-new');
 
 const {
   // enableEditng
@@ -28,10 +27,10 @@ const mapDispatchToProps = dispatch => ({
   //   dispatch(pushFunction(text));
   // },
   save: (name, program) => {
-    console.log('-- SENT --');
+    dbg('-- SENT --');
     dispatch(saveProgram(name, program)).then(
-      v => { console.log('-- RECIEVED --'); },
-      e => { console.error(e); }
+      v => { dbg('-- RECIEVED --'); },
+      e => { throw Error(e); }
     );
   },
   addToUI: (name, program) => {
@@ -46,9 +45,9 @@ class NewComponent extends React.Component {
   }
 
   nameUpdate() {
-    console.log("-- FORM SUMBITTED --");
+    dbg("-- FORM SUMBITTED --");
     const name = this.nameField.value;
-    console.log(`new name: ${name}`);
+    dbg(`new name: ${name}`);
     this.props.save(name, this.props.program);
     this.props.addToUI(name, this.props.program);
     this.props.done();

@@ -3,7 +3,6 @@ const ProgramRow = require('../components/ProgramRow');
 const { connect } = require('react-redux');
 const EditSaved   = require('../containers/EditSaved');
 const EditNew     = require('../containers/EditNew');
-const dbg = console.log;
 
 const mapStateToProps = state => ({
   editing : state.edit.editing,

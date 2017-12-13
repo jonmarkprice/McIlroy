@@ -8,8 +8,6 @@ const DerivedDescription   = require('./DerivedDescription');
 // since we will always need at least "Info" header.
 class InfoPane extends React.Component {
   render() {
-    console.log("-- INFO PANE --");
-    console.log(JSON.stringify(this.props.displayed));;
     if (this.props.displayed === null) {
       return (
         <div id="information" className="box">

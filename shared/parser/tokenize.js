@@ -92,7 +92,6 @@ function tokenize(value, config) {
   }
   else {
     // Throw an error if not. This should never ever happen.
-    console.log(value);
     throw Error(`Invalid token: ${value}.`);
   }
 }

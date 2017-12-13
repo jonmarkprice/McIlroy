@@ -147,8 +147,6 @@ function parseFunction(acc) {
   // Pop the function (top/last of the stack).
   // const fn : Either<Token>  = acc.map(compose(last, prop('stack')));
   //const fn : Accumulator = over(stackLens, S.map(last), acc);
-  // console.log('-- acc.stack -----');
-  // console.log(acc.stack);
 
   const fn = S.chain(last, acc.stack); // Either<Token>
   const fnTok  = S.pluck('token', fn);
@@ -180,12 +178,6 @@ function parseFunction(acc) {
  * @return {Accumulator}
  */
 function expandAlias(alias, acc) {
-
-  console.log("--- BEGIN EXPANDSION ---");
-
-  console.log('ALIAS')
-  console.log(alias);
-
   // Extract the expansion from the alias, and append :
   // NOTE: Not typesafe, use R instead of S
   const expansionLens = R.lensPath(['value', 'expansion']);
@@ -195,8 +187,6 @@ function expandAlias(alias, acc) {
     R.map(R.map(tokenize_))
   )(alias);
   
-//  console.log('---------- END ------');
-
   // Create the expansion step
   const consumed = Right({consumed: acc.index});
   const expansionStep = S.pipe([

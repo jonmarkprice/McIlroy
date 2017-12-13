@@ -3,8 +3,8 @@ const { connect } = require('react-redux');
 const ProgramRow  = require('../components/ProgramRow');
 const { setEditing } = require('../actions/edit');
 const { deleteSavedProgram } = require('../actions/saved-async');
-const dbg = console.log;
 const { prop } = require('ramda');
+const dbg = require('../../src/common/dbgconf')('containers:derived-description');
 
 const mapStateToProps = state => ({
   program: prop('program',

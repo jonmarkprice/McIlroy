@@ -1,7 +1,6 @@
 const { EDIT } = require('../actions/edit');
 const { set, over, lensProp, pipe, dropLast, append } = require('ramda');
-
-const dbg = console.log;
+const dbg = require('../../src/common/dbgconf')('reducers:edit');
 
 // if editing == false <-> id == null, mb. just check that id is null... 
 const initialState = {
@@ -50,7 +49,7 @@ function displayReducer(state = initialState, action) {
     case EDIT.PROGRAM.PUSH:
       return over(lens.program, append(action.token), state);
     default:
-      console.log(`Reached default state on ${action.type}`);
+      dbg(`Reached default state on ${action.type}`);
       return state;
   }
 }

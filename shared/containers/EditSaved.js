@@ -1,9 +1,7 @@
 const React = require('react');
 const EditProgram = require('./EditProgram');
 const { connect } = require('react-redux');
-
-// const dbg = require('debug')('containers:edit-saved');
-const dbg = console.log;
+const dbg = require('../../src/common/dbgconf')('containers:edit-saved');
 
 const {
   // enableEditng
@@ -28,7 +26,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(unsetEditing());
   },
   edit: (id, oldName, newName, newProgram) => {
-    console.log('-- DISPATCHING actions --');
+    dbg('-- DISPATCHING actions --');
     dbg(`Renaming id: ${id}`);
     dbg('Dispatching save with new program: %o', newProgram);
 
@@ -61,9 +59,9 @@ class SavedComponent extends React.Component {
     // XXX: If I update this.props.program, will it the name?
     // May have to go back to onChange and using buffers/actions
     const {edit, id, name, program} = this.props;
-    console.log("-- FORM SUMBITTED --");
+    dbg("-- FORM SUMBITTED --");
     const newName = this.nameField.value;
-    console.log(`new name: ${newName}`);
+    dbg(`new name: ${newName}`);
     edit(id, name, newName, program); 
   }
  

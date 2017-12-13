@@ -2,7 +2,7 @@ const R = require('ramda');
 const { dissoc, compose, set, over, lensProp, pipe } = R;
 const { PROGRAM } = require('../actions/saved');
 
-const dbg = console.log;
+const dbg = require('../../src/common/dbgconf')('reducers:saved');
 
 const initialState = {
   next_id: 0,
@@ -58,14 +58,14 @@ function savedReducer(state = initialState, action) {
       return updated;
   
     case PROGRAM.UI.DISABLE:
-      console.log("Editing disabled.")
+      dbg("Editing disabled.")
       return state;
     case PROGRAM.UI.ENABLE:
-      console.log("Editing enabled.")
+      dbg("Editing enabled.")
       return state;
 
     default:
-      console.log(`In savedReducer. Reached default state on ${action.type}.`);
+      dbg(`In savedReducer. Reached default state on ${action.type}.`);
       return state;
   }
 }

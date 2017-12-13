@@ -57,9 +57,6 @@ const library = new Map([
       out: t.fn
     },
     fn: (x, f) => {
-      // console.log(x);
-      // console.log(f);
-      // console.log('--------');
       return ({
         display: `(${display(x)} ${f.display}) curry`,
         arity: f.arity - 1,
@@ -67,12 +64,7 @@ const library = new Map([
           in: [t.any],
           out: t.any
         },
-        fn: (y) => {
-          //console.log(f);
-          //console.log(x);
-          //console.log(y);
-          return f.fn.call(null, x, y)
-        }
+        fn: y => f.fn.call(null, x, y)
       })
     }
   }],
@@ -232,12 +224,8 @@ const library = new Map([
     },
     // XXX: This could easily break
     fn: (args, f) => {
-      //console.log(f);
-      //console.log(typeof f);
-      //console.log(args);
       return f.fn.apply(null, args);
     }
-    //fn: (args, f) => R.apply(f.fn, args)
   }],
   // renamed apply to eval() since that is what it does.
   // it takes a data structure and evaluates it as a function call

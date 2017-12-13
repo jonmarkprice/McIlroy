@@ -3,8 +3,9 @@ const { hydrate }     = require('react-dom');
 const { Provider }    = require('react-redux');
 const Interpretter    = require('../../shared/components/components');
 const configureStore  = require('../common/configureStore');
+const dbg = require('../common/dbgconf')('client');
 
-console.log('Started successfully...');
+dbg('Started successfully!');
 
 const preloadedState = window.__PRELOADED_STATE__;
 

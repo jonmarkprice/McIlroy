@@ -23,8 +23,6 @@ function result(...program) {
     return S.map(R.head, acc.stack);
   }
   else {
-    console.log(acc.stack);
-
     return Left('Too many items on stack.');
   }
 }

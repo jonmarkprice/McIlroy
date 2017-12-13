@@ -39,17 +39,11 @@ function display(obj) {
     }
   }
   else if (typeof obj === 'object') {
-    console.log("==== DISPLAYING OBJECT ====");
-    console.log(obj);
-  
     if (obj.display !== undefined) {
-      console.log('HAS DISPLAY')
       return obj.display;
     }
     else {
       // for aliases (TODO: rename 'name' -> 'display')
-      console.log('DOES NOT HAVE DISPLAY');
-      console.log(`displaying: ${obj.name}`);
       return obj.name;
     }
   }

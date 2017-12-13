@@ -1,7 +1,6 @@
 const S = require('sanctuary');
 const { Left, Right, env } = S;
 const R = require('ramda');
-//const U = S.create({checkTypes: false, env});
 
 // TODO : Write tests for this.
 // TODO : try to use this is tokenizer to reduce duplicated effort.
@@ -11,49 +10,36 @@ const R = require('ramda');
  * @ereturn {Either<Type>}
  */
 function infer(value) { // maybe Literal
-    // NOTE: This is simpler than tokenize() because it does not
-    // need to look up a string to see if it a token. It also does
-    // not need to deal with Aliases.
-    const supported = new Set(['Array', 'Boolean', 'Number']);
-    const inferred = R.type(value); // string
-    if (supported.has(inferred)) {
-        if (inferred === 'Array') {
-          return Right({name: 'List'});
-        }
-        else {
-          return Right({name: inferred});
-        }
+  // NOTE: This is simpler than tokenize() because it does not
+  // need to look up a string to see if it a token. It also does
+  // not need to deal with Aliases.
+  const supported = new Set(['Array', 'Boolean', 'Number']);
+  const inferred = R.type(value); // string
+  if (supported.has(inferred)) {
+      if (inferred === 'Array') {
+        return Right({name: 'List'});
+      }
+      else {
+        return Right({name: inferred});
+      }
+  }
+  else if (inferred === 'String' && value.length === 1) {
+      return Right({name: 'Char'});
+  }
+  // XXX: This seems to break with functors
+  else if (inferred === 'Object') {
+    if (typeof value.fn == 'function' &&
+        typeof value.arity == 'number' &&
+        typeof value.display == 'string')
+    {
+      return Right({name: 'Function'});
+    } else {
+      return Left('Object is not a proper function.');
     }
-    else if (inferred === 'String' && value.length === 1) {
-        return Right({name: 'Char'});
-    }
-    // XXX: This seems to break with functors
-    else if (inferred === 'Object') {
-        // const allTrue = R.reduce(R.and, true);
-        /*
-        const propChecks = R.juxt([
-            R.propIs('Function', 'fn'),
-            R.propIs('Number', 'arity'),
-            R.propIs('String', 'display')
-        ]);
-        if (allTrue(propChecks(value))) {
-            return Right({name: 'Function'});
-        }*/
-        if (typeof value.fn == 'function' &&
-            typeof value.arity == 'number' &&
-            typeof value.display == 'string'
-        ) {
-          return Right({name: 'Function'});
-        }
-        else {
-          return Left('Object is not a proper function.');
-        }
-    }
-    else {
-        console.log('== TYPE INFERENCE ==');
-        console.log(value);
-        return Left('Cannot infer type.');
-    }
+  }
+  else {
+    return Left('Cannot infer type.');
+  }
 }
 
 // Takes a simple value, returns Either of a wrapped value
@@ -67,7 +53,6 @@ function wrap(x) {
     return S.map(x => R.assoc('value', x, template), values);
   }
   else {
-    // console.log('---- WRAPPING -------');
     const template = {value: x, token: 'Value'};
     return S.map(x => R.assoc('type', x, template), infer(x)); // returns an Either
   }

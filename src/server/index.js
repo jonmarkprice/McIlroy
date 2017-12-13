@@ -52,6 +52,6 @@ app.use(function(err, req, res, next) {
 });
 
 dbg(`Running in: ${app.get('env')}`);
-console.log(`Listening on port ${port}...`);
+dbg(`Listening on port ${port}...`);
 app.listen(port);
 

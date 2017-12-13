@@ -1,7 +1,6 @@
 const React = require('react');
 const ProgramRow = require('../components/ProgramRow');
 const { connect } = require('react-redux');
-const dbg = console.log;
 
 const {
   clearOverlayProgram
