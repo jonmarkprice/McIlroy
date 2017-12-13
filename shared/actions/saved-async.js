@@ -8,7 +8,6 @@ const {
   , disableEditing 
   , removeProgram
 } = require('./saved');
-
 const base = "http://localhost:3000";
 const user = "test";
 
@@ -21,8 +20,6 @@ const loadPost = (data) => ({
   cache   : 'default',
   body    : JSON.stringify(data)
 });
-
-///////////////////////////////////////////////////////////////////////////////
 
 function deleteSavedProgram(id, name) {
   dbg('-- DELETING PROGRAM --');
@@ -53,14 +50,14 @@ function saveProgram(name, expansion) {
     // dispatch(disableEditing(id));
     const payload = loadPost({user, name, expansion});
     return fetch(`${base}/program/save`, payload).then(
-        value => {
-          dbg('-- POST COMPLETE --');
-         //  dispatch(enableEditing(id));
-        },
-        error => {
-          dbg(error);
-        }
-      )
+      value => {
+        dbg('-- POST COMPLETE --');
+       //  dispatch(enableEditing(id));
+      },
+      error => {
+        dbg(error);
+      }
+    );
   }
 }
 

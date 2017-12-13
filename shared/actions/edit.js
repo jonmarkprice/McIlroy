@@ -8,8 +8,11 @@ const EDIT = {
     CLEAR: 'EDIT::PROGRAM::CLEAR',
     BACKSPACE: 'EDIT::PROGRAM::BACKSPACE',
     PUSH: 'EDIT::PROGRAM::PUSH'
+  },
+  MESSAGE: {
+    DISPLAY: 'EDIT::MESSAGE::DISPLAY'
   }
-}
+};
 
 const setEditing = (id, name, program) =>
   ({type: EDIT.EDITING.SET, id, name, program});
@@ -29,6 +32,9 @@ const backspaceOverlayProgram = () =>
 const pushToOverlayProgram = token => 
   ({type: EDIT.PROGRAM.PUSH, token});
 
+const displayEditMessage = message =>
+  ({type: EDIT.MESSAGE.DISPLAY, message});
+
 module.exports = {
   EDIT
 , setEditing
@@ -37,4 +43,5 @@ module.exports = {
 , clearOverlayProgram
 , backspaceOverlayProgram
 , pushToOverlayProgram
+, displayEditMessage
 };

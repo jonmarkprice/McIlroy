@@ -2,17 +2,20 @@ const React = require('react');
 const EditProgram = require('./EditProgram');
 const { connect } = require('react-redux');
 const dbg = require('../../src/common/dbgconf')('containers:edit-new');
-
 const {
   // enableEditng
   // disableEditing
   unsetEditing
+, displayEditMessage
 } = require('../actions/edit');
 const { addProgram } = require('../actions/saved');
 const { saveProgram } = require('../actions/saved-async');
+const { checkName } = require('../helpers');
 
 const mapStateToProps = state => ({
-  program : state.edit.program,
+  program   : state.edit.program,
+  programs  : state.saved.programs,
+  message   : state.edit.message, 
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -35,6 +38,9 @@ const mapDispatchToProps = dispatch => ({
   },
   addToUI: (name, program) => {
     dispatch(addProgram(name, program));
+  },
+  displayMessage: msg => {
+    dispatch(displayEditMessage(msg));
   }
 });
 
@@ -48,9 +54,17 @@ class NewComponent extends React.Component {
     dbg("-- FORM SUMBITTED --");
     const name = this.nameField.value;
     dbg(`new name: ${name}`);
-    this.props.save(name, this.props.program);
-    this.props.addToUI(name, this.props.program);
-    this.props.done();
+
+    dbg(this.props.programs);
+    const nameCheck = checkName(name, this.props.programs);
+   
+    if (nameCheck.ok) {
+      this.props.save(name, this.props.program);
+      this.props.addToUI(name, this.props.program);
+      this.props.done();
+    } else {
+      this.props.displayMessage(nameCheck.reason);
+    }
   }
  
   render() {
@@ -72,6 +86,7 @@ class NewComponent extends React.Component {
           <button id="cancel-edits" onClick={this.props.done}>
             Cancel
           </button>
+          <p id="edit-message">{this.props.message}</p>
         </form>
       </div>
     );

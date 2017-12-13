@@ -2,11 +2,13 @@ const React = require('react');
 const EditProgram = require('./EditProgram');
 const { connect } = require('react-redux');
 const dbg = require('../../src/common/dbgconf')('containers:edit-saved');
+const { checkName } = require('../helpers');
 
 const {
   // enableEditng
   // disableEditing
   unsetEditing
+, displayEditMessage
 } = require('../actions/edit');
 
 // update UI only (no server)
@@ -16,9 +18,11 @@ const { updateProgram } = require('../actions/saved');
 const { updateProgramOnServer } = require('../actions/saved-async');
 
 const mapStateToProps = state => ({
-  id      : state.edit.id,
-  name    : state.edit.name,
-  program : state.edit.program,
+  id      : state.edit.id
+, name    : state.edit.name
+, program : state.edit.program
+, message : state.edit.message
+, programs: state.saved.programs
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -43,7 +47,10 @@ const mapDispatchToProps = dispatch => ({
   },
   backspace: () => {
     dispatch(backspaceOverlayProgram());
-  }
+  },
+  displayMessage: msg => {
+    dispatch(displayEditMessage(msg));
+  },
   // addToken: text => {
   //   dispatch(pushFunction(text));
   // },
@@ -62,7 +69,19 @@ class SavedComponent extends React.Component {
     dbg("-- FORM SUMBITTED --");
     const newName = this.nameField.value;
     dbg(`new name: ${newName}`);
-    edit(id, name, newName, program); 
+
+    if (name === newName) {
+      edit(id, name, newName, program);
+    } else {
+      dbg('Running namecheck');
+      // Check validity of name, if changed.
+      const nameCheck = checkName(newName, this.props.programs);
+      if (nameCheck.ok) {
+        edit(id, name, newName, program);
+      } else {
+       this.props.displayMessage(nameCheck.reason);
+      }
+    }
   }
  
   render() {
@@ -86,6 +105,7 @@ class SavedComponent extends React.Component {
           <button type="button" id="cancel-edits" onClick={this.props.done}>
             Cancel
           </button>
+          <p id="edit-message">{this.props.message}</p>
         </form>
       </div>
     );
