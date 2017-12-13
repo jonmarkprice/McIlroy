@@ -7,7 +7,7 @@ const Input = require('../containers/Input');
 const Info = require('../containers/Info');
 const Overlay = require('../containers/Overlay');
 const SavedProgramList = require('../containers/SavedProgramList');
-// import PropTypes from 'prop-types'; // TODO need?
+const Banner = require('../containers/Banner');
 
 const Program = () => (
   <div id="program" className="container">
@@ -27,6 +27,7 @@ const Palette = () => (
 
 const Interpretter = () => (
   <div className="interpretter">
+    <Banner />
     <Program />
     <Palette />
     <Overlay />

@@ -7,6 +7,7 @@ const { Provider } = require('react-redux');
 const Interpretter = require('../../build/components/components');
 const { pushInput } = require('../../build/actions/input');
 const { addProgram } = require('../../build/actions/saved');
+const { login } = require('../../build/actions/user');
 
 function setup() {
   const store = configureStore(undefined); // Start with undefined, so we get
@@ -33,6 +34,7 @@ function setup() {
     label : "'A'",
     data  : 'A'
   }));
+  store.dispatch(login('fake'));
 
   return store;
 }

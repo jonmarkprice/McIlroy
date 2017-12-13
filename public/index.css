@@ -18,6 +18,43 @@ div.interpretter
 
     div.info
 */
+
+/* this should be a span not a div */
+#user-greeting {
+  display: inline;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+}
+
+#banner {
+  background-color: #333;
+  color: #EEE;
+  padding-left: 2mm;
+  padding-right: 5mm; /* make room for scroll bar */
+  padding-top: 1mm;
+  padding-bottom: 1mm;
+}
+
+#user-control {
+  float: right;
+}
+
+#user-control a {
+  color: lightblue;
+  text-decoration: none;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+}
+
+#user-control a:hover {
+  text-decoration: underline;
+}
+
+#title {
+  display: inline;
+  font-size: 14pt;
+}
+
 p.important-notice {
   color: firebrick;
 }
