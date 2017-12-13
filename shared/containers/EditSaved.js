@@ -101,7 +101,7 @@ class SavedComponent extends React.Component {
 
           <EditProgram />
 
-          <input type="submit" value="Save" />
+          <input type="submit" id="save-edits" value="Save" />
           <button type="button" id="cancel-edits" onClick={this.props.done}>
             Cancel
           </button>

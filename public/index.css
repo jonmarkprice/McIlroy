@@ -26,11 +26,6 @@ p.important-notice {
   margin-bottom: 0.2em;
 }
 
-.container {
-  margin-left: 1mm;
-  margin-right: 1mm;
-}
-
 .box {
   padding: 1mm;
   margin: 1mm;
@@ -56,25 +51,31 @@ p.important-notice {
   float: right;
 }
 
-#palette {
-  float: left;
-  width: 25%;
-  min-width: 3cm;
-  max-width: 10cm;
+html, body, #app, .interpretter { 
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
-/* TODO: rename data -> input */
-/*
-#data {
-  float: left;
-  width: 4cm;
-}*/
+#palette {
+  width: 7.5cm;
+  height: 105%; /* XXX */
+  background-color: #AAA;
+  position: absolute;
+  border-right: thin solid grey;
+}
 
 #program {
-  /*margin-left: 5.2cm;*/
-  width: calc(75% - 4cm - 8mm);
+  position: absolute;
+  margin-left: 7.6cm;
+  max-width: 20cm;
+  min-width: 10cm;
+  width: 100%;
+  margin-right: 1mm;
+  /*
   min-width: 5cm;
-  float: left;
+  margin-left: 8cm;
+  margin-top: 0; */
   /* 6.8cm = 6mm width + 1mm + 2 elments * 2 sides * (1mm margin + 1mm padding) */
 }
 
@@ -92,7 +93,7 @@ h3#function-name {
 }
 
 /** BORDER **/
-.container, .box, .item, .input-item, .function, .value {
+.box, .item, .input-item, .function, .value {
   border: thin solid grey;
   border-radius: 1mm;
 }
@@ -109,7 +110,8 @@ h3#function-name {
 }
 
 /** COLOR **/
-body { background-color: #222; }
+/* #222 */
+body { background-color: white; }
 #program-input { background-color: pink; }
 #execution { background-color: lightblue; }
 #information { background-color: #FCFCFC; }
@@ -125,7 +127,6 @@ body { background-color: #222; }
 .input-item, .value, .function, .item
 { background-color: #DDD; }
 .box { background-color: #EEE; }
-.container { background-color: gainsboro; }
 /* TODO change from id -> class */
 .highlighted { background-color: salmon; }
 
@@ -170,6 +171,10 @@ p { margin-top: 0.3em; margin-bottom: 0.3em; }
   float: right;
 }
 
+#cancel-edits, #save-edits {
+  float: right;
+}
+
 #information > h2 {
   float: left;
 }
@@ -183,16 +188,26 @@ p { margin-top: 0.3em; margin-bottom: 0.3em; }
 }
 
 #overlay {
-  width: 50%;
-  height: 60%;
-  background-color: white;
-  position: absolute;
-  margin-top: 1.5cm;
-  margin-left: 10.5cm;
+  max-width: 20cm;
+  min-width: 10cm;
+  width: 60%;
+  background-color: #EEE;
   border-radius: 1mm;
-  border: thin lightgrey solid;
-  /* drop shadow? */
+  border: thin grey solid;
   padding: 3mm;
+  box-shadow: 2mm 2mm 4mm darkgrey;
+  position: absolute;
+  margin-top: 1cm;;
+  margin-left: 8cm;
+}
+
+.edit-program {
+  border: lightgrey solid thin;
+  background-color: #FCFCFC;
+  margin-bottom: 1mm;
+  margin-top: 1mm;
+  padding: 1mm;
+  border-radius: 1mm;
 }
 
 .overlay-form > h2 {
@@ -203,16 +218,12 @@ p { margin-top: 0.3em; margin-bottom: 0.3em; }
   padding-right: 0.5em;
 }
 
-#overlay-name-field {
-  margin-bottom: 1em;
-}
-
 #overlay-definition-label {
   display: block;
 }
 
 .overlay-form .row {
-  margin-bottom: 1em;
+  margin-bottom: 1mm;
 }
 
 #new-program {

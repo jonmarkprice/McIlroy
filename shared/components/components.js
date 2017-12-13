@@ -27,8 +27,8 @@ const Palette = () => (
 
 const Interpretter = () => (
   <div className="interpretter">
-    <Palette />
     <Program />
+    <Palette />
     <Overlay />
   </div>
 );

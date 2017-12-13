@@ -82,7 +82,7 @@ class NewComponent extends React.Component {
 
           <EditProgram />
 
-          <input type="submit" value="Save" />
+          <input type="submit" id="save-edits" value="Save" />
           <button id="cancel-edits" onClick={this.props.done}>
             Cancel
           </button>
