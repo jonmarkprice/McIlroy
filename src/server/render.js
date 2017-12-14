@@ -75,7 +75,7 @@ function renderPage(programs) {
       <script>
         window.__PRELOADED_STATE__ = ${stateString}
       </script>
-      <script type="text/javascript" src="static/bundle.js"></script>
+      <script type="text/javascript" src="static/app.bundle.js"></script>
     </body>
   </html>`;
 }

@@ -1,10 +1,10 @@
 const path = require('path');
+const webpack = require('webpack');
 
 const config = {
   entry: {
-    app: [
-      path.join(__dirname, './src/client/index.js')
-    ]
+    app: './src/client/index.js',
+    login: './src/client/login.js',
   },
   module: {
     loaders: [
@@ -21,9 +21,19 @@ const config = {
     ]
   },
   output: {
-    filename: 'bundle.js',
+    filename: '[name].bundle.js',
     path: path.resolve(__dirname, './dist')
-  }
+  },
+  plugins: [
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'app',
+      chunks: ['app'],
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'login',
+      chunks: ['login'],
+    }),
+  ]
 };
 
 module.exports = config;
