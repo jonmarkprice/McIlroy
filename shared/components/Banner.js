@@ -1,10 +1,4 @@
 const React = require('react');
-// const { connect } = require('react-redux');
-
-// Refactor into a component
-// const mapStateToProps = state => ({
-//  username: state.user.name
-// });
 
 class Banner extends React.Component {
   render() {
@@ -14,10 +8,7 @@ class Banner extends React.Component {
     const User = (
       <div id="user-control">
         <div id="user-greeting">Hello, {this.props.username}</div>
-        <a href="/logout"
-           onClick={e => {e.preventDefault(); this.props.logout();}}>
-          Log out
-        </a>
+        <a href="/api/user/logout">Log out</a>
       </div>
     );
     const noUser = (
@@ -35,5 +26,4 @@ class Banner extends React.Component {
   }
 }
 
-// const Banner = connect(mapStateToProps)(BannerComponent);
 module.exports = Banner;

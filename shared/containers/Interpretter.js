@@ -5,7 +5,7 @@ const Overlay = require('./Overlay');
 const Program = require('../components/Program');
 const Palette = require('../components/Palette');
 
-const { logout } = require('../actions/user');
+// const { logout } = require('../actions/user');
 
 const mapStateToProps = state => ({
   username: state.user.name
@@ -13,22 +13,23 @@ const mapStateToProps = state => ({
 
 // This needs to be async and clear the cookie
 // Really I should have an API function
+// -- or just redirect to /login and let the server do it...
+/*
 const mapDispatchToProps = dispatch => ({
   logout: () => {
     dispatch(logout());
   }
-});
+}); */
 
-const InterpretterComponent = ({username, logout}) => (
+const InterpretterComponent = ({username}) => (
   <div className="interpretter">
-    <Banner username={username} logout={logout} />
+    <Banner username={username} />
     <Program />
     <Palette />
     <Overlay />
   </div>
 );
 
-const Interpretter = connect(mapStateToProps, mapDispatchToProps)
-                            (InterpretterComponent);
+const Interpretter = connect(mapStateToProps)(InterpretterComponent);
 module.exports = Interpretter;
 

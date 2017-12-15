@@ -1,4 +1,5 @@
 const loginDbg  = require('debug')('user-api:login');
+const logoutDbg = require('debug')('user-api:logout');
 const express = require('express');
 const bodyParser = require('body-parser');
 const { empty } = require('../helpers');
@@ -23,6 +24,13 @@ router.post('/login', parser, (req, res, next) => {
     loginDbg("Logging in user: '%s'", username);
     res.redirect('/');
   }*/
+});
+
+// just get from link
+router.get('/logout', (req, res, next) => {
+  logoutDbg('logout requested.');
+  req.session.user = {name: null, logged_in: false};
+  res.redirect('/login');
 });
 
 module.exports = router;
