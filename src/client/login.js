@@ -42,18 +42,14 @@ class Login extends React.Component {
     return (
       <div id="login-component">
         <Banner username={'hardcoded'} showName={false} />
-        <form id="login"
-          onSubmit={e => {
-            e.preventDefault();
-            this.usernameUpdate();
-          }}>
+        <form id="login" action="/api/user/login" method="POST">
           <legend>Log In</legend>
 
           <label htmlFor="username" id="username-label">User name</label>
-          <input id="username" type="text" ref={x => { this.nameField = x }} />
+          <input name="username" id="username" type="text" ref={x => { this.nameField = x }} />
 
           <label htmlFor="password" id="password-label">Password</label>
-          <input id="password" type="password" />
+          <input id="password" type="password" disable="disable" />
           <input id="submit"   type="submit" value="Log in" />
         </form>
       </div>
@@ -61,6 +57,7 @@ class Login extends React.Component {
   }
 }
 
+// TODO: this needs to be done SS
 render(
   <Login />,
   document.getElementById('app')

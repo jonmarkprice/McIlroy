@@ -9,10 +9,9 @@ const { pushInput } = require('../../build/actions/input');
 const { addProgram } = require('../../build/actions/saved');
 const { login } = require('../../build/actions/user');
 
-function setup() {
+function setup(username) {
   const store = configureStore(undefined); // Start with undefined, so we get
                                            // from individual reducers.
-
   // Dispatch some actions
   store.dispatch(pushInput({
     label : '1',
@@ -34,7 +33,9 @@ function setup() {
     label : "'A'",
     data  : 'A'
   }));
-  store.dispatch(login('fake'));
+
+  dbg('Logging in %s.', username);
+  store.dispatch(login(username));
 
   return store;
 }
@@ -48,8 +49,8 @@ function addAliases(programs, store) {
   return store;
 }
 
-function renderPage(programs) {
-  let store = setup();  // This is not as performant as if we had used a
+function renderPage(programs, username) {
+  let store = setup(username);  // This is not as performant as if we had used a
                         // closure, but it is safer.
   store = addAliases(programs, store);
   const finalState = store.getState();

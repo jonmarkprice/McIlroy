@@ -1,11 +1,33 @@
 // TODO: see ./bin/www from express generator
 require('dotenv').config(); // add environmental variables
 const express = require('express');
+const session = require('express-session');
+
+// TODO: Later use monogo-connect
+const FileStore = require('session-file-store')(session);
+
 const dbg = require('debug')('server-root');
 const db = require('./db');
 
 const app = express();
 const port = 3000;
+
+// set up sessions
+app.use(session({ // Review these settings when connecting to db.
+  name: 'McIlroy',
+  secret: 'keyboard cat',
+  saveUnitialized: true,
+  resave: true,
+  store: new FileStore(),
+}));
+
+// set up session data with sane defaults
+app.use(function initSession(req, res, next) {
+  if (typeof req.session.user === 'undefined') {
+    req.session.user = {name: null, logged_in: false};
+  }
+  next();
+});
 
 app.use('/static', express.static('dist'));
 app.use('/public', express.static('public'));

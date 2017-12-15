@@ -6,7 +6,7 @@ const React = require('react');
 //  username: state.user.name
 // });
 
-class Banner /*Component*/ extends React.Component {
+class Banner extends React.Component {
   render() {
     const showName = this.props.showName !== undefined
       ? this.props.showName 
@@ -14,7 +14,10 @@ class Banner /*Component*/ extends React.Component {
     const User = (
       <div id="user-control">
         <div id="user-greeting">Hello, {this.props.username}</div>
-        <a href="/logout">Log out</a>
+        <a href="/logout"
+           onClick={e => {e.preventDefault(); this.props.logout();}}>
+          Log out
+        </a>
       </div>
     );
     const noUser = (
