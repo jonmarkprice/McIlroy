@@ -1,27 +1,23 @@
 // TODO: see ./bin/www from express generator
 require('dotenv').config(); // add environmental variables
 const express = require('express');
-const dbg     = require('debug')('server-root');
-// TODO serve-favicon
+const dbg = require('debug')('server-root');
 const db = require('./db');
-
-// Routes
-const index = require('./routes/index');
-const programs = require('./routes/programs');
 
 const app = express();
 const port = 3000;
 
 app.use('/static', express.static('dist'));
 app.use('/public', express.static('public'));
-app.use('/program', programs);
-app.use('/', index);
+
+app.use('/login', require('./routes/login'));
+app.use('/api',   require('./routes/api'));
+app.use('/', require('./routes/index'));
 
 // Connect to database
 try {
   dbg("Connecting to database...");
   db.connect();
-  dbg("Connection: ", db.connection);
   dbg("Is connected: %s", db.isConnected);
 } catch (err) {
   dbg("Cannot connect to database. Error: %O", err);

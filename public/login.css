@@ -1,0 +1,22 @@
+form#login > legend {
+  font-size: 12pt;
+  margin-bottom: 3mm;
+}
+
+form#login {
+  background-color: #EEE;
+  padding: 5mm;
+  max-width: 5.5cm;
+  margin: 5mm;
+  border-radius: 1mm;
+  border: thin solid darkgrey;
+}
+
+#password, #username {
+  width: 5cm;
+}
+
+#login > input {
+  display: block;
+  margin-bottom: 2.5mm;
+}

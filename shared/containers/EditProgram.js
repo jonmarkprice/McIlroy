@@ -18,9 +18,6 @@ const mapDispatchToProps = dispatch => ({
   backspace: () => {
     dispatch(backspaceOverlayProgram());
   }
-  // addToken: text => {
-  //   dispatch(pushFunction(text));
-  // },
 });
 
 class EditComponent extends React.Component {

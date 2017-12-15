@@ -8,7 +8,7 @@ const {
   , disableEditing 
   , removeProgram
 } = require('./saved');
-const base = "http://localhost:3000";
+const base = "http://localhost:3000/api";
 const user = "test";
 
 const loadPost = (data) => ({
