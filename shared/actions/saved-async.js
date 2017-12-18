@@ -9,7 +9,6 @@ const {
   , removeProgram
 } = require('./saved');
 const base = "http://localhost:3000/api";
-const user = "test";
 
 const loadPost = (data) => ({
   method  : 'POST',
@@ -21,7 +20,7 @@ const loadPost = (data) => ({
   body    : JSON.stringify(data)
 });
 
-function deleteSavedProgram(id, name) {
+function deleteSavedProgram(user, id, name) {
   dbg('-- DELETING PROGRAM --');
   return function(dispatch) {
     
@@ -44,7 +43,7 @@ function deleteSavedProgram(id, name) {
   }
 }
 
-function saveProgram(name, expansion) {
+function saveProgram(user, name, expansion) {
   dbg('-- SAVING PROGRAM --');
   return function(dispatch) {
     // dispatch(disableEditing(id));
@@ -61,7 +60,7 @@ function saveProgram(name, expansion) {
   }
 }
 
-function updateProgramOnServer(id, oldName, newName, newProgram) {
+function updateProgramOnServer(user, id, oldName, newName, newProgram) {
   dbg('-- UPDATING NAME --');
   return function (dispatch) {
     dispatch(disableEditing(id));

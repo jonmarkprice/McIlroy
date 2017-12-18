@@ -11,7 +11,8 @@ const mapStateToProps = state => ({
             state.saved.programs[state.displayed.id]) || [],
   name: prop('name', 
           state.saved.programs[state.displayed.id]) || '<deleted>',
-  id: state.displayed.id
+  id: state.displayed.id,
+  username  : state.user.name
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -19,22 +20,23 @@ const mapDispatchToProps = dispatch => ({
     dbg(`mapping setEding with id ${id}`);
     dispatch(setEditing(id, name, program));
   },
-  del: (id, name) => {
-    dbg(`mapping delete with id, name (${id}, ${name}).`);
-    dispatch(deleteSavedProgram(id, name));
+  del: (username, id, name) => {
+    dbg(`mapping delete with id, name, user (${id}, ${name}, ${username}).`);
+    dispatch(deleteSavedProgram(username, id, name));
   }
 });
 
 class Container extends React.Component {
   render() {
-    const {id, name, program, edit, del} = this.props;
+    const {username, id, name, program, edit, del} = this.props;
+    dbg('Username: %s', username);
     return (
       <div id="information" className="box">
         <h2>Info</h2>
         <button id="edit-program" onClick={() => edit(id, name, program)}>
           Edit
         </button>
-        <button id="delete-program" onClick={() => del(id, name)}>
+        <button id="delete-program" onClick={() => del(username, id, name)}>
           Delete
         </button>
         <h3 id="function-name">{name}</h3>

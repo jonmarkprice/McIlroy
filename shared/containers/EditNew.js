@@ -15,7 +15,8 @@ const { checkName } = require('../helpers');
 const mapStateToProps = state => ({
   program   : state.edit.program,
   programs  : state.saved.programs,
-  message   : state.edit.message, 
+  message   : state.edit.message,
+  username  : state.user.name
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -29,9 +30,9 @@ const mapDispatchToProps = dispatch => ({
   // addToken: text => {
   //   dispatch(pushFunction(text));
   // },
-  save: (name, program) => {
-    dbg('-- SENT --');
-    dispatch(saveProgram(name, program)).then(
+  save: (username, name, program) => {
+    dbg('username %s', username)
+    dispatch(saveProgram(username, name, program)).then(
       v => { dbg('-- RECIEVED --'); },
       e => { throw Error(e); }
     );
@@ -59,7 +60,8 @@ class NewComponent extends React.Component {
     const nameCheck = checkName(name, this.props.programs);
    
     if (nameCheck.ok) {
-      this.props.save(name, this.props.program);
+      dbg('saving...');
+      this.props.save(this.props.username, name, this.props.program);
       this.props.addToUI(name, this.props.program);
       this.props.done();
     } else {

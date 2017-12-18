@@ -34,7 +34,8 @@ router.post('/save', jsonParser, (req, res, next) => {
     next(new Error('No data with /program/save'));
   }
   else {
-    saveProgram('test', req.body)
+    const {user, name, expansion} = req.body;
+    saveProgram(user, name, expansion)
     .then(data => {
       saveDbg('Response from database: %O', data);
       res.sendStatus(200);

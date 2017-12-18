@@ -11,8 +11,21 @@ const router = express.Router();
 router.post('/login', parser, (req, res, next) => {
   loginDbg('Recieved login request %o.', req.body);
   loginDbg('Data %O:', req.body);
-  req.session.user = {name: req.body.username, logged_in: true};
-  res.redirect('/');
+
+  // Mock authentication
+  const user = req.body.username;
+  if (user === 'admin' || user === 'test') {
+
+    req.session.user = {name: user, logged_in: true};
+    res.redirect('/');
+  } else {
+    // Use query params?
+    // res.redirect('/login?err=1'); // or use url.format
+    // TODO:
+    // just render a new page with error.
+    // This is where a render function would make sense.
+    res.send('<p>Authentication failure</p>');
+  }
   /*
   if (empty(req.body)) {
     next(new Error('No data with /api/user/login'));

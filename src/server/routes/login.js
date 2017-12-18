@@ -3,9 +3,16 @@ const express = require('express');
 const router = express.Router();
 
 router.get('/', function (req, res, next) {
+  // Redirect if already logged on
+  if (typeof req.session.user !== 'undefined'
+      && req.session.user !== null
+      && req.session.logged_in === true
+  ) {
+    res.redirect('/');
+  } else {
   // Send equiv. of :/public/login.html
   // This is duplicated from render()
-  const html = `
+    const html = `
 <!DOCTYPE html>
 <html>
   <head>
@@ -21,13 +28,14 @@ router.get('/', function (req, res, next) {
 </html>
 `;
 
-  // What is unique above?
-  // - bundle name
-  // - (opt.) css
-  // - title
-  // This could easily be a 3 parameter function.
-  res.send(html);
-  // next? --> only if error
+    // What is unique above?
+    // - bundle name
+    // - (opt.) css
+    // - title
+    // This could easily be a 3 parameter function.
+    res.send(html);
+    // next? --> only if error
+  }
 });
 
 module.exports = router;

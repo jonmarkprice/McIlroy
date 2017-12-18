@@ -20,3 +20,10 @@ form#login {
   display: block;
   margin-bottom: 2.5mm;
 }
+
+#construction-notice {
+  background-color: lightyellow;
+  border: dotted medium gold;
+  margin: 5mm;
+  padding-left: 3mm;
+}
