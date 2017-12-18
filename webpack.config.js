@@ -13,7 +13,6 @@ const config = {
         include: [
           path.resolve(__dirname, './src/common'),
           path.resolve(__dirname, './src/client'),
-          path.resolve(__dirname, './shared')
         ],
         loader: 'babel-loader',
         test: /\.js$/

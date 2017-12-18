@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "start": "node local-mongodb/start_db.js& node src/server/index.js",
-    "build": "babel -d build shared -s && webpack -d",
+    "build": "babel -d build src/common -s && webpack -d",
     "clean": "rimraf build/*",
     "prebuild": "npm run clean -s"
   },

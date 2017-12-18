@@ -4,7 +4,7 @@ const ProgramRow  = require('../components/ProgramRow');
 const { setEditing } = require('../actions/edit');
 const { deleteSavedProgram } = require('../actions/saved-async');
 const { prop } = require('ramda');
-const dbg = require('../../src/common/dbgconf')('containers:derived-description');
+const dbg = require('../dbgconf')('containers:derived-description');
 
 const mapStateToProps = state => ({
   program: prop('program',

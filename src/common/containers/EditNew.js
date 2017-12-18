@@ -1,7 +1,7 @@
 const React = require('react');
 const EditProgram = require('./EditProgram');
 const { connect } = require('react-redux');
-const dbg = require('../../src/common/dbgconf')('containers:edit-new');
+const dbg = require('../dbgconf')('containers:edit-new');
 const {
   // enableEditng
   // disableEditing

@@ -2,7 +2,7 @@
 // I think it needs to take all of the data it needs as parameters, since
 // I don't think they "get" anything from the reducers before being dispatched
 // all the dispatches seem to happen here in the action-definitions themseles
-const dbg = require('../../src/common/dbgconf')('actions:saved-async'); 
+const dbg = require('../dbgconf')('actions:saved-async'); 
 const { 
   enableEditing
   , disableEditing 

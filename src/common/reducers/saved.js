@@ -2,7 +2,7 @@ const R = require('ramda');
 const { dissoc, compose, set, over, lensProp, pipe } = R;
 const { PROGRAM } = require('../actions/saved');
 
-const dbg = require('../../src/common/dbgconf')('reducers:saved');
+const dbg = require('../dbgconf')('reducers:saved');
 
 const initialState = {
   next_id: 0,

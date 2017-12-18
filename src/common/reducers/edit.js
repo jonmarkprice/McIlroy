@@ -1,6 +1,6 @@
 const { EDIT } = require('../actions/edit');
 const { set, over, lensProp, pipe, dropLast, append } = require('ramda');
-const dbg = require('../../src/common/dbgconf')('reducers:edit');
+const dbg = require('../dbgconf')('reducers:edit');
 
 // if editing == false <-> id == null, mb. just check that id is null... 
 const initialState = {

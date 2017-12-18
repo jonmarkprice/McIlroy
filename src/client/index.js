@@ -1,7 +1,7 @@
 const React           = require('react');
 const { hydrate }     = require('react-dom');
 const { Provider }    = require('react-redux');
-const Interpretter    = require('../../shared/containers/Interpretter');
+const Interpretter    = require('../common/containers/Interpretter');
 const configureStore  = require('../common/configureStore');
 const dbg = require('../common/dbgconf')('client');
 
