@@ -1,7 +1,7 @@
-const React = require('react');
-const ReactDOM = require('react-dom');
+const React   = require('react');
+const Banner  = require('./Banner');
 
-const Register = () => (
+const RegistrationForm = () => (
   <form id="registration-form"
     action="/api/user/register"
     method="POST">
@@ -20,4 +20,11 @@ const Register = () => (
   </form>
 );
 
-module.exports = Register;
+const RegistrationPage = ({}) => (
+  <div id="page">
+    <Banner username="" showName={false} />
+    <RegistrationForm />
+  </div>
+);
+
+module.exports = RegistrationPage;

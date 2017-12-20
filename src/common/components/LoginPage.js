@@ -1,4 +1,5 @@
-const React = require('react');
+const React   = require('react');
+const Banner  = require('./Banner');
 
 class LoginForm extends React.Component {
   render() {
@@ -31,4 +32,15 @@ class LoginForm extends React.Component {
   }
 }
 
-module.exports = LoginForm;
+class LoginPage extends React.Component {
+  render() {
+    return (
+      <div id="page">
+        <Banner username="" showName={false} />
+        <LoginForm />
+      </div>
+    );
+  }
+}
+
+module.exports = LoginPage;
