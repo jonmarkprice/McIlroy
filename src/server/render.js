@@ -2,16 +2,16 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 const ReactDOMServer = require('react-dom/server');
 const dbg = require('debug')('render');
-const configureStore = require('../common/configureStore');
 const { Provider } = require('react-redux');
-const Interpretter = require('../../build/containers/Interpretter');
-const { pushInput } = require('../../build/actions/input');
-const { addProgram } = require('../../build/actions/saved');
-const { login } = require('../../build/actions/user');
+const configureStore  = require('../../lib/configureStore');
+const Interpretter    = require('../../lib/containers/Interpretter');
+const { pushInput }   = require('../../lib/actions/input');
+const { addProgram }  = require('../../lib/actions/saved');
+const { login }       = require('../../lib/actions/user');
 
 function setup(username) {
-  const store = configureStore(undefined); // Start with undefined, so we get
-                                           // from individual reducers.
+  const store = configureStore(undefined); // Start with undefined, so w
+                                           // get from individual reducers.
   // Dispatch some actions
   store.dispatch(pushInput({
     label : '1',
@@ -49,7 +49,7 @@ function addAliases(programs, store) {
   return store;
 }
 
-function renderPage(programs, username) {
+function renderInterpretter(programs, username) {
   let store = setup(username);  // This is not as performant as if we had used a
                         // closure, but it is safer.
   store = addAliases(programs, store);
@@ -81,4 +81,4 @@ function renderPage(programs, username) {
   </html>`;
 }
 
-module.exports = renderPage;
+module.exports = renderInterpretter;
