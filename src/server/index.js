@@ -33,6 +33,7 @@ app.use('/static', express.static('dist'));
 app.use('/public', express.static('public'));
 
 app.use('/login', require('./routes/login'));
+app.use('/register', require('./routes/register'));
 app.use('/api',   require('./routes/api'));
 app.use('/', require('./routes/index'));
 

@@ -1,6 +1,6 @@
 const { createStore, applyMiddleware } = require('redux');
 const thunkMiddleware = require('redux-thunk').default;
-const rootReducer = require('../../build/reducers');
+const rootReducer = require('./reducers');
 
 function configureStore(state) {
   return createStore(

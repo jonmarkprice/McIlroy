@@ -1,12 +1,7 @@
-const React           = require('react');
-const { render }      = require('react-dom');
-const { Provider }    = require('react-redux');
-const Token           = require('../common/components/Token');
-const Banner          = require('../common/components/Banner');
-const configureStore  = require('../common/configureStore');
-
-console.log("Logging on...");
-const store = configureStore(undefined); 
+const React       = require('react');
+const { render }  = require('react-dom');
+const Token       = require('../common/components/Token');
+const Banner      = require('../common/components/Banner');
 
 // TODO move up into helper?
 const loadPost = (data) => ({

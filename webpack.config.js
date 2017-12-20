@@ -5,6 +5,7 @@ const config = {
   entry: {
     app: './src/client/index.js',
     login: './src/client/login.js',
+    register: './src/client/register.js',
   },
   module: {
     loaders: [
@@ -31,6 +32,10 @@ const config = {
     new webpack.optimize.CommonsChunkPlugin({
       name: 'login',
       chunks: ['login'],
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'register',
+      chunks: ['register']
     }),
   ]
 };

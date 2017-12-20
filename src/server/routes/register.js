@@ -4,10 +4,9 @@ const { renderPage, loggedOn } = require('./helpers');
 
 router.get('/', function (req, res, next) {
   if (loggedOn(req.session)) {
-    // Redirect if already logged on
     res.redirect('/');
   } else {
-    const html = renderPage('Login - McIlroy', 'login', 'login');
+    const html = renderPage('Register - McIlroy', 'register', null);
     res.send(html);
   }
 });
