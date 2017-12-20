@@ -7,7 +7,11 @@ router.get('/', function (req, res, next) {
     // Redirect if already logged on
     res.redirect('/');
   } else {
-    const html = renderPage('Login - McIlroy', 'login', 'login');
+    const html = renderPage(
+      'Login - McIlroy',
+      'login',
+      ['common', 'banner', 'form', 'login']
+    );
     res.send(html);
   }
 });

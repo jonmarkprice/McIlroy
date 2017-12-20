@@ -6,7 +6,11 @@ router.get('/', function (req, res, next) {
   if (loggedOn(req.session)) {
     res.redirect('/');
   } else {
-    const html = renderPage('Register - McIlroy', 'register', null);
+    const html = renderPage(
+      'Register - McIlroy',
+      'register',
+      ['common', 'banner', 'form', 'register']
+    );
     res.send(html);
   }
 });

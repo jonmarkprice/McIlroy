@@ -3,16 +3,15 @@ const R = require('ramda');
 const empty = body => R.isEmpty(body) || R.isNil(body);
 
 // TODO isn't there already a renderPage?
-function renderPage(title, bundle, css = null) {
-  const cssLink = (css === null) 
-            ? ''  
-            : `<link rel="stylesheet" href=/public/${css}.css />`;
+function renderPage(title, bundle, stylesheets = []) {
+  const links = stylesheets.map(
+    name => `<link rel="stylesheet" href=/public/${name}.css />`
+  );
   return `<!DOCTYPE html>
 <html>
   <head>
     <title>${title}</title>
-    <link rel="stylesheet" href="/public/index.css" />
-    ${cssLink}
+    ${links.join('\n')}
     <link rel="shortcut icon" href="/public/favicon.ico" />
   </head>
   <body>

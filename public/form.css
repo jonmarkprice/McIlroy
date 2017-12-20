@@ -1,0 +1,25 @@
+form {
+  background-color: #EEE;
+  padding: 5mm;
+  max-width: 5.5cm;
+  margin: 5mm;
+  border-radius: 1mm;
+  border: thin solid darkgrey;
+}
+
+/* TODO: try to generalize:
+#password, #username {
+  width: 5cm;
+}
+*/
+
+form > input {
+  display: block;
+  margin-bottom: 2.5mm;
+}
+
+/* TODO: add legend to register */
+form > legend {
+  font-size: 12pt;
+  margin-bottom: 3mm;
+}

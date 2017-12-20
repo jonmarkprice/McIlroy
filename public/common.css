@@ -1,0 +1,16 @@
+/** FONT AND TEXT **/
+h1, h2, h3 {
+  margin: 0;
+  margin-bottom: 0.2em;
+  font-family: "Calibri", sans-serif;
+}
+body { font: 10pt "Century Gothic", Futura, sans-serif; }
+h2 { font-size: 14pt; }
+h3 { font-size: 11pt; }
+
+/** COLOR **/
+body { background-color: white; }
+
+body {
+  margin: 0;
+}

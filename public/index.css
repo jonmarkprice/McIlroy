@@ -19,42 +19,6 @@ div.interpretter
     div.info
 */
 
-/* this should be a span not a div */
-#user-greeting {
-  display: inline;
-  padding-left: 0.5em;
-  padding-right: 0.5em;
-}
-
-#banner {
-  background-color: #333;
-  color: #EEE;
-  padding-left: 2mm;
-  padding-right: 5mm; /* make room for scroll bar */
-  padding-top: 1mm;
-  padding-bottom: 1mm;
-}
-
-#user-control {
-  float: right;
-}
-
-#user-control a {
-  color: lightblue;
-  text-decoration: none;
-  padding-left: 0.5em;
-  padding-right: 0.5em;
-}
-
-#user-control a:hover {
-  text-decoration: underline;
-}
-
-#title {
-  display: inline;
-  font-size: 14pt;
-}
-
 p.important-notice {
   color: firebrick;
 }
@@ -116,15 +80,6 @@ html, body, #app, .interpretter {
   /* 6.8cm = 6mm width + 1mm + 2 elments * 2 sides * (1mm margin + 1mm padding) */
 }
 
-/** FONT AND TEXT **/
-h1, h2, h3 {
-  margin: 0;
-  margin-bottom: 0.2em;
-  font-family: "Calibri", sans-serif;
-}
-body { font: 10pt "Century Gothic", Futura, sans-serif; }
-h2 { font-size: 14pt; }
-h3 { font-size: 11pt; }
 h3#function-name {
   font-family: "Courier New", monospace;
 }
@@ -147,8 +102,6 @@ h3#function-name {
 }
 
 /** COLOR **/
-/* #222 */
-body { background-color: white; }
 #program-input { background-color: pink; }
 #execution { background-color: lightblue; }
 #information { background-color: #FCFCFC; }

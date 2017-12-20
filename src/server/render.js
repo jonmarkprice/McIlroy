@@ -69,6 +69,8 @@ function renderInterpretter(programs, username) {
     <head>
       <title>McIlroy</title>
       <link rel="stylesheet" href="public/index.css" />
+      <link rel="stylesheet" href="public/common.css" />
+      <link rel="stylesheet" href="public/banner.css" />
       <link rel="shortcut icon" href="public/favicon.ico" />
     </head>
     <body>
