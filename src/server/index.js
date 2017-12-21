@@ -16,7 +16,7 @@ const port = 3000;
 app.use(session({ // Review these settings when connecting to db.
   name: 'McIlroy',
   secret: 'keyboard cat',
-  saveUnitialized: true,
+  saveUninitialized: true,
   resave: true,
   store: new FileStore(),
 }));
