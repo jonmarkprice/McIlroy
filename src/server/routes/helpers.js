@@ -27,7 +27,9 @@ function renderPage(element, title, bundle, stylesheets = []) {
   </html>`;
 }
 
-const loggedOn = s =>
-  typeof s.user !== undefined && s.user !== null && s.logged_in === true;
+const loggedOn = session =>
+  typeof session.user !== undefined 
+  && session.user.name !== null 
+  && session.user.logged_in === true;
 
 module.exports = { empty, renderPage, loggedOn };
