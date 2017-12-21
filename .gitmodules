@@ -1,0 +1,3 @@
+[submodule "local-mongodb"]
+	path = local-mongodb
+	url = git@github.com:jonmarkprice/local-mongodb
