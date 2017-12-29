@@ -7,7 +7,9 @@ const dbg = require('debug')('routes:login');
 const router = express.Router();
 
 router.get('/', function (req, res, next) {
-  if (loggedOn(req.session)) {
+  // TODO: "right way?" for passport?
+  // if (loggedOn(req.session)) {
+  if (false) {
     // Redirect if already logged oin
     dbg("Logged on, rerouting.");
     res.redirect('/');

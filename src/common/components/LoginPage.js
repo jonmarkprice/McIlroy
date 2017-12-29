@@ -20,10 +20,10 @@ class LoginForm extends React.Component {
                  id="username"
                  type="text"/>
           <label htmlFor="password" id="password-label">Password</label>
-          <input id="password" type="password" disabled />
+          <input id="password" type="password" name="password" />
 
           <div>
-            <input id="submit"   type="submit" value="Log in" />
+            <input id="submit" type="submit" value="Log in" />
             <span>or <a href="/register">Create an account</a></span>
           </div>
         </form>

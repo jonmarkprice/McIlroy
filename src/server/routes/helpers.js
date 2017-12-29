@@ -4,12 +4,16 @@ const { renderToString } = require('react-dom/server');
 const empty = body => R.isEmpty(body) || R.isNil(body);
 
 // TODO isn't there already a renderPage?
-function renderPage(element, title, bundle, stylesheets = []) {
+function renderPage(element, title, bundle = null, stylesheets = []) {
   const links = stylesheets.map(
     name => `<link rel="stylesheet" href=/public/${name}.css />`
   );
   const html = renderToString(element);
 
+  const script = (bundle !== null)
+    ? `<script type="text/javascript" src="/static/${bundle}.bundle.js"></script>`
+    : '';
+  
   console.log("element %O", element);
   console.log("rendered: %O", html);
 
@@ -22,7 +26,7 @@ function renderPage(element, title, bundle, stylesheets = []) {
     </head>
     <body>
       <div id="app">${html}</div>
-      <script type="text/javascript" src="/static/${bundle}.bundle.js"></script>
+      ${script}
     </body>
   </html>`;
 }

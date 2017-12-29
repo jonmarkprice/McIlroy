@@ -1,60 +1,32 @@
-const loginDbg  = require('debug')('user-api:login');
-const logoutDbg = require('debug')('user-api:logout');
-const regDbg    = require('debug')('user-api:register');
-const express = require('express');
-const bodyParser = require('body-parser');
-const { empty } = require('../helpers');
+const express     = require('express');
+const router      = express.Router();
+const bodyParser  = require('body-parser');
+// Try using the "real" passport, following:
+// http://mherman.org/blog/2015/01/31/local-authentication-with-passport-and-express-4/#.WkL9p0tMGSM
+const passport    = require('passport');
 
-const userExists = require('../../user-exists');
-const addUser = require('../../add-user');
+////////////////////////////////////////////////////////////////////////////////////////
+// const loginDbg  = require('debug')('user-api:login');
+// const logoutDbg = require('debug')('user-api:logout');
+const regDbg      = require('debug')('user-api:register');
+const { empty }   = require('../helpers');
+const addUser     = require('../../add-user');
+const userExists  = require('../../user-exists');
 
-// const jsonParser = bodyParser.json();
 const parser = bodyParser.urlencoded({extended: true});
-const router = express.Router();
 
-router.post('/login', parser, (req, res, next) => {
-  loginDbg('Recieved login request %o.', req.body);
-  loginDbg('Data %O:', req.body);
-
-  // Mock authentication
-  const user = req.body.username;
-  userExists(user)
-  .then(exists => {
-    loginDbg(exists);
-    if (exists === true) {
-      req.session.user = {name: user, logged_in: true};
-      res.redirect('/');
-    } else {
-      // Use query params?
-      // res.redirect('/login?err=1'); // or use url.format
-      // TODO:
-      // just render a new page with error.
-      // This is where a render function would make sense.
-      res.send('<p>Authentication failure</p>');
-    }
-  })
-  .catch(error => {
-    throw new Error(error);
+// Define routes. 
+router.post('/login', 
+  passport.authenticate('local', { failureRedirect: '/login' }),
+  function(req, res) {
+    res.redirect('/home');
   });
-  /*
-  if (empty(req.body)) {
-    next(new Error('No data with /api/user/login'));
-  }
-  else {
-    const {username} = req.body; // Really we should be checking what happens
-                                 // after this to ensure that no variables
-                                 // remain undefined, rather than empty().
-    loginDbg("Logging in user: '%s'", username);
-    res.redirect('/');
-  }*/
-});
-
-// just get from link
-router.get('/logout', (req, res, next) => {
-  logoutDbg('logout requested.');
-  req.session.user = {name: null, logged_in: false};
-  res.redirect('/login');
-});
+  
+router.get('/logout',
+  function(req, res){
+    req.logout();
+    res.redirect('/home');
+  });
 
 router.post('/register', parser, (req, res, next) => {
   // Cannot destructure of undef or null.
@@ -80,16 +52,25 @@ router.post('/register', parser, (req, res, next) => {
   }).then(data => {
     if (data === true) {
       // Log in user via cookie
-      req.session.user = {name: username, logged_in: true};
+      // req.session.user = {name: username, logged_in: true};
+      // TODO: how to automatically log on a new user?
       regDbg('Creating new user, %s...', username);
-      addUser(username)
-      .then(x => {
-        regDbg('User created, redirecting.');
-        regDbg(x);
+
+      // ? 
+      //const result = addUser(username)
+      //regDbg(result);
+      addUser(username, pw)
+      .then(success => {
+        if (success) {
+          regDbg('User created, redirecting.');
+          res.redirect('/');
+        } else {
+          regDbg('Username already exists!');
+          res.redirect('/register');
+        }
       }).catch(err => {
         throw new Error(err);
       });
-      res.redirect('/');
     } else {
       // TODO real msg
       regDbg('data (%o, from username avail.) != true', data);
