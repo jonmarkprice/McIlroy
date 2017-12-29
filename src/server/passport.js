@@ -1,6 +1,8 @@
-var passport = require('passport');
-var Strategy = require('passport-local').Strategy;
-var db = require('./db');
+const passport  = require('passport');
+const Strategy  = require('passport-local').Strategy;
+const bcrypt    = require('bcrypt');
+const dbg       = require('debug')('passport-config');
+const db = require('./db');
 
 // Configure the local strategy for use by Passport.
 //
@@ -11,12 +13,24 @@ var db = require('./db');
 passport.use(new Strategy(
   function(username, password, done) {
     db.connection.User
-    .findOne({username}, function (err, user) {
+    .findOne({username}, function(err, user) {
+      dbg("----- QUERYING DATABASE ----");
       if (err) { return done(err); }
-      if (!user) { return done(null, false); }
-      if (user.password != password) { return done(null, false); }
-      return done(null, user);
-    });
+      if (!user) {
+        return done(null, false);
+      }
+      //             plain     hash
+      bcrypt.compare(password, user.password, function(err, res) {
+        dbg("----- CHECKING MATCH (bcrypt) ----");
+        if (res) {
+          dbg('Authenticated');
+          return done(null, user);
+        } else {
+          dbg('Authentication failed');
+          return done(null, false);
+        }
+      });
+    })
   }));
 
 // Configure Passport authenticated session persistence.

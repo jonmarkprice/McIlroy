@@ -1,23 +1,27 @@
+const bcrypt = require('bcrypt');
 const db = require('./db');
-const dbg = require('debug')('add-user');
+// const dbg = require('debug')('add-user');
 
 function addUser(username, password) {
+  console.log("Searching for user");
   return db.connection.User
   .findOne({username}).exec()
   .then(user => {
     if (user === null) {
-      new db.connection.User({
-        username,
-        password,
-        programs: [],
-      })
-      .save();
-      dbg("New user %s saved", username);
-      return Promise.resolve(true);
+      const saltRounds = 7;
+      return bcrypt.hash(password, saltRounds)
     } else {
-      dbg("Test user already exists.");
-      return Promise.resolve(false);
+      return Promise.reject("Test user already exists.");
     }
+  })
+  .then(function(hash) {
+    console.log("Saving new user: %s...", username);
+    return new db.connection.User({
+      username,
+      password: hash,
+      programs: [],
+    })
+    .save(); // Also returns a promise
   });
 }
 
