@@ -6,9 +6,10 @@ const bodyParser  = require('body-parser');
 const passport    = require('passport');
 
 ////////////////////////////////////////////////////////////////////////////////////////
-// const loginDbg  = require('debug')('user-api:login');
+const loginDbg  = require('debug')('user-api:login');
 // const logoutDbg = require('debug')('user-api:logout');
 const regDbg      = require('debug')('user-api:register');
+
 const { empty }   = require('../helpers');
 const addUser     = require('../../add-user');
 const userExists  = require('../../user-exists');
@@ -19,13 +20,14 @@ const parser = bodyParser.urlencoded({extended: true});
 router.post('/login', 
   passport.authenticate('local', { failureRedirect: '/login' }),
   function(req, res) {
-    res.redirect('/home');
+    loginDbg(req.user);
+    res.redirect('/');
   });
   
 router.get('/logout',
   function(req, res){
     req.logout();
-    res.redirect('/home');
+    res.redirect('/');
   });
 
 router.post('/register', parser, (req, res, next) => {
@@ -52,23 +54,26 @@ router.post('/register', parser, (req, res, next) => {
   }).then(data => {
     if (data === true) {
       // Log in user via cookie
-      // req.session.user = {name: username, logged_in: true};
-      // TODO: how to automatically log on a new user?
       regDbg('Creating new user, %s...', username);
 
-      // ? 
-      //const result = addUser(username)
-      //regDbg(result);
+      // Maybe this should return the full user, incl. id
       addUser(username, pw)
-      .then(success => {
-        if (success) {
+      .then(user => {
+        regDbg("Addiing user...");
+        if (user !== undefined) {
           regDbg('User created, redirecting.');
-          res.redirect('/');
+
+          // Log new user in
+          req.login(user, function(err) {
+            if (err) return next(err);
+            res.redirect('/');
+          });
         } else {
           regDbg('Username already exists!');
           res.redirect('/register');
         }
-      }).catch(err => {
+      })
+      .catch(err => {
         throw new Error(err);
       });
     } else {
