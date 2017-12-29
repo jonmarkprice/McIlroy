@@ -5,13 +5,6 @@ class LoginForm extends React.Component {
   render() {
     return (
       <div id="login-component">
-        <div id="construction-notice">
-          <p>This app is under construction.</p>
-          <ul>
-            <li>Use <code>test</code> or <code>admin</code> users.</li>
-            <li>Password field is disabled.</li>
-          </ul>
-        </div>
         <form id="login" action="/api/user/login" method="POST">
           <legend>Log In</legend>
 
