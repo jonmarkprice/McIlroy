@@ -3,7 +3,7 @@ const db = require('./db');
 
 function saveProgram(user, name, expansion) {
   return db.connection.User
-    .findOne({name: user}).exec() // return a promise
+    .findOne({username: user}).exec() // return a promise
     .then(data => {
       if (data !== null) {
         data.programs.push({name, expansion});

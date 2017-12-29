@@ -3,7 +3,7 @@ const db = require('./db');
 
 function deleteProgram(user, name) {
   return db.connection.User
-  .where({name: user})
+  .where({username: user})
   .update({"$pull": {"programs": {"name": name}}})
   .exec() // returns a promise
   .then(data => {
