@@ -1,6 +1,6 @@
 const test = require('tape');
-const { result }  = require('../../src/helpers');
-const { wrap }    = require('../../src/type');
+const { result }  = require('../../src/common/parser/helpers');
+const { wrap }    = require('../../src/common/parser/type');
 
 // NOTE: By "applicative", I mean any function that applies a function it takes as an argument.
 

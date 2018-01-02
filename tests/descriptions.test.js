@@ -1,9 +1,7 @@
-//const descriptions = require('../common/lib/descriptions');
-//const { run } = require('./helpers');
-const descriptions = require('../src/descriptions');
-const { result } = require('../src/helpers');
-const { wrap } = require('../src/type');
-const test = require('tape');
+const descriptions  = require('../src/common/parser/descriptions');
+const { result }    = require('../src/common/parser/helpers');
+const { wrap }      = require('../src/common/parser/type');
+const test          = require('tape');
 
 descriptions.forEach((desc, key) => {
   if (desc.hasOwnProperty('example')) {

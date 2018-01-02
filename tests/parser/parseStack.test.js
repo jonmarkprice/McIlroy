@@ -2,11 +2,11 @@
 
 const test = require('tape')
 const S = require('sanctuary');
-const library = require('../../src/library');
-const { parseStack } = require('../../src/parse');
-const { tokenize_ } = require('../../src/tokenize');
+const library = require('../../src/common/parser/library');
+const { parseStack } = require('../../src/common/parser/parse');
+const { tokenize_ } = require('../../src/common/parser/tokenize');
 const { Right, Left } = S;
-const { interpretTypes } = require('../../src/typecheck');
+const { interpretTypes } = require('../../src/common/parser/typecheck');
 
 // TODO:
 // try moving this somewhere ... getting name already bound...
@@ -44,8 +44,6 @@ test('parseStack', (assert) => {
         },
         'Execute a basic function.'
     );
-
-    console.log("================== ALIAS ==================");
 
     // Try an alias
     assert.deepEqual(

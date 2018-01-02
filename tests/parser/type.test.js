@@ -1,7 +1,7 @@
 const test = require('tape');
 const S = require('sanctuary');
 const { Left, Right } = S;
-const { infer, wrap, unwrap } = require('../../src/type');
+const { infer, wrap, unwrap } = require('../../src/common/parser/type');
 
 test('infer', assert => {
   assert.deepEqual(

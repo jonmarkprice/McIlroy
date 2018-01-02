@@ -1,7 +1,7 @@
 const test = require('tape');
 const S = require('sanctuary');
 const { Right, Left } = S;
-const { interpretTypes } = require('../../src/typecheck');
+const { interpretTypes } = require('../../src/common/parser/typecheck');
 
 test('interpret', assert => {
   const annot1 = {

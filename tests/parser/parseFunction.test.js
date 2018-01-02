@@ -1,7 +1,7 @@
 const test = require('tape');
 const { Right, Left } = require('sanctuary');
-const { parseFunction } = require('../../src/parse');
-const { tokenize_ } = require('../../src/tokenize');
+const { parseFunction } = require('../../src/common/parser/parse');
+const { tokenize_ } = require('../../src/common/parser/tokenize');
 
 test('parseFunction', (assert) => {
   const acc = {

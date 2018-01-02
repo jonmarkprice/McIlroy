@@ -1,6 +1,6 @@
-const test      = require('tape');
-const library   = require('../src/library');
-const { functions } = require('../src/syntax');
+const test          = require('tape');
+const library       = require('../src/common/parser/library');
+const { functions } = require('../src/common/parser/syntax');
 
 // We need display for the function implementations (library)
 // but we also need the list of functions (functions) for the display

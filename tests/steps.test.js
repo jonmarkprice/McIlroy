@@ -1,6 +1,6 @@
 const test = require('tape');
-const { parseProgram } = require('../src/program.js');
-const { tokenize_ } = require('../src/tokenize');
+const { parseProgram } = require('../src/common/parser/program.js');
+const { tokenize_ } = require('../src/common/parser/tokenize');
 
 test('one step', (assert) => {
   assert.deepEqual(

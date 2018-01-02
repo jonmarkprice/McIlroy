@@ -1,6 +1,6 @@
 const test = require('tape');
 const S = require('sanctuary');
-const { last } = require('../src/sanctuary-either');
+const { last } = require('../src/common/parser/sanctuary-either');
 // TODO: also do dropLast, takeLast
 
 const { Left, Right } = S;

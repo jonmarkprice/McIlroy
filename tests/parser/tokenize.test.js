@@ -1,6 +1,6 @@
 const test = require('tape')
-const library = require('../../src/library');
-const { tokenize_ } = require('../../src/tokenize');
+const library = require('../../src/common/parser/library');
+const { tokenize_ } = require('../../src/common/parser/tokenize');
 
 test('tokenize', (assert) => {
     assert.deepEqual(

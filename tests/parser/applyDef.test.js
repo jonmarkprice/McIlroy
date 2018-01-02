@@ -1,7 +1,7 @@
 const test = require('tape');
 const S = require('sanctuary');
 const { Right, Left } = S;
-const { applyDef } = require('../../src/parse');
+const { applyDef } = require('../../src/common/parser/parse');
 
 test('applyDef', (assert) => {
   assert.deepEqual(

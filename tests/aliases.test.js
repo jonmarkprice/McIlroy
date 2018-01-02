@@ -1,13 +1,11 @@
 // Write unit tests for aliases, should get 'Not parsable'
-//import { run } from './helpers';
-//const { run } = require('./helpers');
-const { result } = require('../src/helpers');
-const { wrap } = require('../src/type');
-const { parseStack } = require('../src/parse');
-const { tokenize_ } = require('../src/tokenize');
-const { parseProgram } = require('../src/program');
-const { Right, Left } = require('sanctuary');
-const test = require('tape');
+const { result }        = require('../src/common/parser/helpers');
+const { wrap }          = require('../src/common/parser/type');
+const { parseStack }    = require('../src/common/parser/parse');
+const { tokenize_ }     = require('../src/common/parser/tokenize');
+const { parseProgram }  = require('../src/common/parser/program');
+const { Right, Left }   = require('sanctuary');
+const test              = require('tape');
 
 // sum
 //const sum = {type: 'alias', value: ['+', 0, 'reduce', ':']} // need display?

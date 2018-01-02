@@ -2,6 +2,7 @@
   "name": "McIlroy",
   "version": "6.0.0",
   "scripts": {
+    "test": "tape 'tests/**/*.js'",
     "start": "node src/server/server.js",
     "build": "babel -d lib src/common -s && webpack -d",
     "clean": "rimraf lib/*",

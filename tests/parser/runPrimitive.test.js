@@ -1,9 +1,9 @@
 const test = require('tape');
 const S = require('sanctuary');
-const {  runPrimitive } = require('../../src/parse');
-const library = require('../../src/library');
+const {  runPrimitive } = require('../../src/common/parser/parse');
+const library = require('../../src/common/parser/library');
 const { Right, Left } = S;
-const { tokenize_ } = require('../../src/tokenize');
+const { tokenize_ } = require('../../src/common/parser/tokenize');
 
 test('parseFunction', (assert) => {
   const plus = Right({
