@@ -1,0 +1,12 @@
+.flash {
+  background-color: lightyellow;
+  border: thin solid gold;
+  margin-left: 5mm;
+  margin-right: 5mm;
+  padding: 1mm;
+  border-radius: 1mm;
+}
+
+.flash-no-message {
+  display: none;
+}

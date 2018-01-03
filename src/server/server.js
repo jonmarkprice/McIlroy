@@ -2,6 +2,7 @@ const express   = require('express');
 const passport  = require('./passport');
 const db        = require('./db');
 const router    = require('./routes');
+const flash     = require('connect-flash');
 
 // Create a new Express application.
 const  app = express();
@@ -15,7 +16,7 @@ app.use(require('morgan')('combined'));
 app.use(require('cookie-parser')());
 app.use(require('body-parser').urlencoded({ extended: true }));
 app.use(require('express-session')({ secret: 'keyboard cat', resave: false, saveUninitialized: false }));
-
+app.use(flash());
 
 // Connect to database
 db.connect();

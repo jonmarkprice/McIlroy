@@ -1,21 +1,33 @@
 const R = require('ramda');
 const { renderToString } = require('react-dom/server');
+const dbg = require('debug')('routes:helpers');
 
 const empty = body => R.isEmpty(body) || R.isNil(body);
+const stringify = s => JSON.stringify(s).replace(/</g, '\\u003c');
 
 // TODO isn't there already a renderPage?
-function renderPage(element, title, bundle = null, stylesheets = []) {
+// This might be a good time to:
+// 1. Use an arguments object -- 5 arguments is probably too many...
+// 2. Combine with "main" render.js function.
+function renderPage(element, title, bundle = null, stylesheets = [], preloaded = null) {
   const links = stylesheets.map(
     name => `<link rel="stylesheet" href=/public/${name}.css />`
   );
   const html = renderToString(element);
-
   const script = (bundle !== null)
     ? `<script type="text/javascript" src="/static/${bundle}.bundle.js"></script>`
+    : ''; 
+  const state = (preloaded !== null)
+    ? `<script type="text/javascript">
+        window.__PRELOADED_STATE__ = ${stringify(preloaded)}
+      </script>`
     : '';
-  
+
   console.log("element %O", element);
   console.log("rendered: %O", html);
+  
+  dbg('preloaded %o', preloaded);
+  dbg('state %o', state)
 
   return `<!DOCTYPE html>
   <html>
@@ -26,6 +38,7 @@ function renderPage(element, title, bundle = null, stylesheets = []) {
     </head>
     <body>
       <div id="app">${html}</div>
+      ${state}
       ${script}
     </body>
   </html>`;

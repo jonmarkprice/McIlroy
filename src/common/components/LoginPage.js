@@ -1,5 +1,6 @@
 const React   = require('react');
 const Banner  = require('./Banner');
+const Flash   = require('./Flash');
 
 class LoginForm extends React.Component {
   render() {
@@ -30,6 +31,7 @@ class LoginPage extends React.Component {
     return (
       <div id="page">
         <Banner username="" showName={false} />
+        <Flash message={this.props.flash} />
         <LoginForm />
       </div>
     );

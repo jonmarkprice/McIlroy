@@ -18,12 +18,12 @@ const parser = bodyParser.urlencoded({extended: true});
 
 // Define routes. 
 router.post('/login', 
-  passport.authenticate('local', { failureRedirect: '/login' }),
+  passport.authenticate('local', { failureRedirect: '/login', 
+                                   failureFlash: 'Invalid username or password.' }),
   function(req, res) {
-    loginDbg(req.user);
     res.redirect('/');
   });
-  
+
 router.get('/logout',
   function(req, res){
     req.logout();
@@ -31,9 +31,6 @@ router.get('/logout',
   });
 
 router.post('/register', parser, (req, res, next) => {
-  // Cannot destructure of undef or null.
-  // is req.body right?
-
   // TODO I should scan username for legality (injection!) before scanning
   const {pw, pwConfirm, username} = req.body;
   userExists(username)
@@ -44,9 +41,9 @@ router.post('/register', parser, (req, res, next) => {
       res.sendStatus(401);
     } else {
       if (pw !== pwConfirm) {
-        // Also async...
-        // return saveUser(username, pw);
+        // TODO flash message
         regDbg('Passwords do not match');
+        res.sendStatus(401);
       } else {
         return Promise.resolve(true);
       }
