@@ -1,19 +1,13 @@
 const express     = require('express');
-const router      = express.Router();
 const bodyParser  = require('body-parser');
-// Try using the "real" passport, following:
-// http://mherman.org/blog/2015/01/31/local-authentication-with-passport-and-express-4/#.WkL9p0tMGSM
 const passport    = require('passport');
-
-////////////////////////////////////////////////////////////////////////////////////////
-const loginDbg  = require('debug')('user-api:login');
+const loginDbg    = require('debug')('user-api:login');
 const regDbg      = require('debug')('user-api:register');
-
 const { empty }   = require('../helpers');
 const addUser     = require('../../add-user');
-const userExists  = require('../../user-exists');
 
 const parser = bodyParser.urlencoded({extended: true});
+const router = express.Router();
 
 // Define routes. 
 router.post('/login', 
