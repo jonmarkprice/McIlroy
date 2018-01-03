@@ -1,5 +1,6 @@
 const React   = require('react');
 const Banner  = require('./Banner');
+const Flash   = require('./Flash');
 
 const RegistrationForm = () => (
   <form id="registration-form"
@@ -20,11 +21,20 @@ const RegistrationForm = () => (
   </form>
 );
 
-const RegistrationPage = ({}) => (
+// const RegistrationPage = ({flash}) => (
+class RegistrationPage extends React.Component {
+  render() {
+  const {flash} = this.props;
+  console.log('flash: %s', flash)
+  console.log('props: %o', this.props);
+  return (
+
   <div id="page">
     <Banner username="" showName={false} />
+    <Flash message={flash} />
     <RegistrationForm />
   </div>
 );
+}}
 
 module.exports = RegistrationPage;

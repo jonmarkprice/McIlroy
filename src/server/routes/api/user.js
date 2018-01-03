@@ -7,7 +7,6 @@ const passport    = require('passport');
 
 ////////////////////////////////////////////////////////////////////////////////////////
 const loginDbg  = require('debug')('user-api:login');
-// const logoutDbg = require('debug')('user-api:logout');
 const regDbg      = require('debug')('user-api:register');
 
 const { empty }   = require('../helpers');
@@ -33,56 +32,38 @@ router.get('/logout',
 router.post('/register', parser, (req, res, next) => {
   // TODO I should scan username for legality (injection!) before scanning
   const {pw, pwConfirm, username} = req.body;
-  userExists(username)
-  .then(exists => {
-    if (exists) {
-      // TODO: send real error msg.
-      regDbg('Username %s, is taken.', username);
-      res.sendStatus(401);
-    } else {
-      if (pw !== pwConfirm) {
-        // TODO flash message
-        regDbg('Passwords do not match');
-        res.sendStatus(401);
+  if (pw !== pwConfirm) {
+    regDbg('Passwords do not match');
+    req.flash('error', `Passwords do not match.`);
+    res.redirect('/register');
+  } else {
+    addUser(username, pw)
+    .then(user => {
+      regDbg("Adding user...");
+      if (user !== undefined) {
+        regDbg('User created, redirecting.');
+        // Log new user in.
+        req.login(user, function(err) {
+          if (err) return next(err);
+          res.redirect('/');
+        });
       } else {
-        return Promise.resolve(true);
+        return next('Got undefined from save().');
       }
-    }
-  }).then(data => {
-    if (data === true) {
-      // Log in user via cookie
-      regDbg('Creating new user, %s...', username);
-
-      // Maybe this should return the full user, incl. id
-      addUser(username, pw)
-      .then(user => {
-        regDbg("Addiing user...");
-        if (user !== undefined) {
-          regDbg('User created, redirecting.');
-
-          // Log new user in
-          req.login(user, function(err) {
-            if (err) return next(err);
-            res.redirect('/');
-          });
-        } else {
-          regDbg('Username already exists!');
-          res.redirect('/register');
-        }
-      })
-      .catch(err => {
-        throw new Error(err);
-      });
-    } else {
-      // TODO real msg
-      regDbg('data (%o, from username avail.) != true', data);
-      res.sendStatus(401);
-    }
-  }).catch(err => {
-    // TODO: send real error msg.
-    res.sendStatus(400);
-    throw err;
-  });
+    })
+    .catch(err => {
+      if (err === 'USERNAME EXISTS') {
+        req.flash('error', `Username "${username}" is not available.`);
+        res.redirect('/register');
+      }
+      else {
+        regDbg('Reached top-level registration error-handler with %s', err);
+        regDbg('- Full printout: %O', err);
+        req.flash('error', 'Error creating user.');
+        res.redirect('/register');
+      }
+    });
+  }
 });
 
 module.exports = router;

@@ -1,9 +1,9 @@
 const bcrypt = require('bcrypt');
 const db = require('./db');
-// const dbg = require('debug')('add-user');
+const dbg = require('debug')('add-user');
 
 function addUser(username, password) {
-  console.log("Searching for user");
+  dbg("Searching for user");
   return db.connection.User
   .findOne({username}).exec()
   .then(user => {
@@ -11,18 +11,22 @@ function addUser(username, password) {
       const saltRounds = 7;
       return bcrypt.hash(password, saltRounds)
     } else {
-      return Promise.reject("Test user already exists.");
+      return Promise.reject('USERNAME EXISTS');
     }
   })
   .then(function(hash) {
-    console.log("Saving new user: %s...", username);
+    dbg("Saving new user: %s...", username);
     return new db.connection.User({
       username,
       password: hash,
       programs: [],
     })
     .save(); // Also returns a promise
-  });
+  })
+  .catch(err => {
+    dbg("Re-return rejection");
+    return Promise.reject(err);
+  }); // Do we want to catch here, or later?
 }
 
 module.exports = addUser;
