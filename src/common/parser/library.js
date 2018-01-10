@@ -82,7 +82,7 @@ const library = new Map([
         in: [t.any, t.any], // will be dependent on f's in's
         out: t.any
       },
-      fn: (x, y) => f.fn.call(null, y, x),
+      fn: (x, y) => f.fn.call(null, y, x)
     })
   }],
   ['+', {
@@ -317,7 +317,7 @@ const library = new Map([
       arity: f.arity,
       types: {
         in: f.types.in,
-        out: g.types.out,
+        out: g.types.out
       },
       fn: R.pipe(f.fn, g.fn) // this seems wrong... why not compose?
     })

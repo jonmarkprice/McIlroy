@@ -10,5 +10,5 @@ const popFromCanvas = () => ({type: BACKSPACE});
 module.exports = {
   BACKSPACE, popFromCanvas,  // XXX do not match
   CLEAR_CANVAS, clearCanvas,
-  PUSH_FUNCTION, pushFunction,
+  PUSH_FUNCTION, pushFunction
 };

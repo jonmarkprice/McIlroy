@@ -19,7 +19,7 @@ function addUser(username, password) {
     return new db.connection.User({
       username,
       password: hash,
-      programs: [],
+      programs: []
     })
     .save(); // Also returns a promise
   })

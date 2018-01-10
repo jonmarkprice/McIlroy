@@ -1,4 +1,5 @@
 const React = require('react');
+const { values } = require('ramda');
 const { connect } = require('react-redux');
 const SavedProgram = require('./SavedProgram');
 const { openNew } = require('../actions/edit');
@@ -24,10 +25,8 @@ class Container extends React.Component {
           New
         </button>
         <h2>Saved Programs</h2>
-        {
-          Object.values(programs).map((p, index) =>
-            <SavedProgram obj={p} key={index} />)
-        }
+        { values(programs).map((p, index) =>
+            <SavedProgram obj={p} key={index} />) }
       </div>
     );
   }

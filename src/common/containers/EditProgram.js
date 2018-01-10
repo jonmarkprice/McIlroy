@@ -8,7 +8,7 @@ const {
 } = require('../actions/edit');
 
 const mapStateToProps = state => ({
-  program : state.edit.program,
+  program : state.edit.program
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -4,7 +4,7 @@ const { connect } = require( 'react-redux');
 const { clearCanvas, popFromCanvas } = require('../actions/program-canvas');
 
 const mapStateToProps = state => ({
-  program: state.program,
+  program: state.program
 });
 
 const mapDispatchToProps = dispatch => {
@@ -14,7 +14,7 @@ const mapDispatchToProps = dispatch => {
     },
     onBackspace: () => {
       dispatch(popFromCanvas());
-    },
+    }
   };
 };
 

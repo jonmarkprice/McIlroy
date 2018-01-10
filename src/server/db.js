@@ -30,11 +30,8 @@ class Database {
     });
     // TODO: later use password hash
 
-    mongoose.connect(
-      'mongodb://jon:pw@ds249415.mlab.com:49415/mcilroy',
-      // 'mongodb://localhost:27017/local',
-      {useMongoClient: true}
-    ).catch(err => {
+    mongoose.connect('mongodb://jon:pw@ds249415.mlab.com:49415/mcilroy')
+    .catch(err => {
       dbg('Caught db error');
       this.isConnected = false;
 

@@ -2,7 +2,7 @@ const EDIT = {
   EDITING: {
     SET: 'EDIT::EDITING::SET',
     UNSET: 'EDIT::EDITING::UNSET',
-    NEW: 'EDIT::EDITING::NEW',
+    NEW: 'EDIT::EDITING::NEW'
   },
   PROGRAM: {
     CLEAR: 'EDIT::PROGRAM::CLEAR',

@@ -32,7 +32,7 @@ function savedReducer(state = initialState, action) {
         R.set(nextSaveSlot, {
           name: action.name,
           program : action.expansion,
-          id      : state.next_id,
+          id      : state.next_id
         }),
         R.over(uiIndex, R.inc)
       )(state);

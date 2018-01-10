@@ -8,7 +8,6 @@ const {
   , disableEditing 
   , removeProgram
 } = require('./saved');
-const base = "http://localhost:3000/api";
 
 const loadPost = (data) => ({
   method  : 'POST',
@@ -28,7 +27,7 @@ function deleteSavedProgram(user, id, name) {
 
     const payload = loadPost({user, name});
     dispatch(disableEditing(id));
-    return fetch(`${base}/program/delete`, payload).then(
+    return fetch('/api/program/delete', payload).then(
       value => { 
         dbg('-- DELETE COMPLETE --');
         dispatch(removeProgram(id));
@@ -48,7 +47,7 @@ function saveProgram(user, name, expansion) {
   return function(dispatch) {
     // dispatch(disableEditing(id));
     const payload = loadPost({user, name, expansion});
-    return fetch(`${base}/program/save`, payload).then(
+    return fetch('/api/program/save', payload).then(
       value => {
         dbg('-- POST COMPLETE --');
        //  dispatch(enableEditing(id));
@@ -66,7 +65,7 @@ function updateProgramOnServer(user, id, oldName, newName, newProgram) {
     dispatch(disableEditing(id));
     dbg('Saving with new program: %o', newProgram);
     const payload = loadPost({user, oldName, newName, newProgram});
-    return fetch(`${base}/program/edit`, payload).then(
+    return fetch('api/program/edit', payload).then(
       value => {
         dbg('-- RENAME COMPLETE --');
         dispatch(enableEditing(id));

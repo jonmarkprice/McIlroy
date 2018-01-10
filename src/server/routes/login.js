@@ -25,7 +25,7 @@ router.get('/', function (req, res, next) {
       'Log In - McIlroy',
       'login',
       ['common', 'banner', 'form', 'login', 'flash'],
-      state, 
+      state
     );
     res.send(html);
   }

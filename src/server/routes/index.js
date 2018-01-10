@@ -4,11 +4,9 @@ const router  = express.Router();
 const { createElement } = require('react');
 const { renderPage } = require('./helpers');
 
-const app       = require('./app');    // NEW
+const app       = require('./app');
 const api       = require('./api');
-// const home      = require('./home');   // NEW
 const login     = require('./login');
-// const profile   = require('./profile');  // NEW
 const register  = require('./register');
 
 // Load components

@@ -51,7 +51,7 @@ const mapDispatchToProps = dispatch => ({
   },
   displayMessage: msg => {
     dispatch(displayEditMessage(msg));
-  },
+  }
 });
 
 class SavedComponent extends React.Component {
