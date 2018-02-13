@@ -1,8 +1,10 @@
+const AWS = require("../aws_conf");
+const ddb = new AWS.DynamoDB.DocumentClient();
+
 const passport  = require('passport');
 const Strategy  = require('passport-local').Strategy;
 const bcrypt    = require('bcrypt');
 const dbg       = require('debug')('passport-config');
-const db = require('./db');
 
 // Configure the local strategy for use by Passport.
 //
@@ -12,17 +14,29 @@ const db = require('./db');
 // will be set at `req.user` in route handlers after authentication.
 passport.use(new Strategy(
   function(username, password, done) {
-    db.connection.User
-    .findOne({username}, function(err, user) {
-      dbg("----- QUERYING DATABASE ----");
-      if (err) { return done(err); }
-      if (!user) {
-        return done(null, false);
+    console.log("------------- authenticating ---------------");
+    dbg("authenticating...");
+    ddb.get({
+      TableName: "EBUsers",
+      Key: {"UserId": username},
+      ProjectionExpression: "PasswordHash"
+    })
+    .promise()
+    // TODO Check if user not found...
+    .then(function (result) {
+      if (result === null) {
+        done(null, false);
+      } else {
+        return result;
       }
-      //             plain     hash
-      bcrypt.compare(password, user.password, function(err, res) {
+    })
+    .then(function (result) {
+      dbg("Got password: ", result);
+      const hash = result.Item.PasswordHash;
+      bcrypt.compare(password, hash, function(err, res) {
         dbg("----- CHECKING MATCH (bcrypt) ----");
         if (res) {
+          const user = {"UserId": username};
           dbg('Authenticated');
           return done(null, user);
         } else {
@@ -31,7 +45,9 @@ passport.use(new Strategy(
         }
       });
     })
-  }));
+    .catch(done);
+  }
+));
 
 // Configure Passport authenticated session persistence.
 //
@@ -41,15 +57,23 @@ passport.use(new Strategy(
 // serializing, and querying the user record by ID from the database when
 // deserializing.
 passport.serializeUser(function(user, done) {
-  done(null, user._id);
+  dbg("serializing ...");
+  done(null, user.UserId);
 });
 
 passport.deserializeUser(function(id, done) {
-  db.connection.User
-  .findOne({_id: id}, function (err, user) {
-    if (err) { return done(err); }
-    done(null, user);
-  });
+  dbg("deserializing...");
+  ddb.get({
+    TableName: "EBUsers",
+    Key: {"UserId": id},
+    // ProjectionExpression: "UserId" //want?
+  })
+  .promise()
+  .then(result => {
+    console.log(result);
+    done(null, result.Item)
+  })
+  .catch(done);
 });
 
 module.exports = passport;
