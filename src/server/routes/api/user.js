@@ -28,6 +28,7 @@ router.get('/logout',
   function(req, res){
     req.logout();
     req.session.destroy();
+    res.clearCookie('connect.sid');
     res.redirect('/');
   });
 

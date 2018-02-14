@@ -66,7 +66,6 @@ function savedReducer(state = initialState, action) {
       return state;
 
     default:
-      dbg(`In savedReducer. Reached default state on ${action.type}.`);
       return state;
   }
 }

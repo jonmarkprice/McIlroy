@@ -56,7 +56,6 @@ function displayReducer(state = initialState, action) {
     case EDIT.MESSAGE.DISPLAY:
       return set(lens.message, action.message, state);
     default:
-      dbg(`Reached default state on ${action.type}`);
       return state;
   }
 }

@@ -5,6 +5,7 @@ const passport  = require('passport');
 const Strategy  = require('passport-local').Strategy;
 const bcrypt    = require('bcrypt');
 const dbg       = require('debug')('passport-config');
+const { equals } = require("ramda");
 
 // Configure the local strategy for use by Passport.
 //
@@ -14,7 +15,6 @@ const dbg       = require('debug')('passport-config');
 // will be set at `req.user` in route handlers after authentication.
 passport.use(new Strategy(
   function(username, password, done) {
-    dbg("------------- authenticating ---------------");
     dbg("authenticating...");
     ddb.get({
       TableName: "EBUsers",
@@ -22,9 +22,8 @@ passport.use(new Strategy(
       ProjectionExpression: "PasswordHash"
     })
     .promise()
-    // TODO Check if user not found...
     .then(function (result) {
-      if (result === null) {
+      if (equals({}, result)) {
         done(null, false);
       } else {
         return result;

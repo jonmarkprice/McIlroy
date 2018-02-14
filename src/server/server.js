@@ -31,8 +31,9 @@ if (cluster.isMaster) {
   app.use(session({
     secret: 'keyboard cat',
     saveUninitialized: false,
-    resave: true, // TODO
-    store: new FileStore()
+    resave: true,
+    store: new FileStore({path: '../../sessions'}) // See:
+      // https://github.com/valery-barysok/session-file-store/issues/41
   }));
   app.use(flash());
   
