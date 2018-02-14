@@ -1,8 +1,9 @@
 const cluster = require('cluster');
 const numCPUs = require('os').cpus().length;
+const dbg = require("debug")("server");
 
 if (cluster.isMaster) {
-  console.log(`Master process running at ${process.pid}.`);
+  dbg(`Master process running at ${process.pid}.`);
   for (let i = 0; i < numCPUs; i += 1) {
     cluster.fork();
   }
@@ -41,10 +42,10 @@ if (cluster.isMaster) {
   app.use(passport.session());
   
   app.use('/', router);
-  console.log(`Worker ${process.pid} started.`);
+  dbg(`Worker ${process.pid} started.`);
 
   const port = process.env.PORT || 3000;
   const server = app.listen(port, function() {
-    console.log('Server running at http://127.0.0.1:' + port);
+    dbg('Server running at http://127.0.0.1:' + port);
   }); 
 }

@@ -14,7 +14,7 @@ const dbg       = require('debug')('passport-config');
 // will be set at `req.user` in route handlers after authentication.
 passport.use(new Strategy(
   function(username, password, done) {
-    console.log("------------- authenticating ---------------");
+    dbg("------------- authenticating ---------------");
     dbg("authenticating...");
     ddb.get({
       TableName: "EBUsers",
@@ -70,7 +70,7 @@ passport.deserializeUser(function(id, done) {
   })
   .promise()
   .then(result => {
-    console.log(result);
+    dbg(result);
     done(null, {username: result.Item.UserId})
   })
   .catch(done);

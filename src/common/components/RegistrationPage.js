@@ -21,20 +21,17 @@ const RegistrationForm = () => (
   </form>
 );
 
-// const RegistrationPage = ({flash}) => (
 class RegistrationPage extends React.Component {
   render() {
-  const {flash} = this.props;
-  console.log('flash: %s', flash)
-  console.log('props: %o', this.props);
-  return (
-
-  <div id="page">
-    <Banner username="" showName={false} />
-    <Flash message={flash} />
-    <RegistrationForm />
-  </div>
-);
-}}
+    const {flash} = this.props;
+    return (
+      <div id="page">
+        <Banner username="" showName={false} />
+        <Flash message={flash} />
+        <RegistrationForm />
+      </div>
+    );
+  }
+}
 
 module.exports = RegistrationPage;

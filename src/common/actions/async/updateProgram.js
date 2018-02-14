@@ -1,4 +1,5 @@
 const { createOpts } = require('./helpers/misc');
+const dbg = require("../../dbgconf")("async-actions:update-program");
 
 function updateProgramOnServer(username, id, oldName, newName, newProgram,
                                stage) {
@@ -21,13 +22,13 @@ function updateProgramOnServer(username, id, oldName, newName, newProgram,
     fetch(deletePath, createOpts(old, "mocked"))
     .then(res => res.json())
     .then(parsed => {
-      console.log('Delete response: %s', parsed.message);
+      dbg('Delete response: %s', parsed.message);
       return fetch(savePath, createOpts(updated, "mocked"));
     })
     .then(res => res.json())
     .then( // Two parameter version handles both success & failure.
       parsed => {
-        console.log('Save response: %s', parsed.message);
+        dbg('Save response: %s', parsed.message);
         dispatch({type: 'CLEAR_FLASH'}); 
       },
       err => {

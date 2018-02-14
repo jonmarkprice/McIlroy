@@ -23,8 +23,8 @@ function renderPage(element, title, bundle = null, stylesheets = [], preloaded =
       </script>`
     : '';
 
-  console.log("element %O", element);
-  console.log("rendered: %O", html);
+  dbg("element %O", element);
+  dbg("rendered: %O", html);
   
   dbg('preloaded %o', preloaded);
   dbg('state %o', state)

@@ -50,7 +50,7 @@ router.post('/register', (req, res, next) => {
           loginDbg("Error logging in new user.");
           res.redirect("/login");
         } else {
-          console.log("redirecting");
+          dbg("redirecting");
           res.redirect('/');
         }
      });

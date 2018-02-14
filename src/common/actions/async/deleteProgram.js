@@ -1,5 +1,6 @@
 const { createOpts } = require('./helpers/misc');
 const { removeProgram } = require('../saved');
+const dbg = require("../../dbgconf")("async-actions:delete-program");
 
 const deleteProgram = (username, id, name, stage) => dispatch => {
   const body = { user: username, name };
@@ -9,7 +10,7 @@ const deleteProgram = (username, id, name, stage) => dispatch => {
   .then(res => res.json())
   .then( // Two parameter version handles both success & failure.
     parsed => {
-      console.log('Response: %s', parsed.message);
+      dbg('Response: %s', parsed.message);
       dispatch(removeProgram(id)); 
     },
     err => {

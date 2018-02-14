@@ -22,7 +22,7 @@ router.get('/', function (req, res, next) {
       res.redirect("/login");
     })
   } else {
-    console.log("Couldn't get user, redirecting to login.");
+    dbg("Couldn't get user, redirecting to login.");
     res.redirect("/login");
   }
 });
