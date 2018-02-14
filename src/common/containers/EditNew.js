@@ -5,7 +5,7 @@ const dbg = require('../dbgconf')('containers:edit-new');
 const { unsetEditing
       , displayEditMessage } = require('../actions/edit');
 const { addProgram } = require('../actions/saved');
-const { saveProgram } = require('../actions/saved-async');
+const saveProgram = require('../actions/async/saveProgram');
 const { checkName } = require('../helpers');
 
 const mapStateToProps = state => ({
@@ -21,10 +21,7 @@ const mapDispatchToProps = dispatch => ({
   },
   save: (username, name, program) => {
     dbg('username %s', username)
-    dispatch(saveProgram(username, name, program)).then(
-      v => { dbg('-- RECIEVED --'); },
-      e => { throw Error(e); }
-    );
+    dispatch(saveProgram(username, name, program, "api"));
   },
   addToUI: (name, program) => {
     dispatch(addProgram(name, program));

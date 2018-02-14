@@ -2,7 +2,7 @@ const React = require('react');
 const { connect } = require('react-redux');
 const ProgramRow  = require('../components/ProgramRow');
 const { setEditing } = require('../actions/edit');
-const { deleteSavedProgram } = require('../actions/saved-async');
+const deleteProgram = require('../actions/async/deleteProgram');
 const { prop } = require('ramda');
 const dbg = require('../dbgconf')('containers:derived-description');
 
@@ -22,7 +22,7 @@ const mapDispatchToProps = dispatch => ({
   },
   del: (username, id, name) => {
     dbg(`mapping delete with id, name, user (${id}, ${name}, ${username}).`);
-    dispatch(deleteSavedProgram(username, id, name));
+    dispatch(deleteProgram(username, id, name, "api"));
   }
 });
 
