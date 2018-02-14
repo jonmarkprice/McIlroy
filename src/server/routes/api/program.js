@@ -40,7 +40,7 @@ router.post('/delete', jsonParser, (req, res, next) => {
     deleteProgram(user, name)
     .then(data => {
       deleteDbg('Response from database: %O', data);
-      res.sendStatus(200);
+      res.json({success: true, message: "Deleted program."});
     })
     .catch(next);
   }
@@ -56,7 +56,7 @@ router.post('/save', jsonParser, (req, res, next) => {
     saveProgram(user, name, expansion)
     .then(data => {
       saveDbg('Response from database: %O', data);
-      res.sendStatus(200);
+      res.json({succes: true, message: "Saved program."});
     })
     .catch(next);
   }

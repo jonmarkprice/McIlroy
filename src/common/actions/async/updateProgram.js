@@ -1,32 +1,28 @@
-const { getAuthToken
-        , getUser } = require('../../../client/helpers/cognito');
-const { createOpts } = require('../../../client/helpers/misc');
+const { createOpts } = require('./helpers/misc');
 
-function updateProgramOnServer(userId, id, oldName, newName, newProgram,
+function updateProgramOnServer(username, id, oldName, newName, newProgram,
                                stage) {
   return function (dispatch) {
-    const username = getUser().username;
+    // const username = getUser().username;
     const old = {
-      UserId: username,
-      ProgramName: oldName
+      user: username,
+      name: oldName
     };
     const updated = {
-      UserId: username,
-      ProgramName: newName,
-      ProgramJSON: newProgram
+      user: username,
+      name: newName,
+      expansion: newProgram
     };
-    const deletePath = `/${stage}/programs/delete`;
-    const savePath = `/${stage}/programs/save`;
+    const deletePath = `/${stage}/program/delete`;
+    const savePath = `/${stage}/program/save`;
 
-    getAuthToken()
-    .then(tok => {
-      dispatch({type: 'SET_FLASH', message: 'Updating program...'});
-      return fetch(deletePath, createOpts(old, tok))
-      .then(res => res.json())
-      .then(parsed => {
-        console.log('Delete response: %s', parsed.message);
-        return fetch(savePath, createOpts(updated, tok));
-      });
+    dispatch({type: 'SET_FLASH', message: 'Updating program...'});
+
+    fetch(deletePath, createOpts(old, "mocked"))
+    .then(res => res.json())
+    .then(parsed => {
+      console.log('Delete response: %s', parsed.message);
+      return fetch(savePath, createOpts(updated, "mocked"));
     })
     .then(res => res.json())
     .then( // Two parameter version handles both success & failure.

@@ -44,8 +44,11 @@ function addAliases(programs, store) {
   dbg('Store: %O', store);
   dbg('Got programs: %O', programs);
 
-  programs.map(({name, expansion}) => 
-    store.dispatch(addProgram(name, expansion)));
+  programs.forEach(function (item) {
+    dbg('- %s: %o', item.ProgramName, item.Expansion);
+    store.dispatch(addProgram(item.ProgramName, item.Expansion));
+  });
+
   return store;
 }
 

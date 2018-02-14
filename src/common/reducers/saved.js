@@ -28,6 +28,7 @@ function savedReducer(state = initialState, action) {
 
       // Actually, why not just use a simple list and append to it?
       // const nextId = R.lensPath(['saved', );
+      dbg("Adding program: %O", action);
       return R.pipe(
         R.set(nextSaveSlot, {
           name: action.name,

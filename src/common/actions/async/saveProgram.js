@@ -1,20 +1,12 @@
-const { getAuthToken
-        , getUser } = require('../../../client/helpers/cognito');
-const { createOpts } = require('../../../client/helpers/misc');
-// const { addProgram } = require('../saved');
+const { createOpts } = require('./helpers/misc');
 
-const saveProgram = (userId, name, expansion, stage) => dispatch => {
-  const body = {
-    UserId: getUser().username,
-    ProgramName: name || 'untitled',
-    ProgramJSON: expansion || []
-  };
-  const path = '/' + stage + '/programs/save';
+const saveProgram = (username, name, expansion, stage) => dispatch => {
+  const body = { user: username, name, expansion };
+  const path = '/' + stage + '/program/save';
 
   dispatch({type: 'SET_FLASH', message: 'Saving program...'});
 
-  getAuthToken()
-  .then(tok => fetch(path, createOpts(body, tok)))
+  fetch(path, createOpts(body, "mocked"))
   .then(res => res.json())
   .then( // Two parameter version handles both success & failure.
     parsed => {

@@ -1,17 +1,11 @@
-const { getAuthToken
-        , getUser } = require('../../../client/helpers/cognito');
-const { createOpts } = require('../../../client/helpers/misc');
+const { createOpts } = require('./helpers/misc');
 const { removeProgram } = require('../saved');
 
-const deleteProgram = (userId, id, name, stage) => dispatch => {
-  const body = {
-    UserId: getUser().username,
-    ProgramName: name,
-  };
-  const path = '/' + stage + '/programs/delete';
+const deleteProgram = (username, id, name, stage) => dispatch => {
+  const body = { user: username, name };
+  const path = '/' + stage + '/program/delete';
 
-  getAuthToken()
-  .then(tok => fetch(path, createOpts(body, tok)))
+  fetch(path, createOpts(body, "mocked"))
   .then(res => res.json())
   .then( // Two parameter version handles both success & failure.
     parsed => {
