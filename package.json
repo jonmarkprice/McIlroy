@@ -2,13 +2,14 @@
   "name": "mcilroy",
   "version": "6.1.2",
   "scripts": {
-    "test": "tape 'tests/**/*.js'",
-    "prestart": "npm run build",
-    "start": "node src/server/server.js",
-    "build": "babel -d lib src/common -s && webpack -d",
-    "clean": "rimraf lib/*",
+    "clean": "rimraf lib/* dist/*",
     "prebuild": "npm run clean -s",
-    "lint": "eslint src"
+    "build": "babel -d lib src/common -s",
+    "bundle": "webpack",
+    "prestart": "npm run build && npm run bundle",
+    "start": "node src/server/server.js",
+    "lint": "eslint src",
+    "test": "tape 'tests/**/*.js'"
   },
   "author": "Jonathan Price",
   "dependencies": {
@@ -25,7 +26,6 @@
     "express": "^4.13.3",
     "express-session": "^1.11.3",
     "glob": "^7.1.2",
-    "mongoose": "^5.0.0-rc0",
     "morgan": "^1.6.1",
     "passport": "^0.2.2",
     "passport-local": "^1.0.0",

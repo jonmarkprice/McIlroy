@@ -1,7 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 
-const config = {
+module.exports = {
   entry: {
     app: './src/client/index.js',
     login: './src/client/login.js',
@@ -36,8 +36,6 @@ const config = {
     new webpack.optimize.CommonsChunkPlugin({
       name: 'register',
       chunks: ['register']
-    }),
+    })
   ]
 };
-
-module.exports = config;
