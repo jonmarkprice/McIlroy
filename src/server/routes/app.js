@@ -6,6 +6,8 @@ const fetchPrograms = require("../database/fetch-programs");
 
 router.get('/', function (req, res, next) {
   dbg("Serving main app at /.")
+  dbg("User: %O", req.user);
+  dbg("Session: %O", req.session);
   if (req.user) {
     dbg("Fetching programs for: %s", req.user.username);
     dbg(req.user);    
@@ -20,7 +22,7 @@ router.get('/', function (req, res, next) {
       res.redirect("/login");
     })
   } else {
-    console.log("Couldn't get user.");
+    console.log("Couldn't get user, redirecting to login.");
     res.redirect("/login");
   }
 });

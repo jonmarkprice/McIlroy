@@ -12,6 +12,9 @@ if (cluster.isMaster) {
   const passport  = require('./passport');
   const router    = require('./routes');
   const flash     = require('connect-flash');
+
+  const session   = require("express-session");
+  const FileStore = require("session-file-store")(session);
   
   // Create a new Express application.
   const app = express();
@@ -22,9 +25,14 @@ if (cluster.isMaster) {
   // Use application-level middleware for common functionality, including
   // logging, parsing, and session handling.
   app.use(require('morgan')('combined'));
-  app.use(require('cookie-parser')()); // XXX Don't need
+  // app.use(require('cookie-parser')()); // XXX Don't need
   app.use(require('body-parser').urlencoded({ extended: true }));
-  app.use(require('express-session')({ secret: 'keyboard cat', resave: false, saveUninitialized: false }));
+  app.use(session({
+    secret: 'keyboard cat',
+    saveUninitialized: false,
+    resave: true, // TODO
+    store: new FileStore()
+  }));
   app.use(flash());
   
   // Initialize Passport and restore authentication state, if any, from the
