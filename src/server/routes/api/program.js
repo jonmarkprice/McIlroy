@@ -4,6 +4,7 @@ const saveDbg   = require('debug')('program-route:save'),
       fetchDbg  = require('debug')('program-route:fetch');
 const express = require('express');
 const bodyParser = require('body-parser');
+const { empty } = require("../helpers");
 
 const jsonParser = bodyParser.json();
 const router = express.Router();

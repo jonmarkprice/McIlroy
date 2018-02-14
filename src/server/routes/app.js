@@ -7,16 +7,13 @@ const fetchPrograms = require("../database/fetch-programs");
 router.get('/', function (req, res, next) {
   dbg("Serving main app at /.")
   if (req.user) {
-    dbg("Fetching programs for: %s", req.user.UserId);
+    dbg("Fetching programs for: %s", req.user.username);
     dbg(req.user);    
 
-    // fetchPrograms(req.user.username)
-    fetchPrograms(req.user.UserId)
+    fetchPrograms(req.user.username)
     .then(function (programs) {
       dbg("Got programs: %O", programs);
-      res.send(renderInterpretter(programs.Items,
-        req.user.UserId));
-        //req.user.username));
+      res.send(renderInterpretter(programs.Items, req.user.username));
     })
     .catch(function (err) {
       console.error("Couldn't get session", err);

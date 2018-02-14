@@ -2,12 +2,8 @@ const React = require('react');
 const EditProgram = require('./EditProgram');
 const { connect } = require('react-redux');
 const dbg = require('../dbgconf')('containers:edit-new');
-const {
-  // enableEditng
-  // disableEditing
-  unsetEditing
-, displayEditMessage
-} = require('../actions/edit');
+const { unsetEditing
+      , displayEditMessage } = require('../actions/edit');
 const { addProgram } = require('../actions/saved');
 const { saveProgram } = require('../actions/saved-async');
 const { checkName } = require('../helpers');
@@ -23,13 +19,6 @@ const mapDispatchToProps = dispatch => ({
   done: () => {
     dispatch(unsetEditing());
   },
-  // TODO: Implement after save, delete, rename.
-  // clear: () => {
-  //   dispatch(clearCanvas());
-  // },
-  // addToken: text => {
-  //   dispatch(pushFunction(text));
-  // },
   save: (username, name, program) => {
     dbg('username %s', username)
     dispatch(saveProgram(username, name, program)).then(

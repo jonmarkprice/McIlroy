@@ -39,7 +39,7 @@ function addUser(username, password) {
         } else {
           // Return an object that is serializable by Passport.
           // Need to include password hash?
-          resolve({UserId: username});
+          resolve({username});
         }
       });
     });

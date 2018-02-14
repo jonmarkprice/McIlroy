@@ -36,7 +36,7 @@ passport.use(new Strategy(
       bcrypt.compare(password, hash, function(err, res) {
         dbg("----- CHECKING MATCH (bcrypt) ----");
         if (res) {
-          const user = {"UserId": username};
+          const user = {username};
           dbg('Authenticated');
           return done(null, user);
         } else {
@@ -58,7 +58,7 @@ passport.use(new Strategy(
 // deserializing.
 passport.serializeUser(function(user, done) {
   dbg("serializing ...");
-  done(null, user.UserId);
+  done(null, user.username);
 });
 
 passport.deserializeUser(function(id, done) {
@@ -71,7 +71,7 @@ passport.deserializeUser(function(id, done) {
   .promise()
   .then(result => {
     console.log(result);
-    done(null, result.Item)
+    done(null, {username: result.Item.UserId})
   })
   .catch(done);
 });
