@@ -15,7 +15,8 @@ if (cluster.isMaster) {
   const flash     = require('connect-flash');
 
   const session   = require("express-session");
-  const FileStore = require("session-file-store")(session);
+ 
+  // const FileStore = require("session-file-store")(session);
   
   // Create a new Express application.
   const app = express();
@@ -31,8 +32,8 @@ if (cluster.isMaster) {
   app.use(session({
     secret: 'keyboard cat',
     saveUninitialized: false,
-    resave: true,
-    store: new FileStore({path: '../../sessions'}) // See:
+    resave: true //,
+    //store: new FileStore({path: '../../sessions'}) // See:
       // https://github.com/valery-barysok/session-file-store/issues/41
   }));
   app.use(flash());

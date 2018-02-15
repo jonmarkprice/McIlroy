@@ -3,7 +3,7 @@ const ddb = new AWS.DynamoDB.DocumentClient();
 
 function addItem(UserId, ProgramName, ProgramJSON) {
   return ddb.put({
-    TableName: 'McIlroyPrograms',
+    TableName: process.env.PROGRAMS_TABLE,
     Item: {
       UserId,
       ProgramName,

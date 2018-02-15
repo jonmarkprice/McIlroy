@@ -3,7 +3,7 @@ const ddb = new AWS.DynamoDB.DocumentClient();
 
 const passport  = require('passport');
 const Strategy  = require('passport-local').Strategy;
-const bcrypt    = require('bcrypt');
+const bcrypt    = require('bcryptjs');
 const dbg       = require('debug')('passport-config');
 const { equals } = require("ramda");
 
@@ -17,7 +17,7 @@ passport.use(new Strategy(
   function(username, password, done) {
     dbg("authenticating...");
     ddb.get({
-      TableName: "EBUsers",
+      TableName: process.env.USERS_TABLE,
       Key: {"UserId": username},
       ProjectionExpression: "PasswordHash"
     })
@@ -63,7 +63,7 @@ passport.serializeUser(function(user, done) {
 passport.deserializeUser(function(id, done) {
   dbg("deserializing...");
   ddb.get({
-    TableName: "EBUsers",
+    TableName: process.env.USERS_TABLE,
     Key: {"UserId": id},
     // ProjectionExpression: "UserId" //want?
   })

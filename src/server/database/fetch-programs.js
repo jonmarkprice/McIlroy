@@ -9,7 +9,7 @@ module.exports = function (UserId) {
 
   // need to specify which columns we want?
   const params = {
-    TableName: 'McIlroyPrograms',
+    TableName: process.env.PROGRAMS_TABLE,
     KeyConditionExpression: 'UserId = :user',
     ExpressionAttributeValues: {
       ':user': UserId //{S: UserId}

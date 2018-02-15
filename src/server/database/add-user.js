@@ -2,13 +2,13 @@ const AWS = require("../../aws_conf");
 const ddb = new AWS.DynamoDB.DocumentClient();
 
 const { equals } = require('ramda');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const dbg = require('debug')('add-user');
 
 function addUser(username, password) {
   dbg("Searching for user");
   return ddb.get({
-    TableName: "EBUsers",
+    TableName: process.env.USERS_TABLE,
     Key: {"UserId": username}
   })
   .promise()
@@ -28,7 +28,7 @@ function addUser(username, password) {
     dbg("Saving new user: '%s'...", username);
     return new Promise(function (resolve, reject) {
       ddb.put({
-        TableName: "EBUsers",
+        TableName: process.env.USERS_TABLE,
         Item: {
           "UserId": username,
           "PasswordHash": hash

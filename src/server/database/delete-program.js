@@ -3,7 +3,7 @@ const ddb = new AWS.DynamoDB.DocumentClient();
 
 function deleteItem(UserId, ProgramName) {
  return ddb.delete({
-    TableName: 'McIlroyPrograms',
+    TableName: process.env.PROGRAMS_TABLE,
     Key: {UserId, ProgramName}
   }).promise();
 }
