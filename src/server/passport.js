@@ -16,6 +16,8 @@ const { equals } = require("ramda");
 passport.use(new Strategy(
   function(username, password, done) {
     dbg("authenticating...");
+    dbg("table: %s", process.env.USERS_TABLE);
+
     ddb.get({
       TableName: process.env.USERS_TABLE,
       Key: {"UserId": username},

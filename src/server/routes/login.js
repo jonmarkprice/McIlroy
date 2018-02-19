@@ -1,8 +1,8 @@
 const express = require('express');
 const { createElement } = require('react');
-const { renderPage, loggedOn } = require('./helpers');
+const { renderPage } = require('./helpers');
 const LoginPage = require('../../../lib/components/LoginPage');
-const dbg = require('debug')('routes:login');
+const dbg = require('debug')('pages:login');
 
 const router = express.Router();
 
@@ -12,10 +12,10 @@ router.get('/', function (req, res, next) {
     ? {flash: null}
     : {flash: flash.error.join('')};
 
-  // TODO: "right way?" for passport?
-  // if (loggedOn(req.session)) {
-  if (false) {
-    // Redirect if already logged oin
+  dbg("req.session: %O", req.session);
+
+  // Redirect if already logged on
+  if (req.session.passport.user !== undefined) {
     dbg("Logged on, rerouting.");
     res.redirect('/');
   } else {

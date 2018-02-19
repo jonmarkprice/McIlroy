@@ -44,9 +44,4 @@ function renderPage(element, title, bundle = null, stylesheets = [], preloaded =
   </html>`;
 }
 
-const loggedOn = session =>
-  typeof session.user !== undefined 
-  && session.user.name !== null 
-  && session.user.logged_in === true;
-
 module.exports = { empty, renderPage, loggedOn };
