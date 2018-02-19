@@ -8,6 +8,7 @@ if (process.env.DEPLOYMENT !== "AWS") {
   dbg("Tables: ");
   dbg("Users: ", process.env.USERS_TABLE);
   dbg("Programs: ", process.env.PROGRAMS_TABLE);
+  dbg("Sessions: ", process.env.SESSIONS_TABLE);
 }
 
 const cluster = require('cluster');
@@ -43,7 +44,7 @@ if (cluster.isMaster) {
     secret: 'keyboard cat',
     saveUninitialized: false,
     resave: false,
-    store: new DynamoDBStore({table: "SessionTest"})
+    store: new DynamoDBStore({table: process.env.SESSIONS_TABLE})
     //store: new FileStore({path: '../../sessions'}) // See:
       // https://github.com/valery-barysok/session-file-store/issues/41
   }));

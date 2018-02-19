@@ -44,4 +44,4 @@ function renderPage(element, title, bundle = null, stylesheets = [], preloaded =
   </html>`;
 }
 
-module.exports = { empty, renderPage, loggedOn };
+module.exports = { empty, renderPage };
