@@ -54,6 +54,10 @@ if (cluster.isMaster) {
   // session.
   app.use(passport.initialize());
   app.use(passport.session());
+
+  app.get('/ping', function (req, res) {
+    res.send("pong");
+  });
   
   app.use('/', router);
   dbg(`Worker ${process.pid} started.`);
