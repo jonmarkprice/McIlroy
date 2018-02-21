@@ -32,13 +32,17 @@ if (cluster.isMaster) {
   
   // Create a new Express application.
   const app = express();
-  
+
+  app.get("/nos", function (req, res) {
+    res.send("No session.");
+  }); 
+ 
   app.use('/static', express.static('dist'));
   app.use('/public', express.static('public'));
   
   // Use application-level middleware for common functionality, including
   // logging, parsing, and session handling.
-  app.use(require('morgan')('combined'));
+  // app.use(require('morgan')('combined'));
   app.use(require('body-parser').urlencoded({ extended: true }));
   app.use(session({
     secret: 'keyboard cat',
