@@ -40,6 +40,7 @@ class DynamoDBStore extends Store {
     };
     ddb.get(params, function(err, result) {
       if (err) {
+        console.error("*** Session store Get failed. ***")
         callback(err);
       } else if (Object.keys(result).length == 0) {
         dbg("Session not found.");
@@ -62,6 +63,7 @@ class DynamoDBStore extends Store {
     };
     ddb.put(params, function(err, result) {
       if (err) {
+        console.error("*** Session store Set failed. ***");
         callback(err);
       } else {
         dbg("Session set.");
