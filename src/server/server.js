@@ -42,7 +42,7 @@ if (cluster.isMaster) {
   
   // Use application-level middleware for common functionality, including
   // logging, parsing, and session handling.
-  app.use(require('morgan')('tiny'));
+  app.use(require('morgan')(':date[iso] :method :url :status :res[content-length] - :response-time ms'));
   app.use(require('body-parser').urlencoded({ extended: true }));
   app.use(session({
     secret: 'keyboard cat',
