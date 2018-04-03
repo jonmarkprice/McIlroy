@@ -28,7 +28,6 @@ if (cluster.isMaster) {
   const session   = require("express-session");
  
   const DynamoDBStore = require("./store");
-  // const FileStore = require("session-file-store")(session);
   
   // Create a new Express application.
   const app = express();
@@ -39,18 +38,23 @@ if (cluster.isMaster) {
  
   app.use('/static', express.static('dist'));
   app.use('/public', express.static('public'));
-  
+
+
   // Use application-level middleware for common functionality, including
   // logging, parsing, and session handling.
+  let store = new DynamoDBStore({table: process.env.SESSIONS_TABLE});
+  app.use(function(req, res, next) {
+    store.setUserAgent(req.headers["user-agent"]);
+    next();
+  });
+
   app.use(require('morgan')(':date[iso] :method :url :status :res[content-length] - :response-time ms'));
   app.use(require('body-parser').urlencoded({ extended: true }));
   app.use(session({
     secret: 'keyboard cat',
     saveUninitialized: false,
     resave: false,
-    store: new DynamoDBStore({table: process.env.SESSIONS_TABLE})
-    //store: new FileStore({path: '../../sessions'}) // See:
-      // https://github.com/valery-barysok/session-file-store/issues/41
+    store
   }));
   app.use(flash());
   

@@ -17,6 +17,12 @@ class DynamoDBStore extends Store {
     dbg("Creating store with options: %o.", options);
     super(); 
     this.table = options.table; // Required // TODO enforce
+    this.userAgent = null;
+  }
+
+  // TMP
+  setUserAgent(agent) {
+    this.userAgent = agent;
   }
 
   destroy(sid, callback) {
@@ -61,6 +67,7 @@ class DynamoDBStore extends Store {
 
   set(sid, session, callback) {
     always("Setting session %s, with: %O", sid, session);
+    always("User agent: '%s'", this.userAgent);
     const params = {
       TableName: this.table,
       Item: {
